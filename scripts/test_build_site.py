@@ -25,13 +25,14 @@ class SiteTests(unittest.TestCase):
     def test_source_is_html_escaped(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = Path(directory)
-            src = path / "demo.srp"
-            out = path / "demo.stdout"
+            src = path / "01-escape.srp"
+            out = path / "01-escape.stdout"
             src.write_text('print("<unsafe>");\n', encoding="utf-8")
             out.write_text("<unsafe>\n", encoding="utf-8")
-            # render_lesson requires lesson paths within the project tree.
-            with self.assertRaises(ValueError):
-                render_lesson(src, out, "demo")
+            markup = render_lesson(src, out, "Example & test")
+            self.assertIn("&lt;unsafe&gt;", markup)
+            self.assertNotIn('print("<unsafe>");', markup)
+            self.assertIn("Example &amp; test", markup)
 
     def test_section_guides_describe_own_lessons(self):
         section = ROOT / "examples" / "01-basics"
