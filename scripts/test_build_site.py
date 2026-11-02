@@ -21,7 +21,7 @@ class SiteTests(unittest.TestCase):
         self.assertIn("lang=\"en\"", page)
         self.assertIn("01 · Scarp basics", page)
         self.assertIn("06 · Foundations for AI-oriented programs", page)
-        self.assertNotIn('src="https://', page)
+        self.assertNotIn('src="https://', page)\n        self.assertIn("हिन्दी में सीखें", page)\n        self.assertIn("/docs/hi/README.md", page)
 
     def test_source_is_html_escaped(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:

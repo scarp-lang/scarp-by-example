@@ -47,6 +47,6 @@ No network calls or external Python packages are required by the verifier. A les
 
 ## Translations and contributions
 
-English is the source language for now. Hindi learning materials will have matching lesson IDs and must never silently change Scarp code or expected output. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
+English is the source language. **[Start learning in Hindi](docs/hi/README.md)** with complete companion guides for sections 01 and 02. Further Hindi learning materials will have matching lesson IDs and must never silently change Scarp code or expected output. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
 
 **License:** [MIT](LICENSE) for this learning repository. Some compiler-source examples originated in the separately licensed [Scarp compiler repository](https://github.com/scarp-lang/scarp); preserve upstream attribution and applicable licensing when reusing material. No stable Scarp by Example release is announced.
