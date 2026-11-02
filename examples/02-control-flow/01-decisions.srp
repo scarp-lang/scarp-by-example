@@ -1,0 +1,15 @@
+// Conditions are booleans; each body introduces a lexical scope.
+bind score = 73;
+var grade = "pending";
+if score >= 90 {
+    grade = "A";
+} elif score >= 60 and score < 90 {
+    grade = "B";
+} else {
+    grade = "C";
+}
+print(grade);
+if true or 1 / 0 == 0 {
+    bind message = "Selected safely.";
+    print(message);
+}

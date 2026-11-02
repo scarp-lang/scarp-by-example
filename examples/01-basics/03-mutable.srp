@@ -1,0 +1,9 @@
+var count = 2;
+bind original = count;
+count += 5;
+print(count);
+count *= 3;
+count -= 1;
+count /= 4;
+print(count);
+print(original);

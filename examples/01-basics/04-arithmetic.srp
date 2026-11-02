@@ -1,0 +1,6 @@
+// Multiplication binds more tightly than addition.
+print(1 + 2 * 3);
+print((1 + 2) * 3);
+print(-7 / 2);
+print(-9223372036854775808);
+print("Arithmetic complete.");
