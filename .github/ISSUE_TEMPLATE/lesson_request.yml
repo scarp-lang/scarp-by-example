@@ -1,0 +1,21 @@
+name: Lesson request
+description: Suggest a compiler-supported concept to teach
+title: "Lesson: "
+labels: []
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: Concept and learning goal
+      description: What should learners be able to do after this lesson?
+    validations:
+      required: true
+  - type: input
+    id: compiler
+    attributes:
+      label: Compiler implementation reference
+      description: Link to an actual implemented API, source test or compiler PR
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes

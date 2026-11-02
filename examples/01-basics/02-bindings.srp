@@ -1,0 +1,6 @@
+// Bindings are visible after their declaration.
+bind width = 6;
+bind height = 7;
+bind area = width * height;
+print("Area:");
+print(area);
