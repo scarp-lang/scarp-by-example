@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from build_site import build, escape, lesson_description, render_catalog, render_lesson, section_heading
+from verify_examples import EXAMPLES, discover_examples
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -15,7 +16,7 @@ class SiteTests(unittest.TestCase):
 
     def test_real_course_has_all_lessons(self):
         page, total = render_catalog()
-        self.assertEqual(total, 18)
+        self.assertEqual(total, len(discover_examples(EXAMPLES)))
         self.assertEqual(page.count('class="lesson"'), total)
         self.assertIn("lang=\"en\"", page)
         self.assertIn("01 · Scarp basics", page)

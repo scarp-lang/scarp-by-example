@@ -11,11 +11,29 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 | [03 · Mutable values](03-mutable.srp) | `var`, assignments and compound arithmetic | Sequence shown in [stdout](03-mutable.stdout) |
 | [04 · Arithmetic](04-arithmetic.srp) | Integer operators and precedence | Sequence shown in [stdout](04-arithmetic.stdout) |
 | [05 · Booleans](05-booleans.srp) | Comparisons, boolean logic and short-circuiting | `true`, `false`, `true`, `false` |
+| [06 · Scopes](06-scopes.srp) | Nested blocks and shadowed names | `11`, `23`, `11`, `3` |
+| [07 · String bindings](07-string-bindings.srp) | Reassigning a string and local shadowing | English and Hindi text, plus integer `42` |
+| [08 · Output](08-output.srp) | `write` versus `print` | Mixed output; final `done` has no newline |
+| [09 · Unicode](09-unicode.srp) | UTF-8 literals | `नमस्ते 🌍` and `café — Scarp` |
+| [10 · Unicode text](10-unicode-text.srp) | Text length, byte count, code points and searches | `6 10 127757`, `5 true`, `true true` |
+| [11 · Scalar conversions](11-scalar-conversions.srp) | Explicit numeric conversion | `10.5 12 0` |
+| [12 · Escapes](12-escapes.srp) | Newline, quotation mark, and backslash escapes | Four visible output lines |
 
 **Run any lesson:** `scarp run examples/01-basics/01-hello.srp` from this repository root, with the compiler executable on `PATH`. Or use its absolute path.
 
 **Check it:** `scarp check examples/01-basics/01-hello.srp` (silent when successful).
 
-**Exact output:** each lesson has a `.stdout` file next to the `.srp` file. These fixtures include line breaks and are checked automatically. Read the source, predict the output, run it, then compare the fixture.
+**Exact output:** each lesson has a `.stdout` file next to the `.srp` file. Fixtures preserve the exact bytes, including any final newline **or its absence**, and are checked automatically. Read the source, predict the output, run it, then compare the fixture.
+
+## More to notice
+
+- **06:** Each new block may introduce a new binding with the same name. The outer value remains available after the inner scope finishes.
+- **07:** A `var` can be assigned another string, while `bind` remains immutable; a block can shadow a name with another type.
+- **08:** `write` does not append a newline; `print` does. The expected-output file intentionally has **no final newline**.
+- **09–10:** Unicode characters and UTF-8 bytes are different counting units. Compare `text_len` and `text_bytes` before assuming indexing is byte-based.
+- **11:** Conversions require explicit calls (`to_float` and `to_integer`), not a silent change of numeric type.
+- **12:** An escape sequence in a quoted string can represent a newline or literal backslash.
+
+**Practice:** predict the stdout before opening a fixture, then run `scarp check` and `scarp run` on the lesson.
 
 **Note:** `bind` is not a mutable variable. `var` allows reassignment. `print` is the current compiler syntax; earlier prereleases used `println`.
