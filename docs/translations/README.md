@@ -10,3 +10,7 @@ Rules for translations:
 - Mark untranslated content transparently; do not invent compiler features.
 
 The source lesson and its stdout fixture are locale-neutral. Translation changes must never bypass the compiler validation workflow.
+
+## Published Hindi guides
+
+[Hindi learning index](../hi/README.md) now covers every lesson of chapters 01 and 02 using original `.srp` and `.stdout` links. Keep these guides in sync whenever a new lesson is introduced in those chapters.
