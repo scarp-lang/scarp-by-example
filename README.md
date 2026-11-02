@@ -2,11 +2,15 @@
 
 **Learn Scarp through practical, runnable code examples.**
 
-[Scarp compiler](https://github.com/scarp-lang/scarp) · [Official documentation](https://github.com/scarp-lang/scarp-docs) · [Project website](https://scarp-lang.github.io/) · [Contribute](CONTRIBUTING.md)
+**[Browse the learning catalog](https://scarp-lang.github.io/scarp-by-example/)** · [Scarp compiler](https://github.com/scarp-lang/scarp) · [Official documentation](https://github.com/scarp-lang/scarp-docs) · [Project website](https://scarp-lang.github.io/) · [Contribute](CONTRIBUTING.md)
 
 Scarp by Example is the hands-on companion to the Scarp programming language. Lessons are arranged from first program to numeric and AI-oriented programming. Every runnable lesson includes a Scarp `.srp` source file, an exact `.stdout` output fixture and a focused explanation in its section's guide.
 
 > **Development-stage language:** Scarp syntax can change between prereleases. This repository follows a **source-pinned compiler checkout** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
+
+## Online lessons
+
+The [searchable lesson catalog](https://scarp-lang.github.io/scarp-by-example/) presents the same source-backed examples and expected output fixtures in a readable website. Scarp code executes locally with the compiler, **not** in the browser. The [Pages workflow](.github/workflows/pages.yml) validates the full lesson suite before publishing.
 
 ## Start here
 
