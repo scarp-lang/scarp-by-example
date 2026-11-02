@@ -1,0 +1,77 @@
+name: Build and publish course catalog
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-catalog-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Verify and generate catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out course
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out source-pinned compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: e4db8e191cd7ea623123cae7348450ca6c95b170
+          path: .compiler
+          persist-credentials: false
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+
+      - name: Unit-test catalog and compiler verifier
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+
+      - name: Build pinned compiler
+        run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
+
+      - name: Verify runnable examples before publication
+        run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp
+
+      - name: Generate static course catalog
+        run: python scripts/build_site.py
+
+      - name: Configure Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Upload verified site
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    name: Publish verified catalog
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
