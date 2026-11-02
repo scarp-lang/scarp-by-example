@@ -100,7 +100,7 @@ def render_catalog() -> tuple[str, int]:
 <h1 id="hero-heading">Learn by reading <span>real code.</span></h1>
 <p class="lead">A practical Scarp curriculum built from actual compiler examples. Each lesson includes the full source and its expected output. No invented syntax or unsupported features.</p>
 <div class="hero-meta"><span>{len(lessons)} verified-source lessons</span><span>{len(by_section)} learning chapters</span><span>English first · Hindi planned</span></div>
-<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
+<p class="translation-link"><a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें · Read beginner lessons in Hindi</a></p>\n<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
 </section>
 <section class="discover" aria-label="Find lessons">
 <label for="search">Find a lesson</label>
