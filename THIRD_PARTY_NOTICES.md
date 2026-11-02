@@ -8,4 +8,6 @@ The 2026-11-02 course expansion imported the following additional compiler fixtu
 
 The next numerical-learning expansion imported eight additional upstream `.srp` programs **and byte-exact matching `.stdout` fixtures** from the same pinned compiler commit `e4db8e191cd7ea623123cae7348450ca6c95b170`: `float_smoothing`, `tile_windows`, `numerical_kernels`, `vector_probabilities`, `matrix_targets`, `matrix_forward`, `log_space` and `coefficient_fit`. They appear as numbered lessons in chapters 04 and 06 and remain Apache-2.0-licensed upstream material; the English and Hindi teaching commentary is original MIT-licensed editorial work.
 
+The language-fundamentals expansion added four more upstream compiler fixtures from exactly the same pinned development revision: `comments`, `bit_fields`, `control_escapes` and `terminal_recursion`. Their original source and byte-exact output are published as numbered beginner and function lessons under the upstream **Apache-2.0 license**; bilingual editorial explanations remain MIT. The `control_escapes.stdout` fixture intentionally contains a raw carriage-return byte, which is not a CRLF line ending.
+
 Do not remove existing copyright notices. Review additional third-party material and its license before merging it.

@@ -46,14 +46,24 @@ def discover_examples(examples_root: Path) -> list[tuple[Path, Path]]:
     return [(p, p.with_suffix(".stdout")) for p in lessons]
 
 
-def verify_one(compiler: Path, lesson: Path, expected_path: Path, timeout: int) -> None:
+def read_expected_stdout(expected_path: Path) -> bytes:
+    """Read a byte-exact UTF-8 fixture, allowing intentional inline CR bytes.
+
+    Reject CRLF line endings to keep fixtures portable between operating systems.
+    An interior carriage return followed by a non-LF byte is real program output.
+    """
     expected = expected_path.read_bytes()
-    if b"\r" in expected:
-        raise VerificationError(f"{expected_path}: expected output must use LF only")
+    if b"\r\n" in expected:
+        raise VerificationError(f"{expected_path}: expected output must use LF line endings (not CRLF)")
     try:
         expected.decode("utf-8")
     except UnicodeDecodeError as error:
         raise VerificationError(f"{expected_path}: fixture is not valid UTF-8") from error
+    return expected
+
+
+def verify_one(compiler: Path, lesson: Path, expected_path: Path, timeout: int) -> None:
+    expected = read_expected_stdout(expected_path)
     for command in ("check", "run"):
         try:
             result = subprocess.run(

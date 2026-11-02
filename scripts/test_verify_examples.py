@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from verify_examples import VerificationError, discover_examples
+from verify_examples import VerificationError, discover_examples, read_expected_stdout
 
 
 class DiscoveryTests(unittest.TestCase):
@@ -56,6 +56,30 @@ class DiscoveryTests(unittest.TestCase):
         (nested / "02-extra.stdout").write_text("1\n")
         with self.assertRaisesRegex(VerificationError, "directly in its section"):
             discover_examples(self.examples)
+
+
+
+class FixtureByteTests(unittest.TestCase):
+    def test_literal_carriage_return_is_valid_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "control.stdout"
+            expected = b"line\rstart\n"
+            fixture.write_bytes(expected)
+            self.assertEqual(read_expected_stdout(fixture), expected)
+
+    def test_crlf_line_endings_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "crlf.stdout"
+            fixture.write_bytes(b"first\r\nsecond\r\n")
+            with self.assertRaisesRegex(VerificationError, "CRLF"):
+                read_expected_stdout(fixture)
+
+    def test_invalid_utf8_fixture_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "binary.stdout"
+            fixture.write_bytes(b"invalid \xff")
+            with self.assertRaisesRegex(VerificationError, "UTF-8"):
+                read_expected_stdout(fixture)
 
 
 if __name__ == "__main__":

@@ -41,7 +41,14 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
     rel = source.relative_to(ROOT).as_posix()
     title = source.stem.split("-", 1)[1].replace("-", " ").title()
     raw_source = source.read_text(encoding="utf-8")
-    raw_output = stdout.read_text(encoding="utf-8")
+    raw_output = stdout.read_bytes().decode("utf-8")
+    # HTML parsers normalize raw carriage returns; show the control character visibly.
+    visible_output = raw_output.replace("\r", r"\r")
+    output_note = (
+        '<p class="code-label">Literal carriage return shown as \\r for readability.</p>'
+        if "\r" in raw_output
+        else ""
+    )
     search_text = f"{title} {description} {source.parent.name}"
     return (
         f'<article class="lesson" data-search="{escape(search_text.lower())}">'
@@ -52,7 +59,7 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
         f'<p class="code-label">Scarp (.srp)</p>'
         f'<pre><code>{escape(raw_source)}</code></pre>'
         f'<p class="code-label">Expected stdout</p>'
-        f'<pre><code>{escape(raw_output)}</code></pre>'
+        f'{output_note}<pre><code>{escape(visible_output)}</code></pre>'
         f'</details></article>'
     )
 
