@@ -18,6 +18,9 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 | [10 · Unicode text](10-unicode-text.srp) | Text length, byte count, code points and searches | `6 10 127757`, `5 true`, `true true` |
 | [11 · Scalar conversions](11-scalar-conversions.srp) | Explicit numeric conversion | `10.5 12 0` |
 | [12 · Escapes](12-escapes.srp) | Newline, quotation mark, and backslash escapes | Four visible output lines |
+| [13 · Comments](13-comments.srp) | `//` line comments, strings containing comment markers and whitespace between tokens | `// inside a string is text`, blank line, then `done` |
+| [14 · Bitwise fields](14-bitwise-fields.srp) | Hex/binary integer literals, `|=`, `&`, `>>>`, `<<` and `~` | `3`, `10`, signed 64-bit minimum, `-1` |
+| [15 · Control escapes](15-control-escapes.srp) | Tab, literal carriage return and escaped backslashes | Three output lines with exact tab and inline CR bytes |
 
 **Run any lesson:** `scarp run examples/01-basics/01-hello.srp` from this repository root, with the compiler executable on `PATH`. Or use its absolute path.
 
@@ -33,7 +36,10 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 - **09–10:** Unicode characters and UTF-8 bytes are different counting units. Compare `text_len` and `text_bytes` before assuming indexing is byte-based.
 - **11:** Conversions require explicit calls (`to_float` and `to_integer`), not a silent change of numeric type.
 - **12:** An escape sequence in a quoted string can represent a newline or literal backslash.
+- **13:** `//` starts a comment **outside** a quoted string. The compiler also accepts `println` in this pinned revision; the statement name can be separated from its parentheses by a comment and whitespace.
+- **14:** `0xA0 | 0b0011` is `0xA3` (163 decimal). Applying `& 0x0F` isolates the lowest four bits and produces 3; `>>> 4` gives 10. `1 << 63` prints `-9223372036854775808` in this signed 64-bit example and `~0` gives -1. Bitwise operators on integer representations are **not** the same as `and`/`or` on boolean values.
+- **15:** `\\t` embeds a tab and `\\r` embeds an actual carriage-return byte. Text editors and terminals may display a carriage return differently. The byte-exact fixture is authoritative; the website deliberately displays it as a visible `\\r` sequence without rewriting the file.
 
 **Practice:** predict the stdout before opening a fixture, then run `scarp check` and `scarp run` on the lesson.
 
-**Note:** `bind` is not a mutable variable. `var` allows reassignment. `print` is the current compiler syntax; earlier prereleases used `println`.
+**Note:** `bind` is not a mutable variable. `var` allows reassignment. The pinned compiler accepts both `print` and `println` in these examples; older releases may differ.
