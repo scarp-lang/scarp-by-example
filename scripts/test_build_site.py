@@ -40,6 +40,20 @@ class SiteTests(unittest.TestCase):
             self.assertNotIn('print("<unsafe>");', markup)
             self.assertIn("Example &amp; test", markup)
 
+    def test_carriage_return_is_displayed_without_rewriting_fixture(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            base = Path(directory)
+            src = base / "01-control.srp"
+            out = base / "01-control.stdout"
+            src.write_text('print("line\\rstart");\n', encoding="utf-8")
+            original = b"line\rstart\n"
+            out.write_bytes(original)
+            markup = render_lesson(src, out, "Control escape")
+            self.assertIn(r"line\rstart", markup)
+            self.assertNotIn("line\rstart", markup)
+            self.assertIn("Literal carriage return", markup)
+            self.assertEqual(out.read_bytes(), original)
+
     def test_section_guides_describe_own_lessons(self):
         section = ROOT / "examples" / "01-basics"
         self.assertIn("Scarp basics", section_heading(section / "README.md"))
