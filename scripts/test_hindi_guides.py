@@ -21,6 +21,7 @@ class HindiTranslationCoverageTests(unittest.TestCase):
             with self.subTest(chapter=chapter):
                 content = (GUIDE_ROOT / guide_name).read_text(encoding="utf-8")
                 links = re.findall(r"\]\(\.\./\.\./(examples/[^)]+)\)", content)
+                links = [p for p in links if p.endswith((".srp", ".stdout"))]
                 actual_sources = {p for p in links if p.endswith(".srp")}
                 actual_outputs = {p for p in links if p.endswith(".stdout")}
                 chapter_entries = [
