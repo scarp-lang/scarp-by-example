@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import re
 import shutil
 from pathlib import Path
@@ -66,6 +67,10 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
 
 def render_catalog() -> tuple[str, int]:
     lessons = discover_examples(EXAMPLES)
+    target = json.loads((ROOT / "docs" / "compiler-target.json").read_text(encoding="utf-8"))
+    target_label = escape(target["version"])
+    target_source = escape(target["source_commit"][:12])
+    target_url = escape(target["release_url"])
     by_section: dict[str, list[tuple[Path, Path]]] = {}
     for lesson, fixture in lessons:
         by_section.setdefault(lesson.parent.name, []).append((lesson, fixture))
@@ -112,7 +117,8 @@ def render_catalog() -> tuple[str, int]:
 <h1 id="hero-heading">Learn by reading <span>real code.</span></h1>
 <p class="lead">A practical Scarp curriculum built from actual compiler examples. Each lesson includes the full source and its expected output. No invented syntax or unsupported features.</p>
 <div class="hero-meta"><span>{len(lessons)} verified-source lessons</span><span>{len(by_section)} learning chapters</span><span>English and Hindi · all chapters</span></div>
-<p class="translation-link"><a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें · Read all lessons in Hindi</a></p>\n<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
+<p class="translation-link"><a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें · Read all lessons in Hindi</a></p>
+<p class="translation-link">Compiler target: <a href="{target_url}">Scarp v{target_label} (prerelease)</a> · pinned commit <code>{target_source}</code></p>\n<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
 </section>
 <section class="discover" aria-label="Find lessons">
 <label for="search">Find a lesson</label>

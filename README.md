@@ -6,7 +6,7 @@
 
 Scarp by Example is the hands-on companion to the Scarp programming language. Lessons are arranged from first program to numeric and AI-oriented programming. Every runnable lesson includes a Scarp `.srp` source file, an exact `.stdout` output fixture and a focused explanation in its section's guide.
 
-> **Development-stage language:** Scarp syntax can change between prereleases. This repository follows a **source-pinned compiler checkout** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
+> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.5-alpha.3 at exact source commit `7715c28`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
 
 ## Online lessons
 
@@ -15,7 +15,7 @@ The [searchable lesson catalog](https://scarp-lang.github.io/scarp-by-example/) 
 ## Start here
 
 1. Install [Rust and Cargo](https://www.rust-lang.org/tools/install) to run the current compiler source, or select a supported binary from [Scarp prereleases](https://github.com/scarp-lang/scarp/releases).
-2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp) and build it with `cargo build --locked`. Confirm `target/debug/scarp --version`.
+2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact tested commit `7715c28df09c7703b39e14fddb963275b25df476`, then build it with `cargo build --locked --offline`. Confirm `target/debug/scarp --version` reports `scarp 0.0.5-alpha.3`.
 3. Clone this repository. From your Scarp checkout, run the binary on a lesson, using the **absolute path** to its `.srp` file: `./target/debug/scarp run /path/to/scarp-by-example/examples/01-basics/01-hello.srp`.
 4. Compare output with the lesson's adjacent `.stdout` file. On Windows, use `target\\debug\\scarp.exe`.
 
@@ -37,7 +37,7 @@ For modules, the compiler resolves imports relative to the lesson file. Keep the
 
 ## Verification
 
-The [example verification workflow](.github/workflows/examples.yml) builds a specific commit of the official compiler and checks each lesson's compilation and exact stdout on GitHub-hosted runners. Run the same checks locally:
+The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.5-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.3) from its immutable source commit of the official compiler and checks each lesson's compilation and exact stdout on GitHub-hosted runners. Run the same checks locally:
 
 ```sh
 python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp/target/debug/scarp

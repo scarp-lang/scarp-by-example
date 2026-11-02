@@ -1,6 +1,7 @@
 """Tests for the deterministic, safe static course generator."""
 
 import tempfile
+import json
 import unittest
 from pathlib import Path
 
@@ -24,6 +25,10 @@ class SiteTests(unittest.TestCase):
         self.assertNotIn('src="https://', page)
         self.assertIn("हिन्दी में सीखें", page)
         self.assertIn("/docs/hi/README.md", page)
+        target = json.loads((ROOT / "docs" / "compiler-target.json").read_text(encoding="utf-8"))
+        self.assertIn("Scarp v" + target["version"], page)
+        self.assertIn(target["source_commit"][:12], page)
+        self.assertIn(target["release_url"], page)
         for section in sorted({src.parent.name for src, _ in discover_examples(EXAMPLES)}):
             self.assertIn(f"/docs/hi/{section}.md", page)
         self.assertEqual(page.count('lang="hi"'), 7)

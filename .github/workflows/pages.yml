@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: e4db8e191cd7ea623123cae7348450ca6c95b170
+          ref: 7715c28df09c7703b39e14fddb963275b25df476
           path: .compiler
           persist-credentials: false
 
