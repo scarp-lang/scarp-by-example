@@ -13,4 +13,4 @@ The source lesson and its stdout fixture are locale-neutral. Translation changes
 
 ## Published Hindi guides
 
-[Hindi learning index](../hi/README.md) covers all 28 lessons across chapters 01–06, linking to the same original `.srp` and `.stdout` files. The translation parity unit test verifies that every current lesson is linked exactly once by source and stdout. When adding a new lesson or chapter, add its Hindi companion coverage in the same PR, or explicitly propose a policy change with clear untranslated status instead of silently omitting content.
+[Hindi learning index](../hi/README.md) covers all published lessons across chapters 01–06, linking to the same original `.srp` and `.stdout` files. The translation parity unit test verifies that every current lesson is linked exactly once by source and stdout. When adding a new lesson or chapter, add its Hindi companion coverage in the same PR, or explicitly propose a policy change with clear untranslated status instead of silently omitting content.

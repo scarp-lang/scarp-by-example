@@ -48,6 +48,28 @@ class DiscoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(VerificationError, "numeric prefixes"):
             discover_examples(self.examples)
 
+    def test_rejects_duplicate_lesson_numbers_in_a_chapter(self):
+        self.add_lesson("01-hello")
+        self.add_lesson("01-another")
+        with self.assertRaisesRegex(VerificationError, "unique and contiguous"):
+            discover_examples(self.examples)
+
+    def test_rejects_numbering_gap(self):
+        self.add_lesson("01-hello")
+        self.add_lesson("03-third")
+        with self.assertRaisesRegex(VerificationError, "unique and contiguous"):
+            discover_examples(self.examples)
+
+    def test_rejects_chapters_not_starting_at_one(self):
+        self.add_lesson("02-second")
+        with self.assertRaisesRegex(VerificationError, "starting at 01"):
+            discover_examples(self.examples)
+
+    def test_accepts_contiguous_numbering(self):
+        self.add_lesson("01-first")
+        self.add_lesson("02-second")
+        self.assertEqual(len(discover_examples(self.examples)), 2)
+
     def test_rejects_nested_runnable_lessons(self):
         self.add_lesson()
         nested = self.examples / "01-basics" / "nested"

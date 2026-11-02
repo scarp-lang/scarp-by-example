@@ -12,6 +12,9 @@ Scarp has early numerical primitives useful for AI-related calculations. **These
 | [06 · Matrix forward pass](06-matrix-forward.srp) | Typed `tile` input, `tileadd`, `tilescale`, `matvec`, bias, `softmax` and contracts | `[0.5, 0.5]` |
 | [07 · Log-space scores](07-log-space.srp) | `logsumexp` and `logsoftmax` without exponential overflow | `0.0`, then `[0.0, -1000.0]` |
 | [08 · Explicit coefficient fitting](08-coefficient-fit.srp) | User-written squared-error loss and gradient steps on small vectors | `true`, `true` for coefficient and loss tolerance tests |
+| [09 · Linear transforms](09-linear-transform.srp) | `matmul` composition of a 2×3 and a 3×2 tile | `tile(2x2)[[58.0, 64.0], [139.0, 154.0]]` |
+| [10 · Class score ties](10-class-score-ties.srp) | `matvec`, `argmax` first-match behavior and `maxval` | `[2.0, 2.0, -1.0] 0 2.0` |
+| [11 · Matrix probabilities](11-matrix-probabilities.srp) | Equal-score `softmax` and categorical-loss tolerance check | `[0.5, 0.5]`, then `true` |
 
 Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repository root. `scarp check PATH` validates source, and the adjacent `.stdout` defines the exact output.
 
@@ -30,3 +33,13 @@ Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repo
 **08 · Explicit coefficient fitting:** The program models `y = coefficient * x` with three toy samples and repeats 40 hand-written gradient steps to reduce the mean-squared error. It tests that the fitted coefficient is close to 2.0 and the error is tiny; the two printed `true` lines indicate those threshold conditions, **not** a universal optimizer, automatic differentiation system, or production training API.
 
 **Try it:** compute the `matvec` scores in lesson 05 on paper; explain why equal class scores yield 0.5 in lesson 06; compare `logsoftmax` with `softmax` conceptually; and identify the lines in lesson 08 where the gradient is **manually computed**.
+
+## Composition, ties and probability checks
+
+**09 · Rectangular matrix composition:** `matmul` composes a 2×3 numeric `tile` and a 3×2 tile into a 2×2 result. The printed first row is `[58.0, 64.0]`; calculate 1×7 + 2×9 + 3×11 to verify 58.0. This shows a matrix primitive, not a general linear-algebra framework.
+
+**10 · Equal class scores:** `matvec` produces `[2.0, 2.0, -1.0]`. `argmax(scores)` returns **index 0**, because equal maximum values select the first occurrence in the pinned compiler; `maxval(scores)` returns 2.0. An index is not a probability or a model confidence score.
+
+**11 · Numerical probabilities:** Applying the identity `tile` to `[0.0, 0.0]` produces equal class scores; `softmax` outputs `[0.5, 0.5]`. `crossentropy(scores, 1)` is checked against 0.6931–0.6932, so the printed `true` demonstrates a numerical tolerance comparison rather than exact floating-point equality. No model training or autograd is involved.
+
+**Practice:** Why does the rectangular product have shape 2×2? Which index wins a tie for first place? Why does the two-class loss test use a range?

@@ -37,12 +37,24 @@ def discover_examples(examples_root: Path) -> list[tuple[Path, Path]]:
         raise VerificationError(
             "orphaned fixtures: " + ", ".join(str(p.relative_to(examples_root)) for p in sorted(orphaned))
         )
+    chapter_numbers: dict[str, list[int]] = {}
     for lesson in lessons:
         relative = lesson.relative_to(examples_root)
         if len(relative.parts) != 2:
             raise VerificationError(f"lesson must live directly in its section: {relative}")
         if not relative.parts[0][:2].isdigit() or not relative.name[:2].isdigit():
             raise VerificationError(f"lesson and section must have numeric prefixes: {relative}")
+        if relative.parts[0][2:3] != "-" or relative.stem[2:3] != "-":
+            raise VerificationError(f"lesson and section must use NN-name prefixes: {relative}")
+        chapter_numbers.setdefault(relative.parts[0], []).append(int(relative.name[:2]))
+    for chapter, values in chapter_numbers.items():
+        found = sorted(values)
+        expected_numbers = list(range(1, len(values) + 1))
+        if found != expected_numbers:
+            raise VerificationError(
+                f"{chapter}: lesson numbers must be unique and contiguous "
+                f"starting at 01; found {found}, expected {expected_numbers}"
+            )
     return [(p, p.with_suffix(".stdout")) for p in lessons]
 
 

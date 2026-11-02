@@ -12,6 +12,9 @@
 | [06 · Tile windows](06-tile-windows.srp) | Windowed vector into a 2×2 `tile`, transpose/column, flatten and `matvec` | Matrix, `[1.0, 3.0]`, then a six-value vector |
 | [07 · Numerical kernels](07-numerical-kernels.srp) | `variance`, `stddev`, `relu`, `sigmoid` and `tanh` on numeric data | `2.0 0.0` and three vectors |
 | [08 · Vector probabilities](08-vector-probabilities.srp) | Explicit weight normalization, `softmax`, and probability checks | Two probability vectors, stable extreme-score results and `true` tests |
+| [09 · Vector norm](09-vector-norm.srp) | `norm` length and immutable `normalize` for a 3-4 vector | `5.0`, then `[0.6, 0.8]` |
+| [10 · Float refinement](10-float-refinement.srp) | Newton-style square-root refinement, bounded steps, typed contracts | `sqrt2 checked true`, then `sqrt9 3.0` |
+| [11 · Vector allocation](11-vector-allocation.srp) | `fill`, `len` and `sum` on a three-element numerical vector | `3.0 3` |
 
 Run `scarp run examples/04-collections/01-vectors.srp` from this repository root or pass an absolute lesson path. Compare the exact `.stdout` beside each file.
 
@@ -28,3 +31,13 @@ Run `scarp run examples/04-collections/01-vectors.srp` from this repository root
 **08 · Vector probabilities:** Normalizing [2, 3, 5] produces weights summing to approximately 1; `softmax` converts scores into a probability-like vector. **Floating-point output is not always a short decimal**: the exact second element is printed as `0.30000000000000004`. The examples test a tolerance rather than assuming exact sum equality. Extreme positive/negative scores test numerical stability.
 
 **Try it:** before opening the fixtures, predict why the smoothing estimate rises toward 28.0; why the tile window excludes sentinel values; and why the softmax result for four identical scores is 0.25 at each index.
+
+## Norms, refinement and allocation
+
+**09 · Vector norm:** `norm([3.0, 4.0])` returns the Euclidean length 5.0. `normalize` produces the new unit-length vector `[0.6, 0.8]` without mutating the original binding. Check by computing `3 / 5` and `4 / 5` on paper.
+
+**10 · Float refinement:** `pure funcra root` estimates a positive number's square root using a fixed number of Newton updates and typed parameters. The `needs` preconditions require a positive input and nonnegative step count; `ensures` requires a positive result. The lesson **checks** a tolerance for √2 rather than asserting an exact irrational number, and obtains 3.0 for √9. This is a numerical demonstration, not a general floating-point math library.
+
+**11 · Vector creation:** `fill(1.0, 3)` generates three floating-point values. `sum` gives 3.0 and `len` gives 3. An upstream source comment discusses its payload-byte representation, but that detail is not asserted as a cross-platform memory API by this course.
+
+**Practice:** Which input to `normalize` has length five? How many Newton update steps are used by default? Why should `len(numbers)` be 3?
