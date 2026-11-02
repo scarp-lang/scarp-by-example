@@ -12,4 +12,6 @@ The language-fundamentals expansion added four more upstream compiler fixtures f
 
 The next numerical-curriculum batch added six more unmodified upstream compiler programs with matching byte-exact output fixtures, sourced from the same pinned `e4db8e191cd7ea623123cae7348450ca6c95b170` revision: `scaled_norm`, `float_refinement`, `vector_allocation`, `linear_transform`, `matrix_classification`, and `matrix_probabilities`. They are assigned new lesson numbers in chapters 04 and 06, preserving upstream Apache-2.0 licensing; new bilingual explanation text is original MIT-licensed material. The upstream `vector_allocation` source includes an implementation-specific byte count as a comment; the lesson does not promise a general memory-layout API.
 
+The first example requiring the later published Scarp `v0.0.5-alpha.3` source (`7715c28df09c7703b39e14fddb963275b25df476`) is the **text construction** lesson `examples/01-basics/16-text-construction.srp`, copied unchanged with exact `.stdout` from upstream `examples/text_construction.*`. This upstream program and output remain Apache-2.0-licensed. The new English/Hindi teaching text is original MIT-licensed editorial work. Earlier pinned `e4db8e1` builds may lack these new string-producing intrinsics.
+
 Do not remove existing copyright notices. Review additional third-party material and its license before merging it.

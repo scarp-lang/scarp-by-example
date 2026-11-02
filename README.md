@@ -25,7 +25,7 @@ For modules, the compiler resolves imports relative to the lesson file. Keep the
 
 | Section | Topics | Status |
 | --- | --- | --- |
-| [01 · Basics](examples/01-basics/README.md) | Output, bindings, scopes, Unicode, conversions, comments and bitwise operations | Runnable lessons |
+| [01 · Basics](examples/01-basics/README.md) | Output, bindings, scopes, Unicode construction, conversions, comments and bitwise operations | Runnable lessons |
 | [02 · Control flow](examples/02-control-flow/README.md) | Conditions, while, counted repeat | Runnable lessons |
 | [03 · Functions](examples/03-functions/README.md) | Typed functions, recursion, executable contracts and accumulator recursion | Runnable lessons |
 | [04 · Numerical collections](examples/04-collections/README.md) | Numeric vectors, norms, refinement, windows and numeric kernels | Runnable lessons |
@@ -47,6 +47,6 @@ No network calls or external Python packages are required by the verifier. A les
 
 ## Translations and contributions
 
-English remains the canonical source language. **[Read all 46 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture; neither the Scarp language syntax nor the verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
+English remains the canonical source language. **[Read all 47 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture; neither the Scarp language syntax nor the verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
 
 **License:** [MIT](LICENSE) for this learning repository. Some compiler-source examples originated in the separately licensed [Scarp compiler repository](https://github.com/scarp-lang/scarp); preserve upstream attribution and applicable licensing when reusing material. No stable Scarp by Example release is announced.
