@@ -1,0 +1,10 @@
+var greeting = "Hello from Scarp!";
+bind original = greeting;
+print(greeting);
+greeting = "नमस्ते 🌍";
+{
+    bind greeting = 42;
+    print(greeting);
+}
+print(original);
+print(greeting);

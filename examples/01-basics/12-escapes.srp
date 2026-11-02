@@ -1,0 +1,3 @@
+print("line one\nline two");
+print("a quote: \"Scarp\"");
+print("a backslash: \\");
