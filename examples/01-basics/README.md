@@ -21,6 +21,7 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 | [13 · Comments](13-comments.srp) | `//` line comments, strings containing comment markers and whitespace between tokens | `// inside a string is text`, blank line, then `done` |
 | [14 · Bitwise fields](14-bitwise-fields.srp) | Hex/binary integer literals, `|=`, `&`, `>>>`, `<<` and `~` | `3`, `10`, signed 64-bit minimum, `-1` |
 | [15 · Control escapes](15-control-escapes.srp) | Tab, literal carriage return and escaped backslashes | Three output lines with exact tab and inline CR bytes |
+| [16 · Text construction](16-text-construction.srp) | `text_concat`, Unicode-scalar `text_slice`, `text_repeat`, length vs UTF-8 bytes | `Hello, 🌍`, `🌍🌍🌍`, `8 11` |
 
 **Run any lesson:** `scarp run examples/01-basics/01-hello.srp` from this repository root, with the compiler executable on `PATH`. Or use its absolute path.
 
@@ -39,6 +40,8 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 - **13:** `//` starts a comment **outside** a quoted string. The compiler also accepts `println` in this pinned revision; the statement name can be separated from its parentheses by a comment and whitespace.
 - **14:** `0xA0 | 0b0011` is `0xA3` (163 decimal). Applying `& 0x0F` isolates the lowest four bits and produces 3; `>>> 4` gives 10. `1 << 63` prints `-9223372036854775808` in this signed 64-bit example and `~0` gives -1. Bitwise operators on integer representations are **not** the same as `and`/`or` on boolean values.
 - **15:** `\\t` embeds a tab and `\\r` embeds an actual carriage-return byte. Text editors and terminals may display a carriage return differently. The byte-exact fixture is authoritative; the website deliberately displays it as a visible `\\r` sequence without rewriting the file.
+
+- **16:** `text_concat` joins strings, `text_slice(text, 7, 1)` selects the globe emoji as **one Unicode scalar value**, and `text_repeat` makes three copies. `text_len("Hello, 🌍")` counts 8 Unicode scalars, but `text_bytes` reports 11 UTF-8 bytes because the globe uses four bytes. This does not promise grapheme-cluster-aware slicing or Unicode normalization.
 
 **Practice:** predict the stdout before opening a fixture, then run `scarp check` and `scarp run` on the lesson.
 
