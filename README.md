@@ -25,11 +25,11 @@ For modules, the compiler resolves imports relative to the lesson file. Keep the
 
 | Section | Topics | Status |
 | --- | --- | --- |
-| [01 · Basics](examples/01-basics/README.md) | Output, bindings, mutability, arithmetic, booleans | Runnable lessons |
+| [01 · Basics](examples/01-basics/README.md) | Output, bindings, scopes, Unicode and conversions | Runnable lessons |
 | [02 · Control flow](examples/02-control-flow/README.md) | Conditions, while, counted repeat | Runnable lessons |
-| [03 · Functions](examples/03-functions/README.md) | Typed functions, recursion | Runnable lessons |
+| [03 · Functions](examples/03-functions/README.md) | Typed functions, recursion, executable contracts | Runnable lessons |
 | [04 · Numerical collections](examples/04-collections/README.md) | Numeric vectors, windows, typed declarations | Runnable lessons |
-| [05 · Modules](examples/05-modules/README.md) | Imports and exported definitions | Runnable lessons |
+| [05 · Modules](examples/05-modules/README.md) | Imports and exported definitions, constants | Runnable lessons |
 | [06 · AI foundations](examples/06-ai-foundations/README.md) | Matrix inference, explicit loss gradients | Runnable lessons |
 | [Future topics](docs/roadmap.md) | Structured errors, general collections, async, networking, agents | Not taught as implemented |
 

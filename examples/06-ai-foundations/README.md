@@ -7,7 +7,10 @@ Scarp has early numerical primitives useful for AI-related calculations. **These
 | [01 · Matrix inference](01-matrix-inference.srp) | Matrix/tile construction and matrix-vector multiplication | `[4.0, 1.0]` |
 | [02 · Classification gradient](02-classification-gradient.srp) | One-hot target and **explicit** categorical-loss gradient | `[0.0, 1.0, 0.0]`, `[0.5, -0.5]`, `0.0` |
 | [03 · Classification loss](03-classification-loss.srp) | Scalar categorical loss and selecting maximum score index | `0.0`, `-0.0`, `1` |
+| [04 · Score selection](04-score-selection.srp) | Deterministic `argmax`/`argmin` and extremum values | `1 3.0`, then `0 1.0` |
 
 Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repository root. `scarp check PATH` validates source, and the adjacent `.stdout` defines the exact output.
 
 **Important:** computed gradients are explicit compiler functions; these examples do **not** imply an automatic differentiation engine or a production-grade model deployment stack. Avoid drawing conclusions about real-world model quality from toy numeric inputs.
+
+**New lesson:** [04 · Score selection](04-score-selection.srp) compares scores where the maximum appears twice. The example demonstrates the first-match tie behavior of the current `argmax` implementation; it does **not** train or load a model.
