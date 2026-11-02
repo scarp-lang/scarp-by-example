@@ -16,6 +16,6 @@ This page separates course design from compiler implementation. A planned lesson
 
 ## Website
 
-An interactive learning site is a future enhancement. Source lessons and CI are authoritative. A site must derive published examples from verified files, preserve locale parity, and avoid exposing planned syntax as executable.
+The [static, searchable learning catalog](https://scarp-lang.github.io/scarp-by-example/) is deployed using GitHub Actions after validating all runnable examples with the pinned compiler. Source lessons and CI remain authoritative. Browser-based Scarp execution, richer interactivity and bilingual localization are future enhancements; the catalog must not present unimplemented syntax as runnable.
 
 See [feature matrix](https://github.com/scarp-lang/scarp/blob/main/docs/development/feature-matrix.md) for upstream implementation status.
