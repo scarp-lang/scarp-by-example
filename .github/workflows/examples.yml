@@ -1,0 +1,56 @@
+name: Verify Scarp examples
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: example-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  examples:
+    name: Examples / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out pinned Scarp compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: e4db8e191cd7ea623123cae7348450ca6c95b170
+          path: .compiler
+          persist-credentials: false
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+
+      - name: Unit-test verifier
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+
+      - name: Build compiler from pinned source
+        run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
+
+      - name: Check every source and exact stdout
+        if: runner.os != 'Windows'
+        run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp
+
+      - name: Check every source and exact stdout (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp.exe
