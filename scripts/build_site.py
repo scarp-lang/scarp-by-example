@@ -72,10 +72,15 @@ def render_catalog() -> tuple[str, int]:
             for src, out in pairs
         )
         guide_url = REPOSITORY + "/blob/main/examples/" + section + "/README.md"
+        hindi_guide = ROOT / "docs" / "hi" / (section + ".md")
+        if not hindi_guide.is_file():
+            raise ValueError(f"missing Hindi chapter for {section}")
+        hindi_url = REPOSITORY + "/blob/main/docs/hi/" + section + ".md"
         sections.append(
             f'<section class="section" aria-label="{escape(heading)}">'
             f'<div class="section-heading"><h2>{escape(heading)}</h2>'
-            f'<a href="{escape(guide_url)}">Read chapter guide</a></div>'
+            f'<a href="{escape(guide_url)}">Read chapter guide</a>'
+            f'<a lang="hi" href="{escape(hindi_url)}">हिन्दी अध्याय</a></div>'
             f'<div class="lesson-grid">{cards}</div></section>'
         )
     content = "\n".join(sections)
@@ -99,8 +104,8 @@ def render_catalog() -> tuple[str, int]:
 <p class="eyebrow">OPEN-SOURCE SCARP LEARNING</p>
 <h1 id="hero-heading">Learn by reading <span>real code.</span></h1>
 <p class="lead">A practical Scarp curriculum built from actual compiler examples. Each lesson includes the full source and its expected output. No invented syntax or unsupported features.</p>
-<div class="hero-meta"><span>{len(lessons)} verified-source lessons</span><span>{len(by_section)} learning chapters</span><span>English first · Hindi planned</span></div>
-<p class="translation-link"><a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें · Read beginner lessons in Hindi</a></p>\n<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
+<div class="hero-meta"><span>{len(lessons)} verified-source lessons</span><span>{len(by_section)} learning chapters</span><span>English and Hindi · all chapters</span></div>
+<p class="translation-link"><a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें · Read all lessons in Hindi</a></p>\n<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
 </section>
 <section class="discover" aria-label="Find lessons">
 <label for="search">Find a lesson</label>

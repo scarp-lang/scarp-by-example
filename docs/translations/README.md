@@ -1,6 +1,6 @@
 # Localization / स्थानीयकरण
 
-English is the canonical teaching text during initial development. Hindi explanations are planned.
+English is the canonical teaching text; Hindi companion guides are available for all six currently published chapters.
 
 Rules for translations:
 - Keep section and lesson IDs aligned across locales.
@@ -13,4 +13,4 @@ The source lesson and its stdout fixture are locale-neutral. Translation changes
 
 ## Published Hindi guides
 
-[Hindi learning index](../hi/README.md) now covers every lesson of chapters 01 and 02 using original `.srp` and `.stdout` links. Keep these guides in sync whenever a new lesson is introduced in those chapters.
+[Hindi learning index](../hi/README.md) covers all 28 lessons across chapters 01–06, linking to the same original `.srp` and `.stdout` files. The translation parity unit test verifies that every current lesson is linked exactly once by source and stdout. When adding a new lesson or chapter, add its Hindi companion coverage in the same PR, or explicitly propose a policy change with clear untranslated status instead of silently omitting content.
