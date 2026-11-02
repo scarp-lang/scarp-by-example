@@ -43,7 +43,7 @@ class SiteTests(unittest.TestCase):
     def test_build_creates_static_artifacts(self):
         with tempfile.TemporaryDirectory() as directory:
             total = build(Path(directory))
-            self.assertEqual(total, 18)
+            self.assertEqual(total, len(discover_examples(EXAMPLES)))
             page = (Path(directory) / "index.html").read_text(encoding="utf-8")
             self.assertIn("Scarp by Example", page)
             self.assertTrue((Path(directory) / "styles.css").is_file())
