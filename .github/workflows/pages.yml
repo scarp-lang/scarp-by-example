@@ -46,7 +46,7 @@ jobs:
       - name: Test local progress tracking (no external packages)
         run: |
           node --check site/progress.js
-          node --test site/test_progress.cjs
+          node --test site/test_progress.cjs site/test_progress_dom.cjs
 
       - name: Build pinned compiler
         run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
