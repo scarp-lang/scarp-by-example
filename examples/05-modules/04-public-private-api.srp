@@ -1,0 +1,2 @@
+import "_support/inspection.srp" as tools;
+print(tools.label, tools.adjusted(39));
