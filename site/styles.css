@@ -203,3 +203,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Non-JavaScript visitors can still follow every chapter and lesson link. */
+.theme-button, .copy-button, #lesson-search { display: none; }
+html.js-ready .theme-button, html.js-ready .copy-button { display: inline-flex; }
+html.js-ready #lesson-search { display: block; }
