@@ -9,9 +9,9 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `index.html` | Homepage, six chapter cards and a client-side lesson finder |
 | `chapters/NN-topic/index.html` | Chapter overview with links to its runnable lessons |
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
-| `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
+| `projects/index.html` | Source-backed English/Hindi guide to published alpha.4 `create`, project `verify` and `launch` |\n| `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
 
-A course with 50 runnable examples produces **57 HTML documents** (home, six chapters, fifty lessons). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
+A course with 50 runnable examples produces **58 HTML documents** (home, six chapters, fifty lessons and one project workflow page). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
 
 ## Browser behavior
 
@@ -19,7 +19,7 @@ The theme toggle stores a preference locally when available; the initial dark de
 
 Displayed source is escaped as text, not evaluated. Control-character output such as a literal carriage return is rendered visibly as `\\r`, without rewriting the original fixture. No code is executed in the browser.
 
-The website renders English descriptions and documented expected results directly from the chapter tables. Hindi notes and practice questions are extracted from the six authoritative Hindi Markdown chapter guides. The generator rejects missing, duplicated, misnumbered or wrongly linked notes, rather than publishing partial translations. Original chapter guides remain linked for context. Scarp is prerelease software; all examples are pinned to the exact compiler commit in `docs/compiler-target.json`.
+The project page reads an actual checked-in `Scarp.project`, `.srp` file and exact stdout fixture. It is not counted as a numbered lesson, and includes no simulated browser execution.\n\nThe website renders English descriptions and documented expected results directly from the chapter tables. Hindi notes and practice questions are extracted from the six authoritative Hindi Markdown chapter guides. The generator rejects missing, duplicated, misnumbered or wrongly linked notes, rather than publishing partial translations. Original chapter guides remain linked for context. Scarp is prerelease software; all examples are pinned to the exact compiler commit in `docs/compiler-target.json`.
 
 ## Build and test
 
