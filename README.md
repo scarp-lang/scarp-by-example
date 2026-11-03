@@ -10,9 +10,11 @@ Scarp by Example is the hands-on companion to the Scarp programming language. Le
 
 ## Online lessons
 
-The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provides **a dedicated URL for every runnable lesson**, plus six chapter overview pages, source code, byte-exact expected output, previous/next navigation, English/Hindi explanations with exercises, bilingual lesson search, and dark/light themes. It remains a static GitHub Pages site: Scarp code executes locally with the compiler, **not** in the browser. The [Pages workflow](.github/workflows/pages.yml) validates all lessons before publishing.
+The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provides **a dedicated URL for every runnable lesson**, plus six chapter overview pages, source code, byte-exact expected output, previous/next navigation, English/Hindi explanations with exercises, bilingual lesson search, optional **on-device lesson completion and resume**, and dark/light themes. It remains a static GitHub Pages site: Scarp code executes locally with the compiler, **not** in the browser. The [Pages workflow](.github/workflows/pages.yml) validates all lessons before publishing.
 
 **Scarp-first CLI quickstart:** [English guide](docs/cli-quickstart.md) · [हिन्दी गाइड](docs/hi/cli-quickstart.md). Static `verify` is different from the older `check`, which can evaluate runtime expressions.
+
+**Local progress:** On a lesson page, choose **Mark lesson complete** to save that lesson's ID in this browser only. The homepage shows overall completion and lets you resume the next unfinished lesson or clear your saved progress. Nothing is sent to the server, and no account is needed. On browsers without local storage, normal lesson navigation still works.
 
 **Website navigation:** Open a chapter from the home page, then select an example. For a direct link, use a path like [01 · Hello](https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/). The same source and output fixtures remain in Git; [site development notes](site/README.md) document the generated routes.
 
