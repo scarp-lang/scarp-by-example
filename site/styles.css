@@ -214,3 +214,88 @@ html.js-ready #lesson-search { display: block; }
 .code-panel .syntax-string { color: #99e1b4; }
 .code-panel .syntax-number { color: #f6c28b; }
 .code-panel .syntax-comment { color: #a5b7d0; font-style: italic; }
+
+
+/* Bilingual explanations use the existing, source-linked chapter curriculum.
+   Both languages stay visible without JavaScript and on printed pages. */
+.lesson-notes {
+  margin-top: 1.45rem;
+  padding: clamp(1.1rem, 2.3vw, 1.8rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.notes-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.15rem;
+  margin-bottom: 1.2rem;
+}
+.notes-heading h2 { font-size: 1.55rem; margin: .3rem 0 0; }
+.language-switch { display: none; gap: .35rem; padding: .3rem; border: 1px solid var(--line); background: var(--surface-alt); border-radius: 12px; }
+html.js-ready .language-switch { display: flex; }
+.note-lang-button {
+  border: 1px solid transparent; border-radius: 9px;
+  padding: .45rem .95rem; background: transparent; color: var(--muted);
+  font: 700 .87rem/1.4 system-ui, sans-serif; cursor: pointer;
+}
+.note-lang-button[aria-pressed="true"] {
+  background: var(--surface); color: var(--text);
+  border-color: var(--line); box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
+.note-content { color: var(--muted); max-width: 88ch; }
+.note-content + .note-content { padding-top: 1rem; margin-top: 1.2rem; border-top: 1px dashed var(--line); }
+.note-content h3 { margin: 1.25rem 0 .5rem; color: var(--text); font-size: 1.1rem; }
+.note-content h3:first-child { margin-top: .3rem; }
+.note-content p { margin: .7rem 0 1rem; line-height: 1.8; }
+.note-content strong { color: var(--text); }
+.note-content code {
+  overflow-wrap: anywhere;
+  color: var(--accent-strong);
+  background: var(--surface-alt);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: .05rem .3rem;
+  font: .88em/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.note-content .note-command {
+  margin: 1rem 0;
+  max-width: 100%;
+  overflow-x: auto;
+  background: var(--code);
+  color: #dae8ff;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: .87rem;
+}
+.note-content .note-command code {
+  border: 0; padding: 0; background: none; color: inherit;
+  white-space: pre; overflow-wrap: normal;
+}
+.practice-challenge {
+  background: var(--surface-alt);
+  border-left: 3px solid var(--mint);
+  border-radius: 0 10px 10px 0;
+  padding: .7rem 1rem;
+  margin: 1.25rem 0;
+}
+.practice-challenge p { margin: .3rem 0; }
+.notes-provenance { margin: 1.4rem 0 0; padding-top: 1rem; border-top: 1px solid var(--line); font-size: .84rem; color: var(--muted); }
+@media (max-width: 680px) {
+  .notes-heading { align-items: start; }
+  .notes-heading h2 { font-size: 1.35rem; }
+  .language-switch { width: 100%; }
+  .note-lang-button { flex: 1; }
+}
+@media print {
+  .site-header, .site-footer, .sidebar, .copy-button, .theme-button, .language-switch,
+  .step-nav { display: none !important; }
+  .detail-layout { display: block; }
+  .lesson-notes { break-inside: auto; }
+  .note-content[hidden] { display: block !important; }
+  .code-panel pre { max-height: none; overflow: visible; white-space: pre-wrap; }
+}
