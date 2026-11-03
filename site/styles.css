@@ -208,3 +208,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .theme-button, .copy-button, #lesson-search { display: none; }
 html.js-ready .theme-button, html.js-ready .copy-button { display: inline-flex; }
 html.js-ready #lesson-search { display: block; }
+
+/* Decorative Scarp syntax colors on the dark code canvas. */
+.code-panel .syntax-keyword { color: #b9b5ff; font-weight: 650; }
+.code-panel .syntax-string { color: #99e1b4; }
+.code-panel .syntax-number { color: #f6c28b; }
+.code-panel .syntax-comment { color: #a5b7d0; font-style: italic; }
