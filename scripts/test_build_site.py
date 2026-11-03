@@ -162,8 +162,20 @@ class SiteTests(unittest.TestCase):
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 50)
             self.assertEqual(len({x["url"] for x in search}), 50)
+            self.assertTrue(all(x["hindi_title"] and x["hindi_summary"] for x in search))
+            self.assertIn("पहला Scarp प्रोग्राम", search[0]["hindi_title"])
             self.assertEqual({x["url"] for x in search},
                              {p.relative_to(output).as_posix() for p in pages})
+            # Dedicated language notes exist on every generated lesson page.
+            for lesson_page in pages:
+                markup = lesson_page.read_text(encoding="utf-8")
+                self.assertIn('id="en-notes"', markup, lesson_page)
+                self.assertIn('id="hi-notes"', markup, lesson_page)
+                self.assertIn('data-note-switch="en"', markup, lesson_page)
+                self.assertIn('data-note-switch="hi"', markup, lesson_page)
+                self.assertIn('class="practice-challenge"', markup, lesson_page)
+                self.assertIn('id="lesson-notes"', markup, lesson_page)
+
             for page in output.rglob("index.html"):
                 content = page.read_text(encoding="utf-8")
                 self.assertIn('id="main-content"', content)
@@ -185,6 +197,10 @@ class SiteTests(unittest.TestCase):
             first = output / "lessons/01-basics/01-hello/index.html"
             lesson = first.read_text(encoding="utf-8")
             self.assertIn("EXPECTED OUTPUT", lesson)
+            self.assertIn("पहला Scarp प्रोग्राम", lesson)
+            self.assertIn("What this example teaches", lesson)
+            self.assertIn("Explanation &amp; practice", lesson)
+            self.assertIn('href="#hi-notes"', lesson)
             self.assertIn("scarp verify examples/01-basics/01-hello.srp", lesson)
             self.assertIn("scarp exec examples/01-basics/01-hello.srp", lesson)
             self.assertIn('data-copy="scarp-code"', lesson)

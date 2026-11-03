@@ -9,7 +9,7 @@ Rules for translations:
 - Ask a language reviewer to check technical terms and beginner clarity.
 - Mark untranslated content transparently; do not invent compiler features.
 
-The source lesson and its stdout fixture are locale-neutral. Translation changes must never bypass the compiler validation workflow.
+The source lesson and its stdout fixture are locale-neutral. Translation changes must never bypass the compiler validation workflow. The website now embeds each Hindi lesson's explanation directly into its dedicated page using the matching numbered heading from the corresponding `docs/hi/NN-*.md` chapter guide. Every numbered Hindi section must contain one matching source link, one matching output link, and an `**अभ्यास:**` exercise. `scripts/test_lesson_notes.py` enforces this one-to-one mapping.
 
 ## Published Hindi guides
 
