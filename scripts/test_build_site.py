@@ -5,12 +5,13 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 
 from build_site import (
     build, escape, lesson_description, read_course, render_catalog,
-    render_lesson, section_heading, table_cells,
+    render_lesson, section_heading, table_cells, plain_markdown,
 )
 from verify_examples import EXAMPLES, discover_examples
 
@@ -40,6 +41,10 @@ class SiteTests(unittest.TestCase):
                             chr(96) + ' | result |')
         self.assertEqual(len(cells), 3)
         self.assertIn("|=", cells[1])
+
+    def test_inline_markdown_does_not_leak_into_cards(self):
+        self.assertEqual(plain_markdown("A **real** " + chr(96) + "example" +
+                                        chr(96)), "A real example")
 
     def test_course_has_matching_chapters_and_true_fixtures(self):
         lessons, chapters, target = read_course()
@@ -99,6 +104,18 @@ class SiteTests(unittest.TestCase):
             count = build(output)
             self.assertEqual(count, 50)
             self.assertTrue((output / ".nojekyll").is_file())
+            sitemap = ET.parse(output / "sitemap.xml")
+            locations = [
+                element.text for element in sitemap.findall(
+                    ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
+                )
+            ]
+            self.assertEqual(len(locations), 57)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
+            self.assertIn(
+                "https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/",
+                locations,
+            )
             self.assertTrue((output / "styles.css").is_file())
             self.assertTrue((output / "search.js").is_file())
             self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
@@ -115,6 +132,7 @@ class SiteTests(unittest.TestCase):
                 self.assertIn('id="main-content"', content)
                 self.assertIn('href="#main-content"', content)
                 self.assertIn('id="theme-toggle"', content)
+                self.assertIn('rel="canonical"', content)
                 self.assertNotIn('src="https://', content)
                 links = References()
                 links.feed(content)
@@ -129,7 +147,7 @@ class SiteTests(unittest.TestCase):
                                     f"{page.relative_to(output)} -> {link}")
             first = output / "lessons/01-basics/01-hello/index.html"
             lesson = first.read_text(encoding="utf-8")
-            self.assertIn("Expected stdout", lesson.upper().replace("EXPECTED OUTPUT", "Expected stdout"))
+            self.assertIn("EXPECTED OUTPUT", lesson)
             self.assertIn("scarp verify examples/01-basics/01-hello.srp", lesson)
             self.assertIn("scarp exec examples/01-basics/01-hello.srp", lesson)
             self.assertIn('data-copy="scarp-code"', lesson)
