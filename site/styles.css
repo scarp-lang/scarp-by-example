@@ -299,3 +299,79 @@ html.js-ready .language-switch { display: flex; }
   .note-content[hidden] { display: block !important; }
   .code-panel pre { max-height: none; overflow: visible; white-space: pre-wrap; }
 }
+
+
+/* Optional device-only progress controls. The full course remains visible without JS. */
+.progress-dashboard,
+.chapter-progress-panel,
+.lesson-progress-panel {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.progress-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.7rem 2rem;
+  margin-bottom: 2rem;
+}
+.progress-dashboard h2,
+.lesson-progress-panel h2 { margin: .3rem 0 .55rem; font-size: 1.45rem; }
+.progress-dashboard .progress-disclaimer,
+.progress-dashboard .progress-count,
+.chapter-progress-panel p,
+.lesson-progress-panel p { margin: .35rem 0 .65rem; color: var(--muted); font-size: .88rem; }
+.progress-dashboard progress,
+.chapter-progress-panel progress {
+  display: block; width: min(420px, 100%); height: 13px;
+  border-radius: 100px; overflow: hidden; accent-color: var(--mint);
+}
+.progress-dashboard progress::-webkit-progress-bar,
+.chapter-progress-panel progress::-webkit-progress-bar { background: var(--surface-alt); border-radius: 100px; }
+.progress-dashboard progress::-webkit-progress-value,
+.chapter-progress-panel progress::-webkit-progress-value { background: var(--mint); border-radius: 100px; }
+.progress-dashboard progress::-moz-progress-bar,
+.chapter-progress-panel progress::-moz-progress-bar { background: var(--mint); }
+.progress-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; }
+.progress-actions .primary-button, .progress-actions .secondary-button { font-size: .86rem; padding: .7rem 1rem; }
+.progress-reset, .progress-toggle {
+  cursor: pointer; font: 700 .86rem system-ui, sans-serif;
+  border-radius: 10px; padding: .75rem .9rem;
+  border: 1px solid var(--line); background: var(--surface-alt); color: var(--text);
+}
+.progress-toggle { background: var(--mint); color: #102225; border-color: transparent; }
+.progress-toggle[aria-pressed="true"] { background: var(--surface-alt); color: var(--text); border-color: var(--mint); }
+.progress-reset:hover, .progress-toggle:hover { outline: 1px solid var(--accent); }
+.progress-feedback { width: 100%; color: var(--muted); font-size: .82rem; margin: 0; }
+.chapter-progress { display: inline-block; color: var(--mint); font-size: .76rem; font-weight: 700; margin-top: auto; }
+.chapter-progress:empty { display: none; }
+.chapter-progress-panel {
+  padding: 1rem 1.3rem; margin: 0 0 2rem;
+  display: flex; gap: 1.3rem; justify-content: space-between; align-items: center; flex-wrap: wrap;
+}
+.chapter-progress-panel strong { display: block; margin: .3rem 0 .5rem; font-size: .96rem; }
+.chapter-progress-panel .secondary-button { font-size: .88rem; padding: .7rem 1rem; }
+.lesson-progress-panel {
+  margin: 1.4rem 0; padding: 1.45rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.2rem;
+}
+.lesson-progress-panel .progress-actions { justify-content: flex-start; max-width: 400px; }
+.completed-mark {
+  margin-left: auto; flex: none;
+  width: 21px; height: 21px; border-radius: 50%;
+  background: var(--mint); color: #102225;
+  text-align: center; line-height: 21px; font-size: .8rem; font-weight: 900;
+}
+@media (max-width: 720px) {
+  .progress-dashboard { grid-template-columns: 1fr; padding: 1.35rem; gap: 1rem; }
+  .progress-actions { justify-content: flex-start; }
+  .lesson-progress-panel { display: block; }
+  .lesson-progress-panel .progress-actions { margin-top: 1rem; }
+}
+@media print {
+  .progress-dashboard, .chapter-progress-panel, .lesson-progress-panel,
+  .chapter-progress { display: none !important; }
+}
