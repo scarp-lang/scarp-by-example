@@ -2,10 +2,13 @@
 
 import unittest
 
-from check_prerelease import valid_prerelease_tag
+from check_prerelease import valid_prerelease_tag, check_prerelease
 
 
 class TagPolicyTests(unittest.TestCase):
+    def test_alpha2_release_snapshot_is_complete(self):
+        self.assertIn("v0.1.0-alpha.2", check_prerelease())
+
     def test_accepts_prerelease_tags(self):
         for tag in ("v0.1.0-alpha.1", "v0.1.0-beta.2", "v0.1.0-rc.1"):
             with self.subTest(tag=tag):
