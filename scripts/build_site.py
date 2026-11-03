@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_stdout
+from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -113,6 +114,18 @@ def lesson_description(readme: Path, filename: str) -> str:
     raise ValueError(f"missing {filename} description in {readme}")
 
 
+def lesson_result(readme: Path, filename: str) -> str:
+    """Retrieve the actual documented result from a chapter table, not a guess."""
+    for line in readme.read_text(encoding="utf-8").splitlines():
+        if f"]({filename})" not in line:
+            continue
+        columns = table_cells(line)
+        if len(columns) < 3:
+            raise ValueError(f"{readme}: missing expected result for {filename}")
+        return plain_markdown(columns[2])
+    raise ValueError(f"{readme}: no documented expected result for {filename}")
+
+
 def chapter_url(section: str) -> str:
     return f"chapters/{section}/index.html"
 
@@ -210,11 +223,11 @@ def render_catalog() -> tuple[str, int]:
 <div class="hero-text">
 <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> THE PRACTICAL SCARP HANDBOOK</p>
 <h1>Learn Scarp.<br><span>One real program at a time.</span></h1>
-<p class="lead">From your first line of code to numerical computing. Every lesson has its own page with original Scarp source and verified output.</p>
+<p class="lead">From your first line of code to numerical computing. Every lesson has its own page with real Scarp source, verified output, English and Hindi explanations, and a practice question.</p>
 <div class="hero-buttons"><a class="primary-button" href="{escape(rel("index.html", first.url))}">Start learning <span aria-hidden="true">→</span></a>
 <a class="secondary-button" href="#chapters">Explore chapters</a></div>
 <div class="hero-stats"><span><strong>{len(lessons)}</strong> runnable lessons</span>
-<span><strong>{len(chapters)}</strong> chapters</span><span><strong>EN + हिन्दी</strong> guides</span></div>
+<span><strong>{len(chapters)}</strong> chapters</span><span><strong>English + हिन्दी</strong> explanations</span></div>
 </div>
 <div class="hero-terminal" aria-label="Example Scarp code">
 <div class="terminal-heading"><span aria-hidden="true">● ● ●</span><span>{escape(first.source.name)}</span><span>Scarp</span></div>
@@ -287,7 +300,43 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
 </div>"""
 
 
-def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[Lesson], target: dict) -> str:
+def render_notes(lesson: Lesson, hindi: HindiNote) -> str:
+    """Show existing educational prose in both languages on every lesson page."""
+    if lesson.source_path != hindi.source_path:
+        raise ValueError(f"wrong Hindi notes for {lesson.source_path}")
+    outcome = lesson_result(lesson.source.parent / "README.md", lesson.source.name)
+    return f"""<section class="lesson-notes" id="lesson-notes" aria-labelledby="notes-heading">
+<div class="notes-heading">
+<div><p class="eyebrow">UNDERSTAND THE CODE</p>
+<h2 id="notes-heading">Explanation &amp; practice</h2></div>
+<div class="language-switch" role="group" aria-label="Explanation language">
+<button type="button" class="note-lang-button" data-note-switch="en"
+ aria-controls="en-notes" aria-pressed="true">English</button>
+<button type="button" class="note-lang-button" data-note-switch="hi"
+ aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button>
+</div></div>
+<div class="note-content" id="en-notes" data-note-language="en" lang="en">
+<h3>What this example teaches</h3>
+<p>{escape(lesson.description)}</p>
+<h3>Expected behavior</h3>
+<p>{escape(outcome)}</p>
+<div class="practice-challenge"><p><strong>Practice:</strong>
+Read the source before looking at the output. Predict the values and their order,
+then use the pinned compiler to execute this lesson and compare the exact fixture.
+Identify which operation produces the result.</p></div>
+</div>
+<div class="note-content" id="hi-notes" data-note-language="hi" lang="hi">
+<h3>{escape(hindi.title)}</h3>
+{render_hindi_note(hindi)}
+</div>
+<p class="notes-provenance">Explanations are sourced from the project's
+<a href="{REPOSITORY}/blob/main/examples/{escape(lesson.section)}/README.md">English chapter guide</a>
+and <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/{escape(lesson.section)}.md">हिन्दी अध्याय</a>.
+The Scarp program and output are unchanged.</p>
+</section>"""
+
+
+def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[Lesson], target: dict, hindi: HindiNote) -> str:
     page = lesson.url
     i = all_lessons.index(lesson)
     sidebar = "".join(
@@ -306,6 +355,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     before = all_lessons[i - 1] if i > 0 else None
     after = all_lessons[i + 1] if i + 1 < len(all_lessons) else None
     code = render_lesson(lesson.source, lesson.stdout, lesson.description)
+    notes = render_notes(lesson, hindi)
     main = f"""<main id="main-content" class="container-wide detail-layout">
 <aside class="sidebar" aria-label="This chapter's lessons">
 <div class="sidebar-heading"><span class="eyebrow">CHAPTER {escape(lesson.section[:2])}</span><strong>{escape(lesson.chapter)}</strong></div>
@@ -319,8 +369,9 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 <header class="page-heading lesson-heading"><p class="eyebrow">LESSON {i + 1:02} OF {len(all_lessons)} · CHAPTER {escape(lesson.section[:2])}</p>
 <h1>{escape(lesson.title)}</h1><p class="lead">{escape(lesson.description)}</p>
 <div class="guide-links"><a href="{REPOSITORY}/blob/main/examples/{escape(lesson.section)}/README.md">Read the English notes ↗</a>
-<a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/{escape(lesson.section)}.md">हिन्दी में पढ़ें ↗</a></div></header>
+<a lang="hi" href="#hi-notes">हिन्दी में समझें ↓</a></div></header>
 {code}
+{notes}
 <section class="run-panel" aria-labelledby="run-title">
 <div><p class="eyebrow">TRY IT LOCALLY</p><h2 id="run-title">Verify, then execute</h2>
 <p>Use the pinned compiler from the course root. Keep any imported <code>_support</code> files next to the source.</p></div>
@@ -338,11 +389,14 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 
 def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
+    hindi_notes = read_hindi_notes(ROOT)
     home, count = render_catalog()
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(home, encoding="utf-8", newline="\n")
-    index = [{"title": l.title, "chapter": l.chapter, "description": l.description, "url": l.url}
-             for l in lessons]
+    index = [{"title": l.title, "chapter": l.chapter, "description": l.description,
+              "hindi_title": hindi_notes[l.source_path].title,
+              "hindi_summary": hindi_notes[l.source_path].summary,
+              "url": l.url} for l in lessons]
     (destination / "search-index.json").write_text(
         json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -353,7 +407,8 @@ def build(destination: Path) -> int:
     for lesson in lessons:
         path = destination / lesson.url
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render_lesson_page(lesson, lessons, chapters[lesson.section], target),
+        path.write_text(render_lesson_page(lesson, lessons, chapters[lesson.section],
+                                           target, hindi_notes[lesson.source_path]),
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
     urls = ["index.html"]
