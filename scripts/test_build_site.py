@@ -31,6 +31,27 @@ class References(HTMLParser):
             self.paths.append(fields["src"])
 
 
+class ScarpSourceText(HTMLParser):
+    """Recover the exact code text from its syntax-highlighted DOM."""
+
+    def __init__(self):
+        super().__init__()
+        self.inside = False
+        self.parts: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "code" and dict(attrs).get("id") == "scarp-code":
+            self.inside = True
+
+    def handle_endtag(self, tag):
+        if tag == "code":
+            self.inside = False
+
+    def handle_data(self, data):
+        if self.inside:
+            self.parts.append(data)
+
+
 class SiteTests(unittest.TestCase):
     def test_html_escape_never_injects_source_markup(self):
         self.assertEqual(escape('<script x="a">'), '&lt;script x=&quot;a&quot;&gt;')
@@ -83,6 +104,22 @@ class SiteTests(unittest.TestCase):
             self.assertIn("&lt;unsafe&gt;", markup)
             self.assertNotIn('print("<unsafe>");', markup)
             self.assertEqual(stdout.read_bytes(), b"<unsafe>\n")
+
+    def test_highlighting_preserves_exact_copyable_scarp_source(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            folder = Path(directory)
+            src = folder / "01-code.srp"
+            stdout = folder / "01-code.stdout"
+            raw = 'print("// <hello>"); // comment\nbind value = 42;\n'
+            src.write_text(raw, encoding="utf-8")
+            stdout.write_bytes(b"// <hello>\n")
+            markup = render_lesson(src, stdout, "Syntax display")
+            parser = ScarpSourceText()
+            parser.feed(markup)
+            self.assertEqual("".join(parser.parts), raw)
+            self.assertIn("syntax-string", markup)
+            self.assertIn("syntax-comment", markup)
+            self.assertIn("syntax-keyword", markup)
 
     def test_carriage_return_display_does_not_modify_fixture(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
