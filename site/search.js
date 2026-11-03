@@ -40,6 +40,33 @@
     }
   });
 
+  // Language switch is optional. With JavaScript disabled, both notes remain
+  // visible in document order for keyboard, screen-reader and print access.
+  const english = document.querySelector("#en-notes");
+  const hindi = document.querySelector("#hi-notes");
+  const languageButtons = [...document.querySelectorAll("[data-note-switch]")];
+
+  if (english && hindi && languageButtons.length === 2) {
+    function showLanguage(lang) {
+      const showHindi = lang === "hi";
+      english.hidden = showHindi;
+      hindi.hidden = !showHindi;
+      languageButtons.forEach(button => {
+        const selected = button.dataset.noteSwitch === lang;
+        button.setAttribute("aria-pressed", String(selected));
+      });
+    }
+
+    showLanguage(window.location.hash === "#hi-notes" ? "hi" : "en");
+    languageButtons.forEach(button => {
+      button.addEventListener("click", () => showLanguage(button.dataset.noteSwitch));
+    });
+    window.addEventListener("hashchange", () => {
+      if (window.location.hash === "#hi-notes") showLanguage("hi");
+      if (window.location.hash === "#en-notes") showLanguage("en");
+    });
+  }
+
   const search = document.querySelector("#lesson-search");
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
@@ -82,7 +109,7 @@
       const lessons = await loadIndex();
       if (search.value.trim().toLocaleLowerCase() !== query) return;
       const matches = lessons.filter(item =>
-        [item.title, item.description, item.chapter].some(value =>
+        [item.title, item.description, item.chapter, item.hindi_title, item.hindi_summary].some(value =>
           typeof value === "string" && value.toLocaleLowerCase().includes(query)
         )
       );
@@ -99,7 +126,7 @@
         const name = document.createElement("strong");
         name.textContent = item.title;
         const chapter = document.createElement("small");
-        chapter.textContent = item.chapter;
+        chapter.textContent = item.chapter + " · " + item.hindi_title;
         link.append(name, chapter);
         li.append(link);
         results.append(li);
