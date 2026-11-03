@@ -155,6 +155,12 @@ class SiteTests(unittest.TestCase):
             )
             self.assertTrue((output / "styles.css").is_file())
             self.assertTrue((output / "search.js").is_file())
+            self.assertTrue((output / "progress.js").is_file())
+            self.assertIn('data-progress-index="search-index.json"',
+                          (output / "index.html").read_text(encoding="utf-8"))
+            self.assertEqual(
+                (output / "index.html").read_text(encoding="utf-8").count("data-progress-chapter="), 6
+            )
             self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
             pages = list((output / "lessons").glob("*/*/index.html"))
             self.assertEqual(len(pages), 50)
@@ -162,6 +168,10 @@ class SiteTests(unittest.TestCase):
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 50)
             self.assertEqual(len({x["url"] for x in search}), 50)
+            self.assertEqual(len({x["id"] for x in search}), 50)
+            for item in search:
+                self.assertEqual(item["url"], "lessons/" + item["id"] + "/index.html")
+                self.assertRegex(item["id"], r"^[0-9]{2}-[a-z0-9-]+/[0-9]{2}-[a-z0-9-]+$")
             self.assertTrue(all(x["hindi_title"] and x["hindi_summary"] for x in search))
             self.assertIn("पहला Scarp प्रोग्राम", search[0]["hindi_title"])
             self.assertEqual({x["url"] for x in search},
@@ -182,6 +192,7 @@ class SiteTests(unittest.TestCase):
                 self.assertIn('href="#main-content"', content)
                 self.assertIn('id="theme-toggle"', content)
                 self.assertIn('rel="canonical"', content)
+                self.assertIn('progress.js', content)
                 self.assertNotIn('src="https://', content)
                 links = References()
                 links.feed(content)
@@ -205,6 +216,13 @@ class SiteTests(unittest.TestCase):
             self.assertIn("scarp exec examples/01-basics/01-hello.srp", lesson)
             self.assertIn('data-copy="scarp-code"', lesson)
             self.assertIn('aria-current="page"', lesson)
+            self.assertIn('data-progress-current="01-basics/01-hello"', lesson)
+            self.assertIn('data-progress-toggle', lesson)
+            self.assertIn('data-progress-complete="01-basics/01-hello"', lesson)
+            chapter = (output / "chapters/01-basics/index.html").read_text(encoding="utf-8")
+            self.assertIn('data-progress-scope="01-basics"', chapter)
+            self.assertIn('data-progress-count="01-basics"', chapter)
+            self.assertIn('data-progress-resume', chapter)
             last = output / "lessons/06-ai-foundations/11-matrix-probabilities/index.html"
             self.assertIn("End of course", last.read_text(encoding="utf-8"))
 
