@@ -16,6 +16,7 @@ from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_std
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
 COMPILER = "https://github.com/scarp-lang/scarp"
+PUBLIC_SITE = "https://scarp-lang.github.io/scarp-by-example/"
 
 
 @dataclass(frozen=True)
@@ -47,12 +48,20 @@ def section_heading(readme: Path) -> str:
     return lines[0][2:].strip()
 
 
+def plain_markdown(value: str) -> str:
+    """Remove small inline Markdown markers from chapter and lesson summaries."""
+    import re
+    value = re.sub(r"\[([^]]+)\]\([^)]+\)", r"\1", value)
+    return value.replace("**", "").replace(chr(96), "")
+
+
 def section_intro(readme: Path) -> str:
-    return next(
+    summary = next(
         (s.strip() for s in readme.read_text(encoding="utf-8").splitlines()[1:]
          if s.strip() and not s.startswith("#")),
         "Real examples tested with the Scarp compiler.",
     )
+    return plain_markdown(summary)
 
 
 def table_cells(line: str) -> list[str]:
@@ -75,7 +84,7 @@ def lesson_description(readme: Path, filename: str) -> str:
         if f"]({filename})" in line:
             cells = table_cells(line)
             if len(cells) >= 2:
-                return cells[1].replace(chr(96), "")
+                return plain_markdown(cells[1])
     raise ValueError(f"missing {filename} description in {readme}")
 
 
@@ -121,6 +130,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <meta name="description" content="{escape(description)}">
 <title>{escape(title)} · Scarp by Example</title>
 <link rel="stylesheet" href="{style}">
+<link rel="canonical" href="{escape(PUBLIC_SITE + page.removesuffix("index.html"))}">
 <script src="{script}" defer></script>
 </head>
 <body class="{escape(layout)}">
@@ -190,9 +200,9 @@ def render_catalog() -> tuple[str, int]:
 <section class="search-area container-wide" id="search-area" aria-labelledby="search-heading">
 <div class="section-heading"><div><p class="eyebrow">FIND A TOPIC</p><h2 id="search-heading">Find your next example</h2></div><p>Search titles, syntax topics and chapters.</p></div>
 <label class="sr-only" for="lesson-search">Search lessons</label>
-<input id="lesson-search" type="search" data-index-url="search-index.json" autocomplete="off"
+<input id="lesson-search" type="search" data-index-url="search-index.json" data-lesson-count="{len(lessons)}" autocomplete="off"
  placeholder="Try functions, Unicode, modules, matrix..." aria-controls="search-results">
-<p id="search-status" role="status" aria-live="polite">Browse chapters below or search all {len(lessons)} lessons.</p>
+<p id="search-status" role="status" aria-live="polite">Browse the chapters below. Instant search is available with JavaScript.</p>
 <ul id="search-results" class="search-results" aria-label="Search results"></ul>
 </section>
 <section class="chapters container-wide" id="chapters" aria-labelledby="chapters-heading">
@@ -320,6 +330,18 @@ def build(destination: Path) -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_lesson_page(lesson, lessons, chapters[lesson.section], target),
                         encoding="utf-8", newline="\n")
+    # Discoverable, stable directory URLs for search engines and learners.
+    urls = ["index.html"]
+    urls.extend(chapter_url(section) for section in chapters)
+    urls.extend(lesson.url for lesson in lessons)
+    sitemap = '<?xml version="1.0" encoding="utf-8"?>\n'
+    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    sitemap += "".join(
+        f'  <url><loc>{escape(PUBLIC_SITE + url.removesuffix("index.html"))}</loc></url>\n'
+        for url in urls
+    )
+    sitemap += "</urlset>\n"
+    (destination / "sitemap.xml").write_text(sitemap, encoding="utf-8")
     for asset in ("styles.css", "search.js"):
         shutil.copyfile(ASSETS / asset, destination / asset)
     (destination / ".nojekyll").write_text("", encoding="utf-8")
