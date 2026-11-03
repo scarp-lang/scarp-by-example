@@ -2,7 +2,7 @@
 
 यह [अंग्रेज़ी अध्याय](../../examples/01-basics/README.md) का हिन्दी साथी है। भाषा अभी विकास में है; नीचे दी गई कड़ियाँ वही असली Scarp स्रोत और आउटपुट खोलती हैं।
 
-**चलाएँ:** `scarp run examples/01-basics/01-hello.srp`। पहले `scarp check examples/01-basics/01-hello.srp` भी चला सकते हैं।
+**चलाएँ:** `scarp exec examples/01-basics/01-hello.srp`। पहले static जाँच के लिए `scarp verify examples/01-basics/01-hello.srp` चलाएँ। पुराना `check` runtime गणना भी करता है; [CLI गाइड](cli-quickstart.md) देखें।
 
 **मुख्य शब्द:** बाइंडिंग = किसी नाम से जुड़ा मान; अपरिवर्तनीय = पुनः असाइन नहीं कर सकते; परिवर्तनीय = पुनः असाइन कर सकते; स्कोप = जहाँ नाम उपलब्ध है।
 

@@ -4,7 +4,7 @@ Thank you for helping people learn Scarp.
 
 ## Before adding a lesson
 
-1. Consult the [Scarp compiler](https://github.com/scarp-lang/scarp), [syntax documentation](https://github.com/scarp-lang/scarp/tree/main/docs) and [compatibility policy](docs/compatibility.md).
+1. Consult the [Scarp compiler](https://github.com/scarp-lang/scarp), [syntax documentation](https://github.com/scarp-lang/scarp/tree/main/docs), [CLI quickstart](docs/cli-quickstart.md) and [compatibility policy](docs/compatibility.md).
 2. Verify the proposed syntax exists in the compiler source checkout used by CI. Do not infer implementation from roadmaps or discussion alone.
 3. Add an explicitly numbered `.srp` lesson and an adjacent `.stdout` with its **exact UTF-8 stdout**. Avoid unstable time, randomness, network requests, host-specific paths and inputs.
 4. Explain what learners should notice in the section README; keep examples small and focused. Make explanations understandable to newcomers.

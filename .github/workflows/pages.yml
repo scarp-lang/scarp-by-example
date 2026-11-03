@@ -46,6 +46,9 @@ jobs:
       - name: Verify runnable examples before publication
         run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp
 
+      - name: Smoke-test Scarp-first CLI before publishing
+        run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
+
       - name: Generate static course catalog
         run: python scripts/build_site.py
 

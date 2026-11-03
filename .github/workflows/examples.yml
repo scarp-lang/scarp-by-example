@@ -54,3 +54,11 @@ jobs:
       - name: Check every source and exact stdout (Windows)
         if: runner.os == 'Windows'
         run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp.exe
+
+      - name: Smoke-test Scarp-first CLI
+        if: runner.os != 'Windows'
+        run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
+
+      - name: Smoke-test Scarp-first CLI (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp.exe

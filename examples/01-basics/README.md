@@ -23,9 +23,9 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 | [15 · Control escapes](15-control-escapes.srp) | Tab, literal carriage return and escaped backslashes | Three output lines with exact tab and inline CR bytes |
 | [16 · Text construction](16-text-construction.srp) | `text_concat`, Unicode-scalar `text_slice`, `text_repeat`, length vs UTF-8 bytes | `Hello, 🌍`, `🌍🌍🌍`, `8 11` |
 
-**Run any lesson:** `scarp run examples/01-basics/01-hello.srp` from this repository root, with the compiler executable on `PATH`. Or use its absolute path.
+**Run any lesson:** `scarp exec examples/01-basics/01-hello.srp` from this repository root, with the compiler executable on `PATH`. Or use its absolute path.
 
-**Check it:** `scarp check examples/01-basics/01-hello.srp` (silent when successful).
+**Verify statically:** `scarp verify examples/01-basics/01-hello.srp` (silent on success). Legacy `check` evaluates some runtime statements; read the [CLI guide](../../docs/cli-quickstart.md).
 
 **Exact output:** each lesson has a `.stdout` file next to the `.srp` file. Fixtures preserve the exact bytes, including any final newline **or its absence**, and are checked automatically. Read the source, predict the output, run it, then compare the fixture.
 
@@ -43,6 +43,6 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 
 - **16:** `text_concat` joins strings, `text_slice(text, 7, 1)` selects the globe emoji as **one Unicode scalar value**, and `text_repeat` makes three copies. `text_len("Hello, 🌍")` counts 8 Unicode scalars, but `text_bytes` reports 11 UTF-8 bytes because the globe uses four bytes. This does not promise grapheme-cluster-aware slicing or Unicode normalization.
 
-**Practice:** predict the stdout before opening a fixture, then run `scarp check` and `scarp run` on the lesson.
+**Practice:** predict the stdout before opening a fixture, then run `scarp verify` and `scarp exec` on the lesson.
 
 **Note:** `bind` is not a mutable variable. `var` allows reassignment. The pinned compiler accepts both `print` and `println` in these examples; older releases may differ.
