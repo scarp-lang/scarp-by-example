@@ -72,7 +72,7 @@ class SiteTests(unittest.TestCase):
         self.assertEqual(len(lessons), len(discover_examples(EXAMPLES)))
         self.assertEqual(len(lessons), 50)
         self.assertEqual(len(chapters), 6)
-        self.assertEqual(target["version"], "0.0.5-alpha.3")
+        self.assertEqual(target["version"], json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["version"])
         for lesson in lessons:
             self.assertTrue(lesson.source.is_file())
             self.assertTrue(lesson.stdout.is_file())
