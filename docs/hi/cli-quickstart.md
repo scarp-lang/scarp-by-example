@@ -1,0 +1,80 @@
+# Scarp CLI — शुरुआत से सीखें (हिन्दी)
+
+यह गाइड **Scarp v0.0.5-alpha.3** के प्रकाशित स्रोत कमिट `7715c28df09c7703b39e14fddb963275b25df476` के लिए है। Scarp अभी **प्री-रिलीज़** है। यहाँ बताए गए कमांड इसी संस्करण के वास्तविक कम्पाइलर स्रोत पर आधारित हैं।
+
+यह कमांड सीखने की गाइड है। `inspect` का आउटपुट बदल सकने वाला डिबग डेटा है, इसलिए इसके लिए नई `.srp`/`.stdout` पाठ फ़ाइलें नहीं बनाई जातीं।
+
+## 1. कम्पाइलर तैयार करना
+
+[संगतता निर्देश](../compatibility.md) से निर्धारित स्रोत डाउनलोड और बिल्ड करें। इसके बाद जाँचें:
+
+```sh
+scarp version
+scarp guide
+scarp diagnose
+```
+
+- `version` चल रहे कम्पाइलर का संस्करण दिखाता है।
+- `guide` सही कमांड और उनकी मदद दिखाता है।
+- `diagnose` बिना इंटरनेट उपयोग किए कम्पाइलर और सिस्टम की सुविधाएँ बताता है।
+
+यदि `scarp` PATH में नहीं है, तो उसका पूरा executable पथ लिखें: Linux/macOS पर `target/debug/scarp` और Windows पर `target\debug\scarp.exe`। नीचे दिए उदाहरण **scarp-by-example** रिपॉज़िटरी की मुख्य डायरेक्टरी से चलाएँ।
+
+## 2. पहले verify, फिर exec
+
+```sh
+scarp verify examples/01-basics/01-hello.srp
+scarp exec examples/01-basics/01-hello.srp
+```
+
+**`verify`** स्रोत, इम्पोर्ट, नाम और प्रकार की उपलब्ध स्थिर जाँच (static validation) करता है। यह प्रोग्राम की runtime पंक्तियाँ **नहीं चलाता**। सफल रहने पर सामान्यतः कुछ नहीं छपता और exit code `0` होता है।
+
+**`exec`** वास्तविक Scarp interpreter से प्रोग्राम चलाता है। पहले पाठ का आउटपुट `Hello from Scarp!` है; [मूल आउटपुट फ़ाइल](../../examples/01-basics/01-hello.stdout) से तुलना करें। `exec` कोई native executable नहीं बनाता।
+
+मॉड्यूल वाले उदाहरण में `_support` की साथी फ़ाइलें उसी स्थान पर रखें:
+
+```sh
+scarp verify examples/05-modules/01-modular-inference.srp
+scarp exec examples/05-modules/01-modular-inference.srp
+```
+
+## 3. कोड की अंदरूनी संरचना देखना
+
+```sh
+scarp inspect tokens examples/01-basics/01-hello.srp
+scarp inspect ast examples/01-basics/01-hello.srp
+scarp inspect modules examples/05-modules/01-modular-inference.srp
+scarp inspect modules --json examples/05-modules/01-modular-inference.srp
+```
+
+| कमांड | वास्तविक उपयोग |
+| --- | --- |
+| `inspect tokens` | सिर्फ़ शब्दों/टोकन और उनके स्थान की जाँच; पूरा parsing या type-checking नहीं |
+| `inspect ast` | स्रोत का syntax tree दिखाता है; इम्पोर्ट resolve नहीं करता, प्रकार नहीं जाँचता और प्रोग्राम नहीं चलाता |
+| `inspect modules` | इम्पोर्ट सहित मॉड्यूलों की स्थिर जाँच और सूची; `--json` यहाँ उपलब्ध है |
+
+`inspect ast` का परिणाम बदल सकने वाला **debug format** है, स्थायी JSON API नहीं। `inspect ast --json` और `inspect tokens --json` उपलब्ध नहीं हैं। इनका आउटपुट प्रोग्राम के `.stdout` से अलग होता है।
+
+## 4. verify और पुराने check में अंतर
+
+**`scarp verify` और `scarp check` एक जैसे नहीं हैं।** पुराने `check` में कुछ runtime expressions वास्तव में evaluate होते हैं, लेकिन उनका आउटपुट छिपा रहता है। पुराने `run` और नए `exec` का उद्देश्य प्रोग्राम चलाना है।
+
+अंतर समझने के लिए नंबर वाले पाठों के बाहर एक अस्थायी `.srp` फ़ाइल में यह लिख सकते हैं:
+
+```scarp
+print(1 / 0);
+```
+
+`scarp verify FILE.srp` इसे static स्तर पर सही मानेगा। `scarp check FILE.srp` गणना चलने पर शून्य से भाग देने की त्रुटि देगा। `scarp exec FILE.srp` भी त्रुटि देगा। रिपॉज़िटरी की [स्वचालित CLI जाँच](../../scripts/verify_cli.py) अस्थायी फ़ाइल बनाकर इसी अंतर को जाँचती है।
+
+## जल्दी याद रखने के लिए
+
+- `scarp version` — संस्करण; `scarp guide` — कमांड की मदद; `scarp diagnose` — सिस्टम की क्षमताएँ।
+- `scarp verify FILE` — चलाए बिना static जाँच।
+- `scarp exec FILE` — स्रोत चलाकर असली आउटपुट प्राप्त करें।
+- `scarp inspect tokens/ast/modules FILE` — कम्पाइलर की अंदरूनी जानकारी देखें।
+- `scarp run` और `scarp check` — पुराने compatibility कमांड; `check` runtime evaluation कर सकता है।
+
+सफलता का exit code सामान्यतः `0`, स्रोत/प्रोग्राम त्रुटि `1` और कमांड के गलत प्रयोग का `2` है। यह संस्करण `compile`, `create`, `launch`, native executable या package publishing उपलब्ध नहीं कराता।
+
+[हिन्दी पाठ सूची](README.md) · [English CLI guide](../cli-quickstart.md) · [संगतता नीति](../compatibility.md)
