@@ -70,7 +70,7 @@
   const indexPath = panel.dataset.progressIndex;
   const rootPath = panel.dataset.progressRoot || "index.html";
   const currentId = panel.dataset.progressCurrent || null;
-  const chapterId = panel.dataset.progressChapter || null;
+  const chapterId = panel.dataset.progressScope || null;
 
   function fullPath(item) {
     const prefix = rootPath.replace(/index\.html$/, "");
@@ -83,7 +83,7 @@
     if (!response.ok) throw new Error("Lesson index unavailable");
     const original = await response.json();
     const manifest = normalizeManifest(original);
-    if (manifest.length !== original.length) throw new Error("Lesson index is invalid");
+    if (!manifest.length || manifest.length !== original.length) throw new Error("Lesson index is invalid");
     if (currentId && !manifest.some(item => item.id === currentId)) {
       throw new Error("Current lesson is missing from index");
     }
