@@ -1,6 +1,6 @@
 # Scarp CLI — शुरुआत से सीखें (हिन्दी)
 
-यह गाइड **Scarp v0.0.5-alpha.3** के प्रकाशित स्रोत कमिट `7715c28df09c7703b39e14fddb963275b25df476` के लिए है। Scarp अभी **प्री-रिलीज़** है। यहाँ बताए गए कमांड इसी संस्करण के वास्तविक कम्पाइलर स्रोत पर आधारित हैं।
+यह गाइड **Scarp v0.0.5-alpha.4** के प्रकाशित स्रोत कमिट `79141329176f5dce51457e90a6652902f6432135` के लिए है। Scarp अभी **प्री-रिलीज़** है। यहाँ बताए गए कमांड इसी संस्करण के वास्तविक कम्पाइलर स्रोत पर आधारित हैं।
 
 यह कमांड सीखने की गाइड है। `inspect` का आउटपुट बदल सकने वाला डिबग डेटा है, इसलिए इसके लिए नई `.srp`/`.stdout` पाठ फ़ाइलें नहीं बनाई जातीं।
 
@@ -38,7 +38,36 @@ scarp verify examples/05-modules/01-modular-inference.srp
 scarp exec examples/05-modules/01-modular-inference.srp
 ```
 
-## 3. कोड की अंदरूनी संरचना देखना
+## 3. नया Scarp प्रोजेक्ट (प्रकाशित alpha.4 में नया)
+
+ऐसी डायरेक्टरी से शुरू करें जहाँ `hello-world` फ़ोल्डर पहले से मौजूद न हो:
+
+```sh
+scarp create hello-world
+scarp verify hello-world
+scarp launch hello-world
+```
+
+`create` नया फ़ोल्डर बनाता है जिसमें `Scarp.project` और `src/main.srp` फ़ाइलें होती हैं। पहले से मौजूद फ़ोल्डर को यह कभी नहीं बदलता। `verify DIRECTORY` manifest तथा स्रोत की static जाँच करता है, जबकि `launch DIRECTORY` उसी प्रोग्राम को interpreter में चलाता है।
+
+Manifest की तीन पंक्तियाँ हैं:
+
+```text
+scarp-project: 1
+name: hello-world
+entry: src/main.srp
+```
+
+कोर्स के तैयार नमूने को भी चलाएँ:
+
+```sh
+scarp verify tutorials/first-project
+scarp launch tutorials/first-project
+```
+
+इन कमांड के लिए [विस्तृत हिंदी प्रोजेक्ट ट्यूटोरियल](project-workflow.md) पढ़ें।
+
+## 4. कोड की अंदरूनी संरचना देखना
 
 ```sh
 scarp inspect tokens examples/01-basics/01-hello.srp
@@ -55,7 +84,7 @@ scarp inspect modules --json examples/05-modules/01-modular-inference.srp
 
 `inspect ast` का परिणाम बदल सकने वाला **debug format** है, स्थायी JSON API नहीं। `inspect ast --json` और `inspect tokens --json` उपलब्ध नहीं हैं। इनका आउटपुट प्रोग्राम के `.stdout` से अलग होता है।
 
-## 4. verify और पुराने check में अंतर
+## 5. verify और पुराने check में अंतर
 
 **`scarp verify` और `scarp check` एक जैसे नहीं हैं।** पुराने `check` में कुछ runtime expressions वास्तव में evaluate होते हैं, लेकिन उनका आउटपुट छिपा रहता है। पुराने `run` और नए `exec` का उद्देश्य प्रोग्राम चलाना है।
 
@@ -75,6 +104,6 @@ print(1 / 0);
 - `scarp inspect tokens/ast/modules FILE` — कम्पाइलर की अंदरूनी जानकारी देखें।
 - `scarp run` और `scarp check` — पुराने compatibility कमांड; `check` runtime evaluation कर सकता है।
 
-सफलता का exit code सामान्यतः `0`, स्रोत/प्रोग्राम त्रुटि `1` और कमांड के गलत प्रयोग का `2` है। यह संस्करण `compile`, `create`, `launch`, native executable या package publishing उपलब्ध नहीं कराता।
+सफलता का exit code सामान्यतः `0`, स्रोत/प्रोग्राम त्रुटि `1` और कमांड के गलत प्रयोग का `2` है। यह संस्करण `create`, project `verify` और interpreter-backed `launch` उपलब्ध कराता है, लेकिन `compile`, native executable या package publishing उपलब्ध नहीं कराता।
 
 [हिन्दी पाठ सूची](README.md) · [English CLI guide](../cli-quickstart.md) · [संगतता नीति](../compatibility.md)

@@ -14,7 +14,7 @@ from verify_examples import ROOT, read_expected_stdout
 
 
 class CliSmokeError(RuntimeError):
-    """Observed CLI behavior differs from the documented alpha.3 contract."""
+    """Observed CLI behavior differs from the pinned alpha.4 CLI contract."""
 
 
 def invoke(compiler: Path, *arguments: str, timeout: int = 15) -> subprocess.CompletedProcess[bytes]:
@@ -59,7 +59,7 @@ def require(
 
 
 def smoke_test(compiler: Path, timeout: int = 15) -> None:
-    """Prove real alpha.3 command contracts, including static vs runtime evaluation."""
+    """Prove published alpha.4 commands, static checks and real project workflows."""
     version = invoke(compiler, "version", timeout=timeout)
     require(version, "version", nonempty_stdout=True, stderr=b"")
     require(invoke(compiler, "--version", timeout=timeout), "--version",
@@ -84,6 +84,8 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
             or capabilities.get("static_verify") is not True
             or capabilities.get("native_executable") is not False):
         raise CliSmokeError("diagnose --json: misleading or unsupported capabilities")
+    if capabilities.get("version") != "0.0.5-alpha.4" or capabilities.get("project_workflow") is not True:
+        raise CliSmokeError("diagnose --json: expected published alpha.4 project capabilities")
     expected_version = f"scarp {capabilities['version']}\n".encode("utf-8")
     if version.stdout != expected_version:
         raise CliSmokeError("version and diagnose disagree")
@@ -133,7 +135,62 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
         require(invalid, "verify rejects unresolved identifiers",
                 code=1, stdout=b"", nonempty_stderr=True)
 
-    print("PASS: Scarp-first CLI, legacy migration, static validation and inspection.")
+    project_smoke(compiler, timeout)
+    print("PASS: Scarp-first CLI, legacy migration, static validation, inspection and projects.")
+
+
+def project_smoke(compiler: Path, timeout: int) -> None:
+    """Test real project scaffolding, static verify, launch and rejection paths."""
+    expected = read_expected_stdout(ROOT / "examples/01-basics/01-hello.stdout")
+    checked_in = ROOT / "tutorials" / "first-project"
+    if (checked_in / "expected.stdout").read_bytes() != expected:
+        raise CliSmokeError("checked-in project fixture disagrees with hello lesson")
+    require(invoke(compiler, "verify", str(checked_in), timeout=timeout),
+            "verify checked-in sample project", stdout=b"", stderr=b"")
+    require(invoke(compiler, "launch", str(checked_in), timeout=timeout),
+            "launch checked-in sample project", stdout=expected, stderr=b"")
+    with tempfile.TemporaryDirectory(prefix="scarp-project-smoke-") as folder:
+        project = Path(folder) / "first-project"
+        created = invoke(compiler, "create", str(project), timeout=timeout)
+        require(created, "create project", nonempty_stdout=True, stderr=b"")
+        manifest = project / "Scarp.project"
+        source = project / "src" / "main.srp"
+        original = b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n"
+        if manifest.read_bytes() != original:
+            raise CliSmokeError("create wrote an unexpected project manifest")
+        if source.read_bytes() != b'print("Hello from Scarp!");\n':
+            raise CliSmokeError("create wrote an unexpected source template")
+        require(invoke(compiler, "verify", str(project), timeout=timeout),
+                "static project verify", stdout=b"", stderr=b"")
+        require(invoke(compiler, "launch", str(project), timeout=timeout),
+                "interpreter-backed launch", stdout=expected, stderr=b"")
+        require(invoke(compiler, "exec", str(source), timeout=timeout),
+                "scaffold entry execution", stdout=expected, stderr=b"")
+        # Never adopt or overwrite an existing project directory.
+        require(invoke(compiler, "create", str(project), timeout=timeout),
+                "existing project rejected", code=1, stdout=b"", nonempty_stderr=True)
+        if manifest.read_bytes() != original:
+            raise CliSmokeError("create unexpectedly modified an existing project")
+        source.write_text("print(1 / 0);\n", encoding="utf-8")
+        require(invoke(compiler, "verify", str(project), timeout=timeout),
+                "static project verify skips runtime arithmetic", stdout=b"", stderr=b"")
+        require(invoke(compiler, "launch", str(project), timeout=timeout),
+                "launch catches runtime arithmetic failure", code=1, stdout=b"",
+                nonempty_stderr=True)
+        manifest.write_text(
+            "scarp-project: 1\nname: first-project\nentry: ../outside.srp\n",
+            encoding="utf-8",
+        )
+        invalid = invoke(compiler, "verify", "--diagnostic-format=json",
+                         str(project), timeout=timeout)
+        require(invalid, "reject project path traversal", code=1, stdout=b"",
+                nonempty_stderr=True)
+        try:
+            diagnostic = json.loads(invalid.stderr)
+        except (UnicodeDecodeError, ValueError) as error:
+            raise CliSmokeError("invalid manifest did not produce JSON diagnostic") from error
+        if diagnostic.get("schema_version") != 1:
+            raise CliSmokeError("invalid manifest diagnostic schema differs from v1")
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -8,7 +8,7 @@ python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp
 python3 scripts/verify_cli.py --compiler /absolute/path/to/scarp
 ```
 
-The Python 3 verifier uses only the standard library. It discovers all numbered `.srp` lessons (excluding `_support` source modules), rejects missing/orphaned `.stdout` files, invokes static `scarp verify` then `scarp exec`, and compares the raw output bytes. The independent CLI smoke test verifies legacy `run` equivalence on selected lessons and demonstrates that `check` can execute runtime expressions, unlike `verify`.
+The Python 3 verifier uses only the standard library. The project-smoke check also verifies the checked-in `tutorials/first-project` sample and the exact output bytes.\n\nThe Python 3 verifier uses only the standard library. It discovers all numbered `.srp` lessons (excluding `_support` source modules), rejects missing/orphaned `.stdout` files, invokes static `scarp verify` then `scarp exec`, and compares the raw output bytes. The independent CLI smoke test verifies legacy `run` equivalence, static-vs-runtime checks and real alpha.4 project creation, directory verification, launch, existing-directory rejection and path-traversal diagnostics.
 
 The `test_lesson_notes.py` tests enforce 50 exact Hindi/source/fixture matches and HTML-safe rendering. The website generator embeds the notes and rejects missing explanations, so no page can silently show an unrelated translation.
 

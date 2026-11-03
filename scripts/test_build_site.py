@@ -72,7 +72,7 @@ class SiteTests(unittest.TestCase):
         self.assertEqual(len(lessons), len(discover_examples(EXAMPLES)))
         self.assertEqual(len(lessons), 50)
         self.assertEqual(len(chapters), 6)
-        self.assertEqual(target["version"], "0.0.5-alpha.3")
+        self.assertEqual(target["version"], json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["version"])
         for lesson in lessons:
             self.assertTrue(lesson.source.is_file())
             self.assertTrue(lesson.stdout.is_file())
@@ -147,14 +147,26 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 57)
+            self.assertEqual(len(locations), 58)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/",
                 locations,
             )
             self.assertTrue((output / "styles.css").is_file())
             self.assertTrue((output / "search.js").is_file())
+            project = output / "projects/index.html"
+            self.assertTrue(project.is_file())
+            html = project.read_text(encoding="utf-8")
+            self.assertIn("Scarp.project", html)
+            self.assertIn("scarp create hello-world", html)
+            self.assertIn("scarp verify tutorials/first-project", html)
+            self.assertIn("scarp launch tutorials/first-project", html)
+            self.assertIn("Hello from Scarp!", html)
+            self.assertIn('id="hi-notes"', html)
+            self.assertIn('id="en-notes"', html)
+            self.assertIn("79141329176f", html)
             self.assertTrue((output / "progress.js").is_file())
             self.assertIn('data-progress-index="search-index.json"',
                           (output / "index.html").read_text(encoding="utf-8"))
@@ -164,7 +176,7 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
             pages = list((output / "lessons").glob("*/*/index.html"))
             self.assertEqual(len(pages), 50)
-            self.assertEqual(len(list(output.rglob("index.html"))), 57)
+            self.assertEqual(len(list(output.rglob("index.html"))), 58)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 50)
             self.assertEqual(len({x["url"] for x in search}), 50)

@@ -1,6 +1,6 @@
-# Scarp CLI quickstart (v0.0.5-alpha.3)
+# Scarp CLI quickstart (v0.0.5-alpha.4)
 
-Use this guide with the **published Scarp v0.0.5-alpha.3 source at commit `7715c28df09c7703b39e14fddb963275b25df476`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
+Use this guide with the **published Scarp v0.0.5-alpha.4 source at commit `79141329176f5dce51457e90a6652902f6432135`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
 
 This is a **tooling guide**, not a new runnable `.srp` lesson. Command outputs such as tokens or an AST are development-oriented and deliberately do not have `.stdout` fixtures.
 
@@ -34,7 +34,36 @@ scarp verify examples/05-modules/01-modular-inference.srp
 scarp exec examples/05-modules/01-modular-inference.srp
 ```
 
-## 3. Inspect source (read-only)
+## 3. Create, verify and launch a project (new in published alpha.4)
+
+From a working directory where `hello-world` does **not already exist**, run:
+
+```sh
+scarp create hello-world
+scarp verify hello-world
+scarp launch hello-world
+```
+
+`create` scaffolds `Scarp.project` and `src/main.srp` in a **new** directory. It never overwrites or adopts an existing destination. `verify DIRECTORY` statically validates the declared entrypoint and imports without executing ordinary runtime code. `launch DIRECTORY` executes that entrypoint in the interpreter; it is not native compilation.
+
+The versioned, three-line manifest is:
+
+```text
+scarp-project: 1
+name: hello-world
+entry: src/main.srp
+```
+
+The generated program prints `Hello from Scarp!`. You can also verify and run this repository's [real checked-in project](../tutorials/first-project/Scarp.project):
+
+```sh
+scarp verify tutorials/first-project
+scarp launch tutorials/first-project
+```
+
+For a full beginner tutorial, guardrails and practice, read [Projects in Scarp](project-workflow.md) or [हिन्दी](hi/project-workflow.md).
+
+## 4. Inspect source (read-only)
 
 ```sh
 scarp guide inspect tokens
@@ -52,7 +81,7 @@ scarp inspect modules --json examples/05-modules/01-modular-inference.srp
 
 The inspect commands do not execute the lesson's runtime statements. Successful AST output is **not** a stable JSON API; `--json` does **not** apply to `inspect ast` or `inspect tokens`. Inspection output is not the lesson's expected program stdout.
 
-## 4. Why `verify` and `check` are different
+## 5. Why `verify` and `check` are different
 
 The older `run` command still behaves like `exec` for this compiler. But **`check` is not a synonym for `verify`**: `check` executes selected runtime paths while suppressing their output.
 
@@ -79,6 +108,6 @@ print(1 / 0);
 
 Success typically returns exit code `0`; source or execution failures return `1`, invalid CLI usage returns `2`. Runtime diagnostics may be printed to stderr, while `exec` program output goes to stdout. When debugging a file, `scarp guide exec` or `scarp guide verify` shows focused help.
 
-**Not supported by this pinned CLI:** `scarp compile`, `scarp create`, `scarp launch`, package publishing, LSP, native code emission, and general automatic differentiation. The exact compiler SHA and prerelease status matter more than guessing from newer upstream documentation.
+**Not supported by this pinned CLI:** `scarp compile`, package publishing, an LSP, native code emission, and general automatic differentiation. `create` and `launch` now work with an explicit project directory, but do not compile `.srp` to native executables. The exact compiler SHA and prerelease status matter more than guessing from newer upstream documentation.
 
 [Back to the course](../README.md) · [हिन्दी CLI गाइड](hi/cli-quickstart.md) · [Compiler compatibility](compatibility.md)

@@ -181,6 +181,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <nav class="top-nav" aria-label="Primary navigation">
   <a href="{home}#chapters">Chapters</a>
   <a href="{home}#search-area">Search</a>
+  <a href="{escape(rel(page, "projects/index.html"))}">Projects</a>
   <a href="{COMPILER}">Compiler</a>
   <a href="{REPOSITORY}">GitHub</a>
 </nav>
@@ -261,6 +262,16 @@ def render_catalog() -> tuple[str, int]:
 <p>Six structured chapters. Choose a topic and read one example at a time.</p></div>
 <div class="chapter-grid">{''.join(tiles)}</div>
 </section>
+<section class="project-feature container-wide" aria-labelledby="projects-heading">
+<div><p class="eyebrow">NOW SUPPORTED IN ALPHA.4</p>
+<h2 id="projects-heading">Go beyond a single file.</h2>
+<p>Learn how the real Scarp compiler creates a project, validates its manifest without running code and launches its declared entrypoint.</p>
+<a class="primary-button" href="{escape(rel("index.html", "projects/index.html"))}">Build your first project →</a></div>
+<div class="project-feature-command"><span>Terminal · Scarp v{escape(target["version"])}</span>
+<pre><code>scarp create hello-world
+scarp verify hello-world
+scarp launch hello-world</code></pre></div>
+</section>
 <section class="compat-panel container-wide" aria-label="Compiler compatibility">
 <div><p class="eyebrow">REPRODUCIBLE BY DESIGN</p><h2>Real code. Exact output.</h2>
 <p>Every example is checked with the official compiler. This site displays examples but <strong>does not execute code inside your browser</strong>.</p>
@@ -298,6 +309,91 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict) -> str:
 <p class="fine-print">All examples are validated with Scarp v{escape(target["version"])}. Each lesson has its own code and expected-output page.</p>
 </main>"""
     return page_shell(page, title, summary, main, "chapter-layout")
+
+
+
+def render_project_page(target: dict) -> str:
+    """Publish the compiler-backed, bilingual tutorial from real project files."""
+    page = "projects/index.html"
+    folder = ROOT / "tutorials/first-project"
+    manifest_path = folder / "Scarp.project"
+    entry_path = folder / "src/main.srp"
+    expected_path = folder / "expected.stdout"
+    manifest_bytes = manifest_path.read_bytes()
+    source_bytes = entry_path.read_bytes()
+    expected_bytes = expected_path.read_bytes()
+    if manifest_bytes != b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n":
+        raise ValueError("the alpha.4 sample manifest has changed; review the tutorial")
+    if source_bytes != b'print("Hello from Scarp!");\n':
+        raise ValueError("the sample project source differs from the verified scaffold")
+    reference = (EXAMPLES / "01-basics/01-hello.stdout").read_bytes()
+    if expected_bytes != reference:
+        raise ValueError("the project stdout no longer matches compiler-verified hello")
+    manifest = escape(manifest_bytes.decode("utf-8"))
+    source = highlight_scarp(source_bytes.decode("utf-8"))
+    output = escape(expected_bytes.decode("utf-8"))
+    en = REPOSITORY + "/blob/main/docs/project-workflow.md"
+    hi = REPOSITORY + "/blob/main/docs/hi/project-workflow.md"
+    src = REPOSITORY + "/blob/main/tutorials/first-project/src/main.srp"
+    title = "Your first Scarp project"
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<span aria-current="page">Projects</span></nav>
+<header class="page-heading"><p class="eyebrow">REAL COMPILER WORKFLOW · {escape(target["version"])}</p>
+<h1>{title}</h1>
+<p class="lead">Create a project, verify it without running runtime statements, and execute the declared entrypoint using the published Scarp interpreter.</p>
+<div class="guide-links"><a href="{en}">Full English guide ↗</a>
+<a href="{hi}" lang="hi">पूरी हिन्दी गाइड ↗</a></div></header>
+<section class="project-steps" aria-label="Project commands">
+<div class="project-step"><span>01</span><h2>Create</h2><code>scarp create hello-world</code></div>
+<div class="project-step"><span>02</span><h2>Verify</h2><code>scarp verify hello-world</code></div>
+<div class="project-step"><span>03</span><h2>Launch</h2><code>scarp launch hello-world</code></div></section>
+<p class="project-warning">Run <code>create</code> only with a new, nonexistent directory. To try this course's checked-in sample, use <code>tutorials/first-project</code> without creating it again.</p>
+<div class="project-source-grid">
+<section class="code-panel" aria-labelledby="project-manifest-title">
+<div class="panel-heading"><div><span class="eyebrow">PROJECT MANIFEST</span>
+<h2 id="project-manifest-title">Scarp.project</h2></div></div>
+<pre><code>{manifest}</code></pre></section>
+<section class="code-panel" aria-labelledby="project-code-title">
+<div class="panel-heading"><div><span class="eyebrow">REAL ENTRYPOINT</span>
+<h2 id="project-code-title">src/main.srp</h2></div>
+<button type="button" class="copy-button" data-copy="scarp-code">Copy code</button></div>
+<pre><code id="scarp-code">{source}</code></pre>
+<div class="panel-footer"><a href="{src}">View the original source ↗</a></div></section>
+<section class="code-panel" aria-labelledby="project-output-title">
+<div class="panel-heading"><div><span class="eyebrow">VERIFIED STDOUT</span>
+<h2 id="project-output-title">Expected output</h2></div><span class="verified-tag">Real fixture</span></div>
+<pre><code>{output}</code></pre></section></div>
+<section class="lesson-notes" id="lesson-notes" aria-labelledby="project-explain-title">
+<div class="notes-heading"><div><p class="eyebrow">UNDERSTAND PROJECTS</p>
+<h2 id="project-explain-title">Explanation &amp; practice</h2></div>
+<div class="language-switch" role="group" aria-label="Explanation language">
+<button type="button" class="note-lang-button" data-note-switch="en"
+ aria-controls="en-notes" aria-pressed="true">English</button>
+<button type="button" class="note-lang-button" data-note-switch="hi"
+ aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button></div></div>
+<div class="note-content" id="en-notes" lang="en">
+<h3>What do these commands actually do?</h3>
+<p><strong>create</strong> makes a new directory with a three-line, version-1 manifest and one starter source file. It refuses existing destinations. <strong>verify DIRECTORY</strong> validates the manifest and program statically. <strong>launch DIRECTORY</strong> runs the selected source using the interpreter, not a native compiler.</p>
+<h3>Run the checked-in sample</h3>
+<pre class="note-command"><code>scarp verify tutorials/first-project
+scarp launch tutorials/first-project</code></pre>
+<div class="practice-challenge"><p><strong>Practice:</strong> Create a fresh project with a different name. In that new project's <code>src/main.srp</code>, write <code>print(6 * 7);</code>. Predict the output, verify it and launch it.</p></div></div>
+<div class="note-content" id="hi-notes" lang="hi">
+<h3>ये कमांड क्या करते हैं?</h3>
+<p><strong>create</strong> नया प्रोजेक्ट फ़ोल्डर और उसमें <code>Scarp.project</code> तथा <code>src/main.srp</code> बनाता है। पहले से मौजूद फ़ोल्डर पर यह काम नहीं करता। <strong>verify DIRECTORY</strong> बिना प्रोग्राम चलाए static जाँच करता है। <strong>launch DIRECTORY</strong> असली interpreter से प्रोग्राम चलाता है।</p>
+<h3>तैयार प्रोजेक्ट चलाएँ</h3>
+<pre class="note-command"><code>scarp verify tutorials/first-project
+scarp launch tutorials/first-project</code></pre>
+<div class="practice-challenge"><p><strong>अभ्यास:</strong> अलग नाम से अपना नया प्रोजेक्ट बनाएँ। उसके <code>src/main.srp</code> में <code>print(6 * 7);</code> लिखकर पहले आउटपुट सोचें, फिर verify और launch करें।</p></div></div>
+<p class="notes-provenance">Scarp source, manifest and output come from the checked-in sample; the exact interpreter behavior is tested against the pinned compiler. <a href="{en}">Read detailed constraints ↗</a></p></section>
+<section class="run-panel"><p class="eyebrow">IMPORTANT LIMITS</p>
+<h2>Interpreter projects, not native builds</h2>
+<p>The development manifest is limited to 4,096 bytes and three ordered fields. Project entrypoints cannot escape the project root. These commands do not provide native executable generation, package downloads, lockfiles, a registry or a stable workspace format.</p></section>
+<p class="fine-print">Pinned published compiler: <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> · source <code>{escape(target["source_commit"][:12])}</code>. No browser execution or fabricated output.</p>
+</main>"""
+    return page_shell(page, title, "Learn the real Scarp project CLI workflow in English and Hindi, with verified source and output.", main, "project-layout")
 
 
 def render_lesson(source: Path, stdout: Path, description: str) -> str:
@@ -435,6 +531,9 @@ def build(destination: Path) -> int:
     (destination / "search-index.json").write_text(
         json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    project_path = destination / "projects/index.html"
+    project_path.parent.mkdir(parents=True, exist_ok=True)
+    project_path.write_text(render_project_page(target), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -446,7 +545,7 @@ def build(destination: Path) -> int:
                                            target, hindi_notes[lesson.source_path]),
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
-    urls = ["index.html"]
+    urls = ["index.html", "projects/index.html"]
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)
     sitemap = '<?xml version="1.0" encoding="utf-8"?>\n'
@@ -468,7 +567,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons and chapter pages at {args.output.resolve()}")
+    print(f"Built {count} standalone lessons, 6 chapters, and a project tutorial at {args.output.resolve()}")
     return 0
 
 
