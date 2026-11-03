@@ -142,6 +142,13 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
 def project_smoke(compiler: Path, timeout: int) -> None:
     """Test real project scaffolding, static verify, launch and rejection paths."""
     expected = read_expected_stdout(ROOT / "examples/01-basics/01-hello.stdout")
+    checked_in = ROOT / "tutorials" / "first-project"
+    if (checked_in / "expected.stdout").read_bytes() != expected:
+        raise CliSmokeError("checked-in project fixture disagrees with hello lesson")
+    require(invoke(compiler, "verify", str(checked_in), timeout=timeout),
+            "verify checked-in sample project", stdout=b"", stderr=b"")
+    require(invoke(compiler, "launch", str(checked_in), timeout=timeout),
+            "launch checked-in sample project", stdout=expected, stderr=b"")
     with tempfile.TemporaryDirectory(prefix="scarp-project-smoke-") as folder:
         project = Path(folder) / "first-project"
         created = invoke(compiler, "create", str(project), timeout=timeout)
