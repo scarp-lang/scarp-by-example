@@ -2,6 +2,7 @@
 (() => {
   "use strict";
   const root = document.documentElement;
+  root.classList.add("js-ready");
   const toggle = document.querySelector("#theme-toggle");
 
   function setTheme(theme) {
@@ -43,6 +44,8 @@
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
   if (!search || !status || !results) return;
+  const searchHint = "Browse chapters below or search all " + search.dataset.lessonCount + " lessons.";
+  status.textContent = searchHint;
   let cached = null;
   let pending = null;
 
@@ -71,7 +74,7 @@
     const query = search.value.trim().toLocaleLowerCase();
     results.replaceChildren();
     if (!query) {
-      status.textContent = "Browse chapters below or search all 50 lessons.";
+      status.textContent = searchHint;
       return;
     }
     status.textContent = "Searching lessons…";
