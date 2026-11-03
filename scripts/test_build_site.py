@@ -31,7 +31,10 @@ class SiteTests(unittest.TestCase):
         self.assertIn(target["release_url"], page)
         for section in sorted({src.parent.name for src, _ in discover_examples(EXAMPLES)}):
             self.assertIn(f"/docs/hi/{section}.md", page)
-        self.assertEqual(page.count('lang="hi"'), 7)
+        self.assertEqual(page.count('lang="hi"'), 8)
+        self.assertIn('/docs/cli-quickstart.md', page)
+        self.assertIn('/docs/hi/cli-quickstart.md', page)
+        self.assertIn('scarp verify PATH_TO_LESSON.srp', page)
 
     def test_source_is_html_escaped(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:

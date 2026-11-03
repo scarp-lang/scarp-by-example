@@ -3,8 +3,10 @@
 import tempfile
 import unittest
 from pathlib import Path
+import subprocess
+from unittest.mock import patch
 
-from verify_examples import VerificationError, discover_examples, read_expected_stdout
+from verify_examples import VerificationError, discover_examples, read_expected_stdout, verify_one
 
 
 class DiscoveryTests(unittest.TestCase):
@@ -102,6 +104,36 @@ class FixtureByteTests(unittest.TestCase):
             fixture.write_bytes(b"invalid \xff")
             with self.assertRaisesRegex(VerificationError, "UTF-8"):
                 read_expected_stdout(fixture)
+
+
+class RunnerCommandTests(unittest.TestCase):
+    def test_verifier_uses_static_verify_then_exec(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            lesson = root / "01-hello.srp"
+            stdout = root / "01-hello.stdout"
+            lesson.write_text('print("hello");\n', encoding="utf-8")
+            stdout.write_bytes(b"hello\n")
+            checked = subprocess.CompletedProcess(["scarp"], 0, b"", b"")
+            executed = subprocess.CompletedProcess(["scarp"], 0, b"hello\n", b"")
+            with patch("verify_examples.subprocess.run", side_effect=[checked, executed]) as runner:
+                verify_one(Path("scarp"), lesson, stdout, 5)
+            self.assertEqual(
+                [call.args[0][1] for call in runner.call_args_list],
+                ["verify", "exec"],
+            )
+
+    def test_verifier_rejects_output_during_static_verify(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            lesson = root / "01-hello.srp"
+            stdout = root / "01-hello.stdout"
+            lesson.write_text('print("hello");\n', encoding="utf-8")
+            stdout.write_bytes(b"hello\n")
+            noisy = subprocess.CompletedProcess(["scarp"], 0, b"hello\n", b"")
+            with patch("verify_examples.subprocess.run", return_value=noisy):
+                with self.assertRaisesRegex(VerificationError, "static verify must be silent"):
+                    verify_one(Path("scarp"), lesson, stdout, 5)
 
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ Scarp is an experimental programming language; **syntax, commands and runtime be
 | Source-of-truth metadata | [`compiler-target.json`](compiler-target.json) |
 | Testing | [Three-platform compiler validation](../.github/workflows/examples.yml) and [pre-publish catalog checks](../.github/workflows/pages.yml) |
 
-Both GitHub Actions workflows check out the **full immutable source SHA** rather than floating `main` or a release tag. The metadata contract is unit-tested against both workflow refs. Source and expected output are byte-for-byte compared using `scarp run`, and `scarp check` must succeed. Those two commands are still supported by this release, but the historical `check` path evaluates selected runtime statements silently—it **must not** be confused with the newer non-executing `verify` command.
+Both GitHub Actions workflows check out the **full immutable source SHA** rather than floating `main` or a release tag. The metadata contract is unit-tested against both workflow refs. The course statically validates every lesson with `scarp verify` and compares byte-exact output using `scarp exec`. An independent CLI smoke test checks `exec` against legacy `run` and confirms static-versus-runtime behavior. Historical `check` evaluates selected runtime statements silently; it **must not** be confused with non-executing `verify`.
 
 The alpha.3 source contains newer Scarp-first CLI entries such as `exec`, `verify` and `inspect`, alongside legacy `run` and `check`. New CLI names, AST inspection and text construction do **not** imply native code generation, an LSP, automatic differentiation, or general maps and sets. Scarp by Example teaches only source-backed features represented in its runnable lessons. Lesson `01-basics/16-text-construction.srp` requires the **alpha.3** `text_concat`, `text_slice` and `text_repeat` implementation; it was not in the earlier pinned `e4db8e1` source. This is Unicode-scalar slicing, not a guarantee about grapheme clusters or Unicode normalization.
 
@@ -35,13 +35,13 @@ On Windows, use `target\\debug\\scarp.exe`. To run the full Scarp by Example sui
 python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp/target/debug/scarp
 ```
 
-The output fixtures follow the original compiler examples; a program may depend on that particular interpreter revision. An unrelated, older binary may reject newer syntax. `--version` identifies the package version, while `git rev-parse HEAD` identifies the precise checkout.
+The output fixtures follow the original compiler examples; a program may depend on that particular interpreter revision. An unrelated, older binary may reject newer syntax. `--version` identifies the package version, while `git rev-parse HEAD` identifies the precise checkout. For command usage, see the [English CLI guide](cli-quickstart.md) or [हिन्दी CLI गाइड](hi/cli-quickstart.md).
 
 ## Upgrading to another compiler release
 
 1. Select a **published** release source revision and independently verify the tag resolves to a real immutable 40-character commit SHA.
 2. In one PR, update `docs/compiler-target.json` and the compiler `ref` in **both** workflow files.
-3. Run unit tests, all runnable examples with `check` and byte-exact `run` on Linux, Windows and macOS; run the Pages catalog build.
+3. Run unit tests, all runnable examples with static `verify` and byte-exact `exec` on Linux, Windows and macOS; run the CLI smoke test and Pages catalog build.
 4. Investigate any changed output, failure, or error behavior. Modify a fixture only for an intentional, verified upstream change, preserving its provenance and both language guides.
 5. Merge only after green checks. Confirm the new main-branch workflow and Pages deployment. Never describe an alpha as a stable release.
 

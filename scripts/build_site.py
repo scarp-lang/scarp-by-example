@@ -118,6 +118,7 @@ def render_catalog() -> tuple[str, int]:
 <p class="lead">A practical Scarp curriculum built from actual compiler examples. Each lesson includes the full source and its expected output. No invented syntax or unsupported features.</p>
 <div class="hero-meta"><span>{len(lessons)} verified-source lessons</span><span>{len(by_section)} learning chapters</span><span>English and Hindi · all chapters</span></div>
 <p class="translation-link"><a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें · Read all lessons in Hindi</a></p>
+<p class="translation-link"><a href="{REPOSITORY}/blob/main/docs/cli-quickstart.md">Scarp CLI quickstart</a> · <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/cli-quickstart.md">CLI हिन्दी गाइड</a></p>
 <p class="translation-link">Compiler target: <a href="{target_url}">Scarp v{target_label} (prerelease)</a> · pinned commit <code>{target_source}</code></p>\n<p class="caution"><strong>Language status:</strong> Scarp is prerelease software. These lessons target a pinned development compiler; runnable behavior is checked in CI, not in this browser. Async, networking, agents and general maps/sets are not advertised as implemented.</p>
 </section>
 <section class="discover" aria-label="Find lessons">
@@ -126,7 +127,7 @@ def render_catalog() -> tuple[str, int]:
 <p id="search-status" aria-live="polite">Showing all {len(lessons)} lessons.</p>
 </section>
 {content}
-<section class="next"><h2>Ready to run one?</h2><p>Get the current Scarp compiler, then use <code>scarp run PATH_TO_LESSON.srp</code>. Compare the result with the corresponding <code>.stdout</code> file.</p><a href="{REPOSITORY}#start-here">Installation and running instructions</a> · <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy</a> · <a href="{REPOSITORY}/blob/main/CONTRIBUTING.md">Contribute a lesson</a></section>
+<section class="next"><h2>Ready to run one?</h2><p>Get the pinned Scarp compiler, then use <code>scarp verify PATH_TO_LESSON.srp</code> and <code>scarp exec PATH_TO_LESSON.srp</code>. Compare the result with the corresponding <code>.stdout</code> file.</p><a href="{REPOSITORY}#start-here">Installation and running instructions</a> · <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy</a> · <a href="{REPOSITORY}/blob/main/CONTRIBUTING.md">Contribute a lesson</a></section>
 </main>
 <footer><div class="container"><p>Scarp by Example · Community learning resource · <a href="{REPOSITORY}/blob/main/LICENSE">MIT editorial material</a> · <a href="{REPOSITORY}/blob/main/THIRD_PARTY_NOTICES.md">Apache-licensed upstream examples</a></p></div></footer>
 <script src="search.js" defer></script>

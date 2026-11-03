@@ -76,7 +76,7 @@ def read_expected_stdout(expected_path: Path) -> bytes:
 
 def verify_one(compiler: Path, lesson: Path, expected_path: Path, timeout: int) -> None:
     expected = read_expected_stdout(expected_path)
-    for command in ("check", "run"):
+    for command in ("verify", "exec"):
         try:
             result = subprocess.run(
                 [str(compiler), command, str(lesson)],
@@ -93,7 +93,12 @@ def verify_one(compiler: Path, lesson: Path, expected_path: Path, timeout: int) 
             raise VerificationError(
                 f"{lesson}: `{command}` failed with exit {result.returncode}:\n{stderr}"
             )
-        if command == "run" and result.stdout != expected:
+        if command == "verify" and (result.stdout or result.stderr):
+            raise VerificationError(
+                f"{lesson}: static verify must be silent on success; "
+                f"stdout={result.stdout!r}, stderr={result.stderr!r}"
+            )
+        if command == "exec" and result.stdout != expected:
             raise VerificationError(
                 f"{lesson}: stdout mismatch\n"
                 f"  expected: {expected!r}\n"

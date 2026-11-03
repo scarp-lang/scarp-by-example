@@ -15,11 +15,13 @@
 
 ## Scarp चलाने का तरीका
 
+नए CLI कमांड जानने के लिए [हिन्दी CLI गाइड](cli-quickstart.md) पढ़ें। इसमें `verify` और पुराने `check` का वास्तविक अंतर भी है।
+
 पहले [आधिकारिक कम्पाइलर](https://github.com/scarp-lang/scarp) का संस्करण जाँचें। यह प्रोजेक्ट **Scarp v0.0.5-alpha.3 के सटीक स्रोत कमिट `7715c28`** पर उदाहरणों को जाँचता है; पुराने प्री-रिलीज़ का सिंटैक्स अलग हो सकता है। [संगतता नीति](../compatibility.md) देखें।
 
 ```sh
-scarp check examples/01-basics/01-hello.srp
-scarp run examples/01-basics/01-hello.srp
+scarp verify examples/01-basics/01-hello.srp
+scarp exec examples/01-basics/01-hello.srp
 ```
 
 कमांड प्रोजेक्ट के मूल फ़ोल्डर से चलाएँ। आउटपुट की तुलना संबंधित `.stdout` फ़ाइल से करें। यदि कमांड PATH में नहीं है तो निर्मित executable का पूरा पथ प्रयोग करें।
