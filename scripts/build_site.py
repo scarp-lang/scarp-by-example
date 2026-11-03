@@ -170,6 +170,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <link rel="stylesheet" href="{style}">
 <link rel="canonical" href="{escape(PUBLIC_SITE + page.removesuffix("index.html"))}">
 <script src="{script}" defer></script>
+<script src="{escape(rel(page, "progress.js"))}" defer></script>
 </head>
 <body class="{escape(layout)}">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -215,6 +216,7 @@ def render_catalog() -> tuple[str, int]:
 <span class="eyebrow">CHAPTER {escape(section[:2])} · {len(chapter)} LESSONS</span>
 <h3>{escape(chapter_title.split("·", 1)[-1].strip())}</h3>
 <p>{escape(section_intro(EXAMPLES / section / "README.md"))}</p>
+<span class="chapter-progress" data-progress-chapter="{escape(section)}" aria-live="polite"></span>
 <span class="chapter-action">Explore chapter <span aria-hidden="true">↗</span></span></a>""")
     hello_source = escape(first.source.read_text(encoding="utf-8"))
     hello_output = escape(first.stdout.read_bytes().decode("utf-8").strip())
@@ -234,6 +236,17 @@ def render_catalog() -> tuple[str, int]:
 <pre><code>{hello_source}</code></pre>
 <div class="terminal-result"><span>Verified output</span><code>{hello_output}</code></div>
 </div>
+</section>
+<section class="progress-dashboard container-wide" data-progress-index="search-index.json"
+ data-progress-root="index.html" hidden aria-labelledby="dashboard-heading">
+<div><p class="eyebrow">YOUR LEARNING JOURNEY</p><h2 id="dashboard-heading">Pick up where you left off</h2>
+<p class="progress-disclaimer" data-progress-status>Saved only in this browser. No account or tracking.</p>
+<progress data-progress-bar max="{len(lessons)}" value="0" aria-label="Completed lessons"></progress>
+<p class="progress-count"><strong data-progress-count="all">0 of {len(lessons)} completed</strong></p></div>
+<div class="progress-actions"><a class="primary-button" data-progress-resume
+ href="{escape(rel("index.html", first.url))}">Start learning →</a>
+<button class="progress-reset" type="button" data-progress-clear>Clear saved progress</button>
+<p class="progress-feedback" role="status" data-progress-message></p></div>
 </section>
 <section class="search-area container-wide" id="search-area" aria-labelledby="search-heading">
 <div class="section-heading"><div><p class="eyebrow">FIND A TOPIC</p><h2 id="search-heading">Find your next example</h2></div><p>Search titles, syntax topics and chapters.</p></div>
@@ -271,6 +284,15 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict) -> str:
 <h1>{escape(title)}</h1><p class="lead">{escape(summary)}</p>
 <div class="guide-links"><a href="{REPOSITORY}/blob/main/examples/{escape(section)}/README.md">English guide ↗</a>
 <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/{escape(section)}.md">हिन्दी अध्याय ↗</a></div></header>
+<section class="chapter-progress-panel" data-progress-index="{escape(rel(page, "search-index.json"))}"
+ data-progress-root="{escape(rel(page, "index.html"))}" data-progress-scope="{escape(section)}"
+ hidden aria-label="Progress in this chapter">
+<div><p class="eyebrow">YOUR CHAPTER PROGRESS</p>
+<strong data-progress-count="{escape(section)}">0 of {len(lessons)} completed</strong>
+<progress data-progress-bar max="{len(lessons)}" value="0" aria-label="Completed chapter lessons"></progress>
+<p data-progress-status>Saved only in this browser. No account or tracking.</p></div>
+<a data-progress-resume href="{escape(rel(page, lessons[0].url))}" class="secondary-button">Continue chapter →</a>
+</section>
 <section class="chapter-list" aria-labelledby="chapter-list-title"><h2 id="chapter-list-title">Lessons in this chapter</h2>
 <div class="lesson-list">{cards}</div></section>
 <p class="fine-print">All examples are validated with Scarp v{escape(target["version"])}. Each lesson has its own code and expected-output page.</p>
@@ -342,7 +364,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     sidebar = "".join(
         f'<a href="{escape(rel(page, item.url))}"'
         + (' aria-current="page" class="active"' if item == lesson else '')
-        + f'><span>{escape(item.source.stem[:2])}</span>{escape(item.title)}</a>'
+        + f'><span>{escape(item.source.stem[:2])}</span>{escape(item.title)}<span class="completed-mark" data-progress-complete="{escape(item.section + "/" + item.source.stem)}" hidden aria-hidden="true">✓</span></a>'
         for item in chapter
     )
 
@@ -372,6 +394,18 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 <a lang="hi" href="#hi-notes">हिन्दी में समझें ↓</a></div></header>
 {code}
 {notes}
+<section class="lesson-progress-panel" data-progress-index="{escape(rel(page, "search-index.json"))}"
+ data-progress-root="{escape(rel(page, "index.html"))}"
+ data-progress-current="{escape(lesson.section + "/" + lesson.source.stem)}" hidden
+ aria-label="Local lesson progress">
+<div><p class="eyebrow">LEARNING PROGRESS</p>
+<h2>Keep your place</h2><p data-progress-status role="status">Mark this lesson complete when you are ready.</p>
+<p class="progress-disclaimer">Only saved in this browser. No account or tracking.</p></div>
+<div class="progress-actions">
+<button type="button" class="progress-toggle" data-progress-toggle aria-pressed="false">Mark lesson complete</button>
+<a data-progress-resume href="{escape(rel(page, lesson.url))}" class="secondary-button">Continue learning →</a>
+<p role="status" data-progress-message class="progress-feedback"></p></div>
+</section>
 <section class="run-panel" aria-labelledby="run-title">
 <div><p class="eyebrow">TRY IT LOCALLY</p><h2 id="run-title">Verify, then execute</h2>
 <p>Use the pinned compiler from the course root. Keep any imported <code>_support</code> files next to the source.</p></div>
@@ -393,7 +427,8 @@ def build(destination: Path) -> int:
     home, count = render_catalog()
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(home, encoding="utf-8", newline="\n")
-    index = [{"title": l.title, "chapter": l.chapter, "description": l.description,
+    index = [{"id": l.section + "/" + l.source.stem,
+              "title": l.title, "chapter": l.chapter, "description": l.description,
               "hindi_title": hindi_notes[l.source_path].title,
               "hindi_summary": hindi_notes[l.source_path].summary,
               "url": l.url} for l in lessons]
@@ -422,7 +457,7 @@ def build(destination: Path) -> int:
     )
     sitemap += "</urlset>\n"
     (destination / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-    for asset in ("styles.css", "search.js"):
+    for asset in ("styles.css", "search.js", "progress.js"):
         shutil.copyfile(ASSETS / asset, destination / asset)
     (destination / ".nojekyll").write_text("", encoding="utf-8")
     return count
