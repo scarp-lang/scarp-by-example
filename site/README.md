@@ -15,7 +15,7 @@ A course with 50 runnable examples produces **57 HTML documents** (home, six cha
 
 ## Browser behavior
 
-The theme toggle stores a preference locally when available; the initial dark design works without JavaScript. Search, copy-code and the English/हिन्दी explanation switch are progressive enhancements. With JavaScript disabled, both languages remain readable on each lesson page. Every lesson and chapter remains navigable without JavaScript, and the original GitHub source/fixture links are always present.
+The theme toggle stores a preference locally when available; the initial dark design works without JavaScript. Optional **learning progress** saves only the stable IDs of lessons you explicitly mark complete in the browser's `localStorage`; it does not send data to a server, require an account, or use cookies. Homepage progress, chapter totals, next-incomplete links and sidebar completion checks are computed from the generated lesson index. Progress can be cleared from the homepage after confirmation; cross-tab changes are reflected with the storage event. No progress UI appears if storage or the lesson index is unavailable. Search, copy-code and the English/हिन्दी explanation switch are progressive enhancements. With JavaScript disabled, both languages remain readable on each lesson page. Every lesson and chapter remains navigable without JavaScript, and the original GitHub source/fixture links are always present.
 
 Displayed source is escaped as text, not evaluated. Control-character output such as a literal carriage return is rendered visibly as `\\r`, without rewriting the original fixture. No code is executed in the browser.
 
@@ -26,6 +26,8 @@ The website renders English descriptions and documented expected results directl
 ```sh
 python -m unittest discover -s scripts -p 'test_*.py'
 python scripts/build_site.py --output dist
+node --check site/progress.js
+node --test site/test_progress.cjs
 ```
 
 The GitHub Pages workflow first compiles and validates every real Scarp lesson and checks the CLI, then generates the static site. Pull requests build the site but do not deploy; merged `main` changes deploy using GitHub Actions. Git tracks source files under `site/` and `scripts/`, not generated `dist/`.
