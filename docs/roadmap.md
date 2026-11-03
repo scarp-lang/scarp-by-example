@@ -9,13 +9,16 @@ This page separates course design from compiler implementation. A planned lesson
 | Typed functions and recursion | Functions | Working compiler fixtures and passing CI |
 | Numeric vectors, windows, matrices | Collections / AI foundations | Working compiler fixtures and passing CI |
 | Source modules and imports | Modules | Working compiler fixtures and passing CI |
-| Unicode text construction, slicing and repetition | Basics | Published alpha.3 implementation and passing exact-output CI |
+| Unicode text construction, slicing and repetition | Basics | Published alpha.3 implementation, retained in alpha.4 and passing exact-output CI |
 | Generic lists, maps, sets, records | Future | Compiler implements and tests the complete construct |
 | Structured errors and propagation | Future | Compiler ships a tested public syntax and runtime semantics |
 | Async, concurrency, networking | Future | Tested runtime APIs and deterministic, safe demonstrations |
 | Agents, inference tooling and model training | Future | Explicitly implemented APIs, repeatable local tests and honest limitations |
 
 ## Developer CLI
+
+**Published alpha.4:** The official compiler now supports offline `Scarp.project` directories with `create`, static project `verify`, and interpreter-backed `launch`. See the [English tutorial](project-workflow.md) and [हिन्दी](hi/project-workflow.md). This is a development manifest, **not** a package manager or native compiler.
+
 
 The pinned prerelease CLI is taught in separate [English](cli-quickstart.md) and [Hindi](hi/cli-quickstart.md) guides, backed by real-command smoke tests. Inspection metadata is **not** treated as a runnable `.srp` lesson; native compilation, an LSP and package tools remain outside the current verified feature set.
 
