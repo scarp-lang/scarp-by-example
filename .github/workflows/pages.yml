@@ -40,6 +40,9 @@ jobs:
       - name: Unit-test catalog and compiler verifier
         run: python -m unittest discover -s scripts -p 'test_*.py'
 
+      - name: Check browser JavaScript syntax (no dependencies)
+        run: node --check site/search.js
+
       - name: Build pinned compiler
         run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
 
