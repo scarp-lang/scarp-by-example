@@ -2,3 +2,4 @@
 *.stdout text eol=lf
 *.md text eol=lf
 *.py text eol=lf
+Scarp.project text eol=lf
