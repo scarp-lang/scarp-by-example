@@ -43,6 +43,11 @@ jobs:
       - name: Check browser JavaScript syntax (no dependencies)
         run: node --check site/search.js
 
+      - name: Test local progress tracking (no external packages)
+        run: |
+          node --check site/progress.js
+          node --test site/test_progress.cjs
+
       - name: Build pinned compiler
         run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
 
