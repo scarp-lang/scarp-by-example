@@ -1,81 +1,141 @@
-"""Tests for the deterministic, safe static course generator."""
+"""Tests for the static multipage learning site, routes, and source fidelity."""
 
-import tempfile
+from __future__ import annotations
+
 import json
+import tempfile
 import unittest
+from html.parser import HTMLParser
 from pathlib import Path
 
-from build_site import build, escape, lesson_description, render_catalog, render_lesson, section_heading
+from build_site import (
+    build, escape, lesson_description, read_course, render_catalog,
+    render_lesson, section_heading, table_cells,
+)
 from verify_examples import EXAMPLES, discover_examples
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
+class References(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.paths: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        fields = dict(attrs)
+        if tag in {"a", "link"} and fields.get("href"):
+            self.paths.append(fields["href"])
+        if tag == "script" and fields.get("src"):
+            self.paths.append(fields["src"])
+
+
 class SiteTests(unittest.TestCase):
-    def test_escapes_html_and_quotes(self):
+    def test_html_escape_never_injects_source_markup(self):
         self.assertEqual(escape('<script x="a">'), '&lt;script x=&quot;a&quot;&gt;')
 
-    def test_real_course_has_all_lessons(self):
-        page, total = render_catalog()
-        self.assertEqual(total, len(discover_examples(EXAMPLES)))
-        self.assertEqual(page.count('class="lesson"'), total)
-        self.assertIn("lang=\"en\"", page)
-        self.assertIn("01 · Scarp basics", page)
-        self.assertIn("06 · Foundations for AI-oriented programs", page)
-        self.assertNotIn('src="https://', page)
-        self.assertIn("हिन्दी में सीखें", page)
-        self.assertIn("/docs/hi/README.md", page)
-        target = json.loads((ROOT / "docs" / "compiler-target.json").read_text(encoding="utf-8"))
-        self.assertIn("Scarp v" + target["version"], page)
-        self.assertIn(target["source_commit"][:12], page)
-        self.assertIn(target["release_url"], page)
-        for section in sorted({src.parent.name for src, _ in discover_examples(EXAMPLES)}):
-            self.assertIn(f"/docs/hi/{section}.md", page)
-        self.assertEqual(page.count('lang="hi"'), 8)
-        self.assertIn('/docs/cli-quickstart.md', page)
-        self.assertIn('/docs/hi/cli-quickstart.md', page)
-        self.assertIn('scarp verify PATH_TO_LESSON.srp', page)
+    def test_parses_markdown_table_with_bitwise_pipe_operators(self):
+        cells = table_cells('| [14 · Bitwise](14-bitwise-fields.srp) | Uses ' +
+                            chr(96) + '|=' + chr(96) + ' and ' + chr(96) + '&' +
+                            chr(96) + ' | result |')
+        self.assertEqual(len(cells), 3)
+        self.assertIn("|=", cells[1])
 
-    def test_source_is_html_escaped(self):
+    def test_course_has_matching_chapters_and_true_fixtures(self):
+        lessons, chapters, target = read_course()
+        self.assertEqual(len(lessons), len(discover_examples(EXAMPLES)))
+        self.assertEqual(len(lessons), 50)
+        self.assertEqual(len(chapters), 6)
+        self.assertEqual(target["version"], "0.0.5-alpha.3")
+        for lesson in lessons:
+            self.assertTrue(lesson.source.is_file())
+            self.assertTrue(lesson.stdout.is_file())
+            self.assertTrue((ROOT / "docs" / "hi" / (lesson.section + ".md")).is_file())
+        self.assertIn("Scarp basics", section_heading(EXAMPLES / "01-basics" / "README.md"))
+        self.assertIn("displays a string", lesson_description(
+            EXAMPLES / "01-basics" / "README.md", "01-hello.srp"
+        ))
+
+    def test_home_is_chapter_focused_not_one_long_code_grid(self):
+        page, total = render_catalog()
+        self.assertEqual(total, 50)
+        self.assertEqual(page.count('class="chapter-tile"'), 6)
+        self.assertIn("One real program at a time", page)
+        self.assertIn('href="chapters/01-basics/index.html"', page)
+        self.assertIn("search-index.json", page)
+        self.assertIn("हिन्दी", page)
+        self.assertNotIn('class="lesson-card"', page)
+        self.assertNotIn('src="https://', page)
+
+    def test_render_lesson_escapes_untrusted_source_and_preserves_fixture(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
-            path = Path(directory)
-            src = path / "01-escape.srp"
-            out = path / "01-escape.stdout"
+            folder = Path(directory)
+            src = folder / "01-escape.srp"
+            stdout = folder / "01-escape.stdout"
             src.write_text('print("<unsafe>");\n', encoding="utf-8")
-            out.write_text("<unsafe>\n", encoding="utf-8")
-            markup = render_lesson(src, out, "Example & test")
+            stdout.write_bytes(b"<unsafe>\n")
+            markup = render_lesson(src, stdout, "Control")
             self.assertIn("&lt;unsafe&gt;", markup)
             self.assertNotIn('print("<unsafe>");', markup)
-            self.assertIn("Example &amp; test", markup)
+            self.assertEqual(stdout.read_bytes(), b"<unsafe>\n")
 
-    def test_carriage_return_is_displayed_without_rewriting_fixture(self):
+    def test_carriage_return_display_does_not_modify_fixture(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
-            base = Path(directory)
-            src = base / "01-control.srp"
-            out = base / "01-control.stdout"
+            folder = Path(directory)
+            src = folder / "01-cr.srp"
+            stdout = folder / "01-cr.stdout"
             src.write_text('print("line\\rstart");\n', encoding="utf-8")
-            original = b"line\rstart\n"
-            out.write_bytes(original)
-            markup = render_lesson(src, out, "Control escape")
+            raw = b"line\rstart\n"
+            stdout.write_bytes(raw)
+            markup = render_lesson(src, stdout, "CR output")
             self.assertIn(r"line\rstart", markup)
             self.assertNotIn("line\rstart", markup)
-            self.assertIn("Literal carriage return", markup)
-            self.assertEqual(out.read_bytes(), original)
+            self.assertIn("literal CR byte", markup)
+            self.assertEqual(stdout.read_bytes(), raw)
 
-    def test_section_guides_describe_own_lessons(self):
-        section = ROOT / "examples" / "01-basics"
-        self.assertIn("Scarp basics", section_heading(section / "README.md"))
-        self.assertIn("displays a string", lesson_description(section / "README.md", "01-hello.srp"))
-
-    def test_build_creates_static_artifacts(self):
-        with tempfile.TemporaryDirectory() as directory:
-            total = build(Path(directory))
-            self.assertEqual(total, len(discover_examples(EXAMPLES)))
-            page = (Path(directory) / "index.html").read_text(encoding="utf-8")
-            self.assertIn("Scarp by Example", page)
-            self.assertTrue((Path(directory) / "styles.css").is_file())
-            self.assertTrue((Path(directory) / "search.js").is_file())
-            self.assertTrue((Path(directory) / ".nojekyll").exists())
+    def test_build_all_pages_and_local_links(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder)
+            count = build(output)
+            self.assertEqual(count, 50)
+            self.assertTrue((output / ".nojekyll").is_file())
+            self.assertTrue((output / "styles.css").is_file())
+            self.assertTrue((output / "search.js").is_file())
+            self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
+            pages = list((output / "lessons").glob("*/*/index.html"))
+            self.assertEqual(len(pages), 50)
+            self.assertEqual(len(list(output.rglob("index.html"))), 57)
+            search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
+            self.assertEqual(len(search), 50)
+            self.assertEqual(len({x["url"] for x in search}), 50)
+            self.assertEqual({x["url"] for x in search},
+                             {p.relative_to(output).as_posix() for p in pages})
+            for page in output.rglob("index.html"):
+                content = page.read_text(encoding="utf-8")
+                self.assertIn('id="main-content"', content)
+                self.assertIn('href="#main-content"', content)
+                self.assertIn('id="theme-toggle"', content)
+                self.assertNotIn('src="https://', content)
+                links = References()
+                links.feed(content)
+                for link in links.paths:
+                    if link.startswith(("http:", "https:", "mailto:", "#")):
+                        continue
+                    path = link.split("#", 1)[0]
+                    if not path:
+                        continue
+                    destination = (page.parent / path).resolve()
+                    self.assertTrue(destination.is_file(),
+                                    f"{page.relative_to(output)} -> {link}")
+            first = output / "lessons/01-basics/01-hello/index.html"
+            lesson = first.read_text(encoding="utf-8")
+            self.assertIn("Expected stdout", lesson.upper().replace("EXPECTED OUTPUT", "Expected stdout"))
+            self.assertIn("scarp verify examples/01-basics/01-hello.srp", lesson)
+            self.assertIn("scarp exec examples/01-basics/01-hello.srp", lesson)
+            self.assertIn('data-copy="scarp-code"', lesson)
+            self.assertIn('aria-current="page"', lesson)
+            last = output / "lessons/06-ai-foundations/11-matrix-probabilities/index.html"
+            self.assertIn("End of course", last.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
