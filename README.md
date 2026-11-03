@@ -10,9 +10,11 @@ Scarp by Example is the hands-on companion to the Scarp programming language. Le
 
 ## Online lessons
 
-The [searchable lesson catalog](https://scarp-lang.github.io/scarp-by-example/) presents the same source-backed examples and expected output fixtures in a readable website. Scarp code executes locally with the compiler, **not** in the browser. The [Pages workflow](.github/workflows/pages.yml) validates the full lesson suite before publishing.
+The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provides **a dedicated URL for every runnable lesson**, plus six chapter overview pages, source code, byte-exact expected output, previous/next navigation, lesson search, and dark/light themes. It remains a static GitHub Pages site: Scarp code executes locally with the compiler, **not** in the browser. The [Pages workflow](.github/workflows/pages.yml) validates all lessons before publishing.
 
 **Scarp-first CLI quickstart:** [English guide](docs/cli-quickstart.md) · [हिन्दी गाइड](docs/hi/cli-quickstart.md). Static `verify` is different from the older `check`, which can evaluate runtime expressions.
+
+**Website navigation:** Open a chapter from the home page, then select an example. For a direct link, use a path like [01 · Hello](https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/). The same source and output fixtures remain in Git; [site development notes](site/README.md) document the generated routes.
 
 ## Start here
 
