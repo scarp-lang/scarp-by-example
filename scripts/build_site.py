@@ -7,6 +7,7 @@ import argparse
 import html
 import json
 import posixpath
+import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -39,6 +40,30 @@ class Lesson:
 
 def escape(value: str) -> str:
     return html.escape(value, quote=True)
+
+
+# Display-only highlighting: these spans never parse or execute Scarp code.
+SCARP_TOKENS = re.compile(
+    r'(?P<comment>//[^\n]*)'
+    r'|(?P<string>"(?:\\.|[^"\\])*")'
+    r'|(?P<keyword>\b(?:bind|var|pub|import|as|pure|funcra|return|'
+    r'needs|ensures|if|elif|else|while|repeat|true|false|and|or|not)\b)'
+    r'|(?P<number>\b\d+(?:\.\d+)?\b)'
+)
+
+
+def highlight_scarp(source: str) -> str:
+    """Only decorate escaped code tokens; preserve every source character."""
+    tokens: list[str] = []
+    position = 0
+    for match in SCARP_TOKENS.finditer(source):
+        tokens.append(escape(source[position:match.start()]))
+        tokens.append(
+            f'<span class="syntax-{match.lastgroup}">{escape(match.group())}</span>'
+        )
+        position = match.end()
+    tokens.append(escape(source[position:]))
+    return "".join(tokens)
 
 
 def section_heading(readme: Path) -> str:
@@ -252,7 +277,7 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
 <section class="code-panel" aria-labelledby="source-title"><div class="panel-heading">
 <div><span class="eyebrow">ORIGINAL SOURCE</span><h2 id="source-title">{escape(source.name)}</h2></div>
 <button type="button" class="copy-button" data-copy="scarp-code">Copy code</button></div>
-<pre><code id="scarp-code">{escape(raw)}</code></pre>
+<pre><code id="scarp-code">{highlight_scarp(raw)}</code></pre>
 <div class="panel-footer"><a href="{escape(src_url)}">View .srp on GitHub ↗</a></div></section>
 <section class="code-panel output-panel" aria-labelledby="output-title"><div class="panel-heading">
 <div><span class="eyebrow">EXPECTED OUTPUT</span><h2 id="output-title">stdout</h2></div>
