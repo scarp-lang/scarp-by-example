@@ -22,7 +22,7 @@ Each entry requires:
 - `explanation`: an accurate, concise English and Hindi explanation
   grounded in the source program and the expected result.
 
-There is currently one question in each of the six chapters; add any new
+There are currently three questions in each of the six chapters (18 total); add any new
 question only after inspecting its real Scarp source, supporting modules, and
 fixture. A matching fixture is necessary but **not sufficient** evidence that a
 question is well written: review distractors, explanation, and Hindi translation
@@ -60,6 +60,6 @@ service. Completing a checkpoint never automatically marks a lesson complete.
 
 A matching fixture line does not prove every interpretation in the explanation:
 the review must also check the source implementation. This first set contains
-**six** reviewed questions, not one automatically generated quiz for each of
+**18** reviewed questions, not one automatically generated quiz for each of
 the 50 lessons. Further chapters or questions require matching real examples
 and review, not copied filler.

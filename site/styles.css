@@ -453,3 +453,19 @@ html.js-ready .language-switch { display: flex; }
   .checkpoint-buttons, .checkpoint-feedback { display: none !important; }
   .checkpoint-fallback { display: block !important; }
 }
+
+/* Quiz discovery on source-backed chapter pages. */
+.chapter-check-count {
+  display: block;
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 650;
+  margin-top: .45rem;
+}
+.lesson-check-tag {
+  display: block;
+  margin-top: .3rem;
+  font-size: .76rem;
+  font-weight: 650;
+  color: var(--mint);
+}

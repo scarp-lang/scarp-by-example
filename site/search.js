@@ -131,6 +131,11 @@
         const chapter = document.createElement("small");
         chapter.textContent = item.chapter + " · " + item.hindi_title;
         link.append(name, chapter);
+        if (item.has_checkpoint === true) {
+          const quiz = document.createElement("small");
+          quiz.textContent = "Quick check available · अभ्यास प्रश्न";
+          link.append(quiz);
+        }
         li.append(link);
         results.append(li);
       }
