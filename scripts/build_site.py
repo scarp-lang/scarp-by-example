@@ -672,7 +672,7 @@ returns metadata without evaluating <code>print</code>.
 result <code>42</code>.</p>
 <div class="practice-challenge"><p><strong>Try it:</strong> Run inspection against
 the project directory, then against <code>tutorials/module-inspection/src/main.srp</code>.
-Compare schema-v1 inventories; the checked-in CLI tests require equality.</p></div>
+Compare imports, dependencies and symbols. Schema-v1 module display labels may differ across platforms; the checked-in CLI tests compare the underlying graph.</p></div>
 </div>
 <div class="note-content" id="hi-notes" lang="hi">
 <p><code>Scarp.project</code> में <code>src/main.srp</code> को entrypoint चुना गया है।
