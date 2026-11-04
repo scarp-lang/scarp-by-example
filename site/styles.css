@@ -494,3 +494,44 @@ html.js-ready .language-switch { display: flex; }
 .lab-reveals p { line-height: 1.75; }
 @media (max-width: 950px) { .lab-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 650px) { .lab-grid, .lab-translations { grid-template-columns: 1fr; } }
+
+
+/* Structured chapter pathway: lesson reading, evidence-backed checks, local coding. */
+.chapter-path { margin: 2.3rem 0 3.1rem; scroll-margin-top: 105px; }
+.chapter-path .section-heading { align-items: start; }
+.chapter-path .section-heading p { max-width: 340px; }
+.path-steps {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem; margin: 0; padding: 0; list-style: none;
+}
+.path-step {
+  position: relative; min-width: 0; padding: 1.5rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 15px;
+}
+.path-step-number {
+  display: inline-grid; place-items: center; width: 2rem; height: 2rem;
+  color: var(--mint); background: var(--surface-alt); border: 1px solid var(--line);
+  border-radius: .55rem; font: 750 .85rem ui-monospace, Consolas, monospace;
+}
+.path-step h3 { margin: .9rem 0 .6rem; font-size: 1.18rem; }
+.path-step h3 span { font-weight: 500; color: var(--muted); }
+.path-step > p { color: var(--muted); font-size: .91rem; line-height: 1.7; }
+.path-step-link { font-weight: 700; text-underline-offset: 3px; }
+.path-step-status { font-size: .8rem !important; margin: .85rem 0 0; }
+.path-check-links { margin: .55rem 0 0; padding-left: 1.25rem; }
+.path-check-links li { margin-bottom: .55rem; line-height: 1.5; }
+.path-check-links a { font-size: .88rem; }
+.path-disclaimer { color: var(--muted); font-size: .83rem; max-width: 840px; margin: 1rem 0 0; }
+.lesson-path-nav {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: .6rem 1.25rem; margin: 0 0 1.4rem;
+  padding: .9rem 1.1rem; border: 1px solid var(--line);
+  background: var(--surface-alt); border-radius: 12px; font-size: .88rem;
+}
+.lesson-path-nav a { font-weight: 650; }
+#checkpoint { scroll-margin-top: 105px; }
+@media (max-width: 990px) { .path-steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 680px) {
+  .path-steps { grid-template-columns: 1fr; }
+  .chapter-path .section-heading { display: block; }
+}
