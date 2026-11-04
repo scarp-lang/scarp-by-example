@@ -180,8 +180,10 @@
         storage.setItem(KEY, serializeCompleted(next, manifest));
         completed = next;
         render();
+        return true;
       } catch (_) {
         say("Progress could not be saved in this browser.");
+        return false;
       }
     }
 
@@ -253,9 +255,10 @@
               say("Backup read successfully. No new completed lessons to restore.");
               return;
             }
-            persist(next);
-            say("Restored " + added + " completed lesson" + (added === 1 ? "" : "s") +
-                ". Existing progress was preserved.");
+            if (persist(next)) {
+              say("Restored " + added + " completed lesson" + (added === 1 ? "" : "s") +
+                  ". Existing progress was preserved.");
+            }
           } catch (_) {
             say("Could not read that backup. Your current progress was not changed.");
           }
