@@ -221,8 +221,33 @@ def project_inspection_smoke(compiler: Path, timeout: int) -> None:
             or not isinstance(from_file.get("modules"), list)
             or len(from_file["modules"]) != 2):
         raise CliSmokeError("project module inspection: unexpected two-module inventory")
-    if from_project != from_file or from_alias != from_project:
-        raise CliSmokeError("source, project and legacy module inventories differ")
+    # Schema-v1 module.path is a loader-provided *display label*, not a stable
+    # identity. Directory/file entrypaths can display differently on Windows.
+    # Preserve every other field: graph IDs, spans, symbol metadata and edges.
+    def semantic_inventory(inventory: dict) -> dict:
+        modules = inventory.get("modules")
+        if not isinstance(modules, list):
+            raise CliSmokeError("module inspection: missing modules array")
+        for module in modules:
+            if not isinstance(module, dict) or not isinstance(module.get("path"), str):
+                raise CliSmokeError("module inspection: missing display path")
+            if not module["path"].replace("\\\\", "/").endswith(".srp"):
+                raise CliSmokeError("module inspection: unexpected source label")
+        return {**inventory, "modules": [
+            {key: value for key, value in module.items() if key != "path"}
+            for module in modules
+        ]}
+
+    expected_graph = semantic_inventory(from_file)
+    for label, metadata in (("project directory", from_project),
+                            ("legacy project alias", from_alias)):
+        actual = semantic_inventory(metadata)
+        if actual != expected_graph:
+            keys = sorted(
+                key for key in set(actual) | set(expected_graph)
+                if actual.get(key) != expected_graph.get(key)
+            )
+            raise CliSmokeError(f"{label}: non-display metadata differs in {keys}")
 
     # Static inspection must not evaluate ordinary runtime statements.
     with tempfile.TemporaryDirectory(prefix="scarp-inspection-smoke-") as directory:
