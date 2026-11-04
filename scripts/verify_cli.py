@@ -231,7 +231,7 @@ def project_inspection_smoke(compiler: Path, timeout: int) -> None:
         for module in modules:
             if not isinstance(module, dict) or not isinstance(module.get("path"), str):
                 raise CliSmokeError("module inspection: missing display path")
-            if not module["path"].replace("\\\\", "/").endswith(".srp"):
+            if not module["path"].replace(chr(92), "/").endswith(".srp"):
                 raise CliSmokeError("module inspection: unexpected source label")
         return {**inventory, "modules": [
             {key: value for key, value in module.items() if key != "path"}
