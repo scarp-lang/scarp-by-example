@@ -275,7 +275,7 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 </section>
 <section class="chapters container-wide" id="chapters" aria-labelledby="chapters-heading">
 <div class="section-heading"><div><p class="eyebrow">LEARNING PATH</p><h2 id="chapters-heading">Explore by chapter</h2></div>
-<p>Six structured chapters. Choose a topic and read one example at a time.</p></div>
+<p>Six structured chapters: read real code, answer bilingual checkpoints, then solve a coding lab.</p></div>
 <div class="chapter-grid">{''.join(tiles)}</div>
 </section>
 <section class="project-feature container-wide" aria-labelledby="projects-heading">
@@ -300,12 +300,74 @@ scarp launch hello-world</code></pre></div>
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
 
 
+def render_chapter_path(section: str, lessons: list[Lesson],
+                        question_paths: set[str], lab: GuidedLab) -> str:
+    """Show a genuine read → self-check → code sequence from existing artifacts.
+
+    Self-check and lab success are deliberately not inferred from lesson progress:
+    the website does not record quiz answers or execute the learner's code.
+    """
+    if lab.identifier != section:
+        raise ValueError(f"guided lab does not match chapter {section}")
+    checks = [lesson for lesson in lessons if lesson.source_path in question_paths]
+    if not checks:
+        raise ValueError(f"no source-backed checkpoints for chapter {section}")
+    if len(checks) != len({lesson.source_path for lesson in checks}):
+        raise ValueError(f"duplicate checkpoint for chapter {section}")
+    page = chapter_url(section)
+    checkpoint_links = "".join(
+        f'<li><a href="{escape(rel(page, lesson.url))}#checkpoint">'
+        f'{escape(lesson.title)} · <span lang="hi">अभ्यास</span></a></li>'
+        for lesson in checks
+    )
+    return f"""<section class="chapter-path" id="chapter-path" aria-labelledby="chapter-path-heading">
+<div class="section-heading">
+<div><p class="eyebrow">YOUR CHAPTER LEARNING PATH · सीखने का क्रम</p>
+<h2 id="chapter-path-heading">Read. Check. Build.</h2></div>
+<p>Three linked steps using real Scarp source and verified output.</p></div>
+<ol class="path-steps">
+<li class="path-step">
+<span class="path-step-number" aria-hidden="true">01</span>
+<h3>Read the lessons <span lang="hi">· पाठ पढ़ें</span></h3>
+<p>Work through all {len(lessons)} verified examples. Save optional local lesson
+progress as you learn; this does not certify code execution.</p>
+<a class="path-step-link" href="{escape(rel(page, lessons[0].url))}">Start with {escape(lessons[0].title)} ↗</a>
+<p class="path-step-status" data-path-lesson-status="{escape(section)}">
+Lesson tracking is optional and only available when browser storage works.</p>
+</li>
+<li class="path-step">
+<span class="path-step-number" aria-hidden="true">02</span>
+<h3>Check understanding <span lang="hi">· समझ जाँचें</span></h3>
+<p>Try {len(checks)} bilingual questions linked directly to their original
+source and expected output. No quiz score is stored.</p>
+<ul class="path-check-links">{checkpoint_links}</ul>
+</li>
+<li class="path-step">
+<span class="path-step-number" aria-hidden="true">03</span>
+<h3>Write Scarp <span lang="hi">· कोड लिखें</span></h3>
+<p>Edit the real starter locally, compare output with the compiler-verified goal,
+and use the hint or tested solution when needed.</p>
+<a class="path-step-link" href="{escape(rel(page, lab.url))}">Open {escape(lab.title["en"])} lab ↗</a>
+</li>
+</ol>
+<p class="path-disclaimer">Lesson completion is voluntary local tracking.
+Passing a quiz or lab is not automatically recorded or claimed by this website.
+The Scarp compiler runs locally, not in your browser.</p>
+</section>"""
+
+
 def render_chapter(section: str, lessons: list[Lesson], target: dict,
-                   question_paths: set[str] | None = None) -> str:
+                   question_paths: set[str] | None = None, lab: GuidedLab | None = None) -> str:
     page = chapter_url(section)
     title = lessons[0].chapter
     summary = section_intro(EXAMPLES / section / "README.md")
     cards = "".join(lesson_card(item, page, question_paths) for item in lessons)
+    if lab is None:
+        matching = [item for item in read_labs(ROOT) if item.identifier == section]
+        if len(matching) != 1:
+            raise ValueError(f"missing guided lab for chapter {section}")
+        lab = matching[0]
+    path_steps = render_chapter_path(section, lessons, question_paths or set(), lab)
     main = f"""<main id="main-content" class="container-wide chapter-page">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(page, "index.html"))}">All chapters</a><span>/</span><span aria-current="page">{escape(title)}</span></nav>
 <header class="page-heading"><p class="eyebrow">CHAPTER {escape(section[:2])} · {len(lessons)} LESSONS</p>
@@ -322,6 +384,7 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
 <p data-progress-status>Saved only in this browser. No account or tracking.</p></div>
 <a data-progress-resume href="{escape(rel(page, lessons[0].url))}" class="secondary-button">Continue chapter →</a>
 </section>
+{path_steps}
 <section class="chapter-list" aria-labelledby="chapter-list-title"><h2 id="chapter-list-title">Lessons in this chapter</h2>
 <div class="lesson-list">{cards}</div></section>
 <p class="fine-print">All examples are validated with Scarp v{escape(target["version"])}. Each lesson has its own code and expected-output page.</p>
@@ -386,6 +449,9 @@ def render_lab_page(lab: GuidedLab, target: dict) -> str:
 <h1>{escape(lab.title["en"])}</h1>
 <p lang="hi" class="lead">{escape(lab.title["hi"])}</p>
 </header>
+<nav class="lesson-path-nav" aria-label="Chapter learning path">
+<a href="{escape(rel(page, chapter_url(lab.identifier)))}#chapter-path">← Return to this chapter learning path</a>
+</nav>
 <section class="lab-task" aria-label="Your task">
 <h2>The challenge · अभ्यास</h2>
 <div class="lab-translations">
@@ -600,7 +666,7 @@ def render_checkpoint(lesson: Lesson, questions: dict[str, dict]) -> str:
         language: correct[language] + " — " + explanation[language]
         for language in ("en", "hi")
     }
-    return f"""<section class="checkpoint-card" data-checkpoint
+    return f"""<section class="checkpoint-card" id="checkpoint" data-checkpoint
  data-checkpoint-answer="{question["correct"]}" aria-labelledby="checkpoint-title">
 <p class="eyebrow">SOURCE-BACKED SELF-CHECK · स्रोत-आधारित अभ्यास</p>
 <h2 id="checkpoint-title">Quick checkpoint / त्वरित अभ्यास</h2>
@@ -660,6 +726,11 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 <h1>{escape(lesson.title)}</h1><p class="lead">{escape(lesson.description)}</p>
 <div class="guide-links"><a href="{REPOSITORY}/blob/main/examples/{escape(lesson.section)}/README.md">Read the English notes ↗</a>
 <a lang="hi" href="#hi-notes">हिन्दी में समझें ↓</a></div></header>
+<nav class="lesson-path-nav" aria-label="Chapter learning path">
+<a href="{escape(rel(page, chapter_url(lesson.section)))}#chapter-path">← Chapter learning path</a>
+{f'<a href="#checkpoint">Practice checkpoint ↓</a>' if checkpoint else ''}
+<a href="{escape(rel(page, "labs/" + lesson.section + "/index.html"))}">Try chapter coding lab ↗</a>
+</nav>
 {code}
 {notes}
 {checkpoint}
@@ -720,7 +791,8 @@ def build(destination: Path) -> int:
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render_chapter(section, chapter, target, set(questions)),
+        path.write_text(render_chapter(section, chapter, target, set(questions),
+                                      next(lab for lab in labs if lab.identifier == section)),
                         encoding="utf-8", newline="\n")
     for lesson in lessons:
         path = destination / lesson.url
