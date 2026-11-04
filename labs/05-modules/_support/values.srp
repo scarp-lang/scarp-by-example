@@ -1,0 +1,2 @@
+// This public value is imported by the guided modules lab.
+pub bind value = 21;

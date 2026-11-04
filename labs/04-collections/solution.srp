@@ -1,0 +1,3 @@
+// Compute the mean of four numeric vector elements.
+bind numbers = [1.0, 2.0, 3.0, 4.0];
+print(mean(numbers));
