@@ -54,7 +54,7 @@ scarp launch tutorials/module-inspection
 ```
 
 - `verify DIRECTORY` validates the versioned manifest, entrypoint and imported source **statically**, with successful output on neither stream.
-- Both `inspect modules --json` commands expose schema-v1 module metadata. The project-directory form resolves to the same canonical entrypoint as the source-file form; their parsed inventories should agree. They do not print the program result.
+- Both `inspect modules --json` commands expose schema-v1 module metadata. The project-directory form resolves to the same canonical entrypoint as the source-file form. Their module graph and symbol metadata should agree; schema-v1 `module.path` is a loader-provided **display label**, so its presentation can differ by operating system or invocation. They do not print the program result.
 - `launch DIRECTORY` executes through the actual interpreter and prints `42` followed by LF. Compare its stdout byte-for-byte with [expected.stdout](../tutorials/module-inspection/expected.stdout).
 
 You can also run `scarp modules --json tutorials/module-inspection` for legacy compatibility, but prefer the Scarp-first `inspect modules` spelling in new tooling. Use `scarp guide inspect modules` for current help.
