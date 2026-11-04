@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import unittest
+from collections import Counter
 
 from build_site import read_course, render_checkpoint
 from practice_questions import read_practice_questions, validate_question
@@ -19,8 +20,9 @@ class PracticeQuestionTests(unittest.TestCase):
             for src, out in discover_examples(ROOT / "examples")
         }
 
-    def test_one_real_question_in_each_of_six_chapters(self):
-        self.assertEqual(len(self.questions), 6)
+    def test_three_real_questions_in_each_of_six_chapters(self):
+        self.assertEqual(len(self.questions), 18)
+        self.assertEqual(set(Counter(src.split("/")[1] for src in self.questions).values()), {3})
         self.assertEqual(
             {src.split("/")[1] for src in self.questions},
             {"01-basics", "02-control-flow", "03-functions",
@@ -42,7 +44,11 @@ class PracticeQuestionTests(unittest.TestCase):
             validate_question(question, self.fixtures)
         question["correct"] = 1
         question["options"][0] = copy.deepcopy(question["options"][1])
-        with self.assertRaisesRegex(ValueError, "duplicate answer"):
+        with self.assertRaisesRegex(ValueError, "duplicate en answer"):
+            validate_question(question, self.fixtures)
+        question = copy.deepcopy(next(iter(self.questions.values())))
+        question["options"][0]["hi"] = question["options"][1]["hi"]
+        with self.assertRaisesRegex(ValueError, "duplicate hi answer"):
             validate_question(question, self.fixtures)
 
     def test_missing_translation_and_unknown_source_are_rejected(self):
