@@ -9,13 +9,14 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `index.html` | Homepage, six chapter cards and a client-side lesson finder |
 | `chapters/NN-topic/index.html` | Chapter overview with links to its runnable lessons |
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
-| `projects/index.html` | Source-backed English/Hindi guide to published alpha.4 `create`, project `verify` and `launch` |\n| `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
+| `projects/index.html` | Source-backed English/Hindi guide to published alpha.4 `create`, project `verify` and `launch` |
+| `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
 
 A course with 50 runnable examples produces **58 HTML documents** (home, six chapters, fifty lessons and one project workflow page). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
 
 ## Browser behavior
 
-The theme toggle stores a preference locally when available; the initial dark design works without JavaScript. Optional **learning progress** saves only the stable IDs of lessons you explicitly mark complete in the browser's `localStorage`; it does not send data to a server, require an account, or use cookies. Homepage progress, chapter totals, next-incomplete links and sidebar completion checks are computed from the generated lesson index. Progress can be cleared from the homepage after confirmation; cross-tab changes are reflected with the storage event. No progress UI appears if storage or the lesson index is unavailable. Search, copy-code and the English/हिन्दी explanation switch are progressive enhancements. With JavaScript disabled, both languages remain readable on each lesson page. Every lesson and chapter remains navigable without JavaScript, and the original GitHub source/fixture links are always present.
+The theme toggle stores a preference locally when available; the initial dark design works without JavaScript. Optional **learning progress** saves only the stable IDs of lessons you explicitly mark complete in the browser's `localStorage`; it does not send data to a server, require an account, or use cookies. Homepage progress, chapter totals, next-incomplete links and sidebar completion checks are computed from the generated lesson index. Progress can be exported as a small local JSON backup and restored on another device by importing that file; restore **merges** the recognized completed lesson IDs and does not remove existing progress. Corrupt, oversized, unsupported-version and unsafe backup contents are rejected. Export/import use browser APIs only: no server upload, analytics or account. Progress can still be cleared from the homepage after confirmation; cross-tab changes are reflected with the storage event. No progress UI appears if storage or the lesson index is unavailable. Search, copy-code and the English/हिन्दी explanation switch are progressive enhancements. With JavaScript disabled, both languages remain readable on each lesson page. Every lesson and chapter remains navigable without JavaScript, and the original GitHub source/fixture links are always present.
 
 Displayed source is escaped as text, not evaluated. Control-character output such as a literal carriage return is rendered visibly as `\\r`, without rewriting the original fixture. No code is executed in the browser.
 
@@ -27,7 +28,7 @@ The project page reads an actual checked-in `Scarp.project`, `.srp` file and exa
 python -m unittest discover -s scripts -p 'test_*.py'
 python scripts/build_site.py --output dist
 node --check site/progress.js
-node --test site/test_progress.cjs
+node --test site/test_progress.cjs site/test_progress_dom.cjs
 ```
 
 The GitHub Pages workflow first compiles and validates every real Scarp lesson and checks the CLI, then generates the static site. Pull requests build the site but do not deploy; merged `main` changes deploy using GitHub Actions. Git tracks source files under `site/` and `scripts/`, not generated `dist/`.
