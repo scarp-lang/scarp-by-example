@@ -1,0 +1,4 @@
+// Lab: change the arithmetic operator to compute the area.
+bind width = 6;
+bind height = 7;
+print(width + height);
