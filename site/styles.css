@@ -469,3 +469,28 @@ html.js-ready .language-switch { display: flex; }
   font-weight: 650;
   color: var(--mint);
 }
+
+
+/* Six source-verified guided coding labs with genuine starter/solution disclosure. */
+.lab-index, .lab-detail { padding-block: 2.6rem 4.5rem; }
+.lab-index .page-heading, .lab-detail .page-heading { margin-bottom: 2rem; }
+.lab-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 2rem 0; }
+.lab-card { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow); text-decoration: none; }
+.lab-card:hover, .lab-card:focus-visible { border-color: var(--mint); }
+.lab-card h2 { color: var(--text); font-size: 1.35rem; margin: .8rem 0 .5rem; }
+.lab-card p { color: var(--muted); margin: 0; }
+.lab-open { display: block; margin-top: 1rem; font-weight: 700; color: var(--accent); }
+.lab-task { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; margin: 1.5rem 0; }
+.lab-task h2 { font-size: 1.35rem; margin: 0 0 .8rem; }
+.lab-translations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.lab-translations p { margin: 0; line-height: 1.75; }
+.lab-detail .code-grid { margin: 1.4rem 0; }
+.lab-detail .code-panel pre, .lab-reveals pre { overflow-x: auto; white-space: pre; }
+.lab-reveals { display: grid; gap: 1rem; margin: 1.5rem 0; }
+.lab-reveals details { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 1.2rem 1.4rem; }
+.lab-reveals summary { cursor: pointer; font-weight: 750; }
+.lab-reveals details[open] { border-color: var(--mint); }
+.lab-reveals pre { padding: 1rem; background: var(--code); color: #dbe8ff; border-radius: 10px; }
+.lab-reveals p { line-height: 1.75; }
+@media (max-width: 950px) { .lab-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 650px) { .lab-grid, .lab-translations { grid-template-columns: 1fr; } }

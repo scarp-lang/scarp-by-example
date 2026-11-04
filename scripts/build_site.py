@@ -15,6 +15,7 @@ from pathlib import Path, PurePosixPath
 from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_stdout
 from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
 from practice_questions import read_practice_questions
+from guided_labs import GuidedLab, read_labs
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -186,6 +187,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
   <a href="{home}#chapters">Chapters</a>
   <a href="{home}#search-area">Search</a>
   <a href="{escape(rel(page, "projects/index.html"))}">Projects</a>
+  <a href="{escape(rel(page, "labs/index.html"))}">Coding labs</a>
   <a href="{COMPILER}">Compiler</a>
   <a href="{REPOSITORY}">GitHub</a>
 </nav>
@@ -237,7 +239,8 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <h1>Learn Scarp.<br><span>One real program at a time.</span></h1>
 <p class="lead">From your first line of code to numerical computing. Every lesson has its own page with real Scarp source, verified output, English and Hindi explanations, and a practice question.</p>
 <div class="hero-buttons"><a class="primary-button" href="{escape(rel("index.html", first.url))}">Start learning <span aria-hidden="true">→</span></a>
-<a class="secondary-button" href="#chapters">Explore chapters</a></div>
+<a class="secondary-button" href="#chapters">Explore chapters</a>
+<a class="secondary-button" href="labs/index.html">Solve guided labs ↗</a></div>
 <div class="hero-stats"><span><strong>{len(lessons)}</strong> runnable lessons</span>
 <span><strong>{len(chapters)}</strong> chapters</span><span><strong>English + हिन्दी</strong> explanations</span></div>
 </div>
@@ -308,7 +311,8 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
 <header class="page-heading"><p class="eyebrow">CHAPTER {escape(section[:2])} · {len(lessons)} LESSONS</p>
 <h1>{escape(title)}</h1><p class="lead">{escape(summary)}</p>
 <div class="guide-links"><a href="{REPOSITORY}/blob/main/examples/{escape(section)}/README.md">English guide ↗</a>
-<a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/{escape(section)}.md">हिन्दी अध्याय ↗</a></div></header>
+<a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/{escape(section)}.md">हिन्दी अध्याय ↗</a>
+<a href="{escape(rel(page, "labs/" + section + "/index.html"))}">Coding lab for this chapter ↗</a></div></header>
 <section class="chapter-progress-panel" data-progress-index="{escape(rel(page, "search-index.json"))}"
  data-progress-root="{escape(rel(page, "index.html"))}" data-progress-scope="{escape(section)}"
  hidden aria-label="Progress in this chapter">
@@ -325,6 +329,109 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
     return page_shell(page, title, summary, main, "chapter-layout")
 
 
+
+
+
+def render_labs_index(labs: list[GuidedLab], target: dict) -> str:
+    """Discovery page for six independently compiler-verified guided exercises."""
+    page = "labs/index.html"
+    cards = "".join(
+        f'<a class="lab-card" href="{escape(rel(page, lab.url))}">'
+        + f'<span class="eyebrow">LAB {escape(lab.identifier[:2])}</span>'
+        + f'<h2>{escape(lab.title["en"])}</h2>'
+        + f'<p lang="hi">{escape(lab.title["hi"])}</p>'
+        + f'<span class="lab-open">Open guided exercise ↗</span></a>'
+        for lab in labs
+    )
+    main = f"""<main id="main-content" class="container-wide lab-index">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<span aria-current="page">Coding labs</span></nav>
+<header class="page-heading"><p class="eyebrow">LEARN BY EDITING REAL SCARP</p>
+<h1>Guided coding labs</h1>
+<p class="lead">Six practical challenges, one per chapter. Start with working Scarp,
+change it to match an exact expected output, and check your code using the published compiler.
+Tasks and hints are available in English and हिन्दी.</p></header>
+<section class="lab-grid" aria-label="Coding labs">{cards}</section>
+<section class="run-panel"><h2>No simulated results</h2>
+<p>Every starter and reference solution is verified with the pinned Scarp compiler,
+and each solution must match its checked-in output fixture byte for byte.
+You edit and run Scarp on your own computer. There is no browser compiler or score tracking.</p>
+<p>Compiler target: <a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>.
+<a href="{REPOSITORY}/blob/main/docs/guided-labs.md">Read lab instructions ↗</a></p>
+</section></main>"""
+    return page_shell(page, "Guided coding labs",
+                      "Six bilingual compiler-verified Scarp exercises", main, "lab-layout")
+
+
+def render_lab_page(lab: GuidedLab, target: dict) -> str:
+    """Display an authentic starter, native hint and solution reveals, and real stdout."""
+    page = lab.url
+    folder = "labs/" + lab.identifier
+    source = lab.starter.read_text(encoding="utf-8")
+    solution = lab.solution.read_text(encoding="utf-8")
+    expected = read_expected_stdout(lab.expected).decode("utf-8")
+    visible_output = expected.replace("\r", r"\r")
+    source_url = REPOSITORY + "/blob/main/" + folder + "/starter.srp"
+    solution_url = REPOSITORY + "/blob/main/" + folder + "/solution.srp"
+    fixture_url = REPOSITORY + "/blob/main/" + folder + "/solution.stdout"
+    previous = escape(rel(page, "labs/index.html"))
+    main = f"""<main id="main-content" class="container-wide lab-detail">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<a href="{previous}">Coding labs</a><span>/</span>
+<span aria-current="page">{escape(lab.title["en"])}</span></nav>
+<header class="page-heading">
+<p class="eyebrow">GUIDED LAB {escape(lab.identifier[:2])} OF 06 · VERIFIED SCARP</p>
+<h1>{escape(lab.title["en"])}</h1>
+<p lang="hi" class="lead">{escape(lab.title["hi"])}</p>
+</header>
+<section class="lab-task" aria-label="Your task">
+<h2>The challenge · अभ्यास</h2>
+<div class="lab-translations">
+<p lang="en">{escape(lab.task["en"])}</p>
+<p lang="hi">{escape(lab.task["hi"])}</p></div>
+</section>
+<div class="code-grid">
+<section class="code-panel" aria-labelledby="lab-starter-title">
+<div class="panel-heading"><div><span class="eyebrow">EDIT THIS STARTER</span>
+<h2 id="lab-starter-title">starter.srp</h2></div>
+<button type="button" class="copy-button" data-copy="scarp-code">Copy code</button></div>
+<pre><code id="scarp-code">{highlight_scarp(source)}</code></pre>
+<div class="panel-footer"><a href="{escape(source_url)}">View starter source ↗</a></div>
+</section>
+<section class="code-panel output-panel" aria-labelledby="lab-goal-title">
+<div class="panel-heading"><div><span class="eyebrow">MATCH THIS VERIFIED OUTPUT</span>
+<h2 id="lab-goal-title">solution.stdout</h2></div>
+<span class="verified-tag">Compiler fixture</span></div>
+<pre><code>{escape(visible_output)}</code></pre>
+<div class="panel-footer"><a href="{escape(fixture_url)}">View exact fixture ↗</a></div></section>
+</div>
+<section class="run-panel" aria-labelledby="lab-run-title">
+<h2 id="lab-run-title">Run and check your attempt locally</h2>
+<p>Copy <code>starter.srp</code> to <code>attempt.srp</code> in the <strong>same lab folder</strong>,
+edit it, and use the pinned Scarp compiler from the repository root.
+Keeping the same folder is important for imports and the bundled <code>_support</code> helper.</p>
+<div class="commands"><code>scarp verify {escape(folder)}/attempt.srp</code>
+<code>scarp exec {escape(folder)}/attempt.srp</code></div>
+<p>Compare the printed output with the fixture shown above. No website execution,
+uploads or stored answers are involved.</p></section>
+<section class="lab-reveals" aria-label="Hints and reference solution">
+<details><summary>Show hint · संकेत देखें</summary>
+<p lang="en">{escape(lab.hint["en"])}</p>
+<p lang="hi">{escape(lab.hint["hi"])}</p></details>
+<details><summary>Reveal tested solution · सत्यापित हल देखें</summary>
+<pre><code>{highlight_scarp(solution)}</code></pre>
+<p lang="en">{escape(lab.explanation["en"])}</p>
+<p lang="hi">{escape(lab.explanation["hi"])}</p>
+<a href="{escape(solution_url)}">Reference .srp on GitHub ↗</a>
+</details></section>
+<p class="fine-print">The starter compiles but intentionally does not produce the goal.
+The reference solution and its output are verified on Linux, macOS and Windows
+against <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a>.
+<a href="{previous}">Browse all labs ↗</a></p>
+</main>"""
+    return page_shell(page, lab.title["en"], lab.task["en"], main, "lab-layout")
 
 def render_project_page(target: dict) -> str:
     """Publish the compiler-backed, bilingual tutorial from real project files."""
@@ -587,9 +694,17 @@ def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
     questions = read_practice_questions(ROOT)
+    labs = read_labs(ROOT)
     home, count = render_catalog(questions)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(home, encoding="utf-8", newline="\n")
+    lab_index = destination / "labs/index.html"
+    lab_index.parent.mkdir(parents=True, exist_ok=True)
+    lab_index.write_text(render_labs_index(labs, target), encoding="utf-8", newline="\n")
+    for lab in labs:
+        lab_path = destination / lab.url
+        lab_path.parent.mkdir(parents=True, exist_ok=True)
+        lab_path.write_text(render_lab_page(lab, target), encoding="utf-8", newline="\n")
     index = [{"id": l.section + "/" + l.source.stem,
               "title": l.title, "chapter": l.chapter, "description": l.description,
               "hindi_title": hindi_notes[l.source_path].title,
@@ -614,7 +729,8 @@ def build(destination: Path) -> int:
                                            target, hindi_notes[lesson.source_path], questions),
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
-    urls = ["index.html", "projects/index.html"]
+    urls = ["index.html", "projects/index.html", "labs/index.html"]
+    urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)
     sitemap = '<?xml version="1.0" encoding="utf-8"?>\n'

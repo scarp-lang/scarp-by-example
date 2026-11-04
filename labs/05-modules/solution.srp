@@ -1,0 +1,3 @@
+// Import one public value from a local helper module and double it.
+import "_support/values.srp" as values;
+print(values.value * 2);

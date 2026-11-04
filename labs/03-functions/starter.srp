@@ -1,0 +1,5 @@
+// Lab: repair square so it multiplies the input by itself.
+pure funcra square(value: integer) -> integer {
+    return value + value;
+}
+print(square(6));

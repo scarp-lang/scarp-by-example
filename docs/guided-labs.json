@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "labs": [
+    {
+      "id": "01-basics",
+      "title": {
+        "en": "Rectangle area",
+        "hi": "आयत का क्षेत्रफल"
+      },
+      "task": {
+        "en": "The starter adds width and height. Change the expression so a 6 × 7 rectangle prints its area, 42.",
+        "hi": "स्टार्टर प्रोग्राम चौड़ाई और ऊँचाई को जोड़ता है। व्यंजक बदलें, ताकि 6 × 7 आयत का क्षेत्रफल 42 प्रिंट हो।"
+      },
+      "hint": {
+        "en": "Look at the operator inside print. Area is width multiplied by height.",
+        "hi": "print के अंदर का ऑपरेटर देखें। क्षेत्रफल = चौड़ाई × ऊँचाई।"
+      },
+      "explanation": {
+        "en": "Replacing addition with multiplication produces 6 × 7 = 42.",
+        "hi": "जोड़ की जगह गुणा करने पर 6 × 7 = 42 मिलता है।"
+      }
+    },
+    {
+      "id": "02-control-flow",
+      "title": {
+        "en": "Sum loop indices",
+        "hi": "लूप इंडेक्स का योग"
+      },
+      "task": {
+        "en": "Use the counted repeat loop to print the sum of indices 0 through 4, rather than the number of iterations.",
+        "hi": "गिने हुए repeat लूप से केवल पुनरावृत्तियों की संख्या नहीं, बल्कि index 0 से 4 तक का योग प्रिंट करें।"
+      },
+      "hint": {
+        "en": "Add index to total on each pass instead of adding 1.",
+        "hi": "हर बार total में 1 के बजाय index जोड़ें।"
+      },
+      "explanation": {
+        "en": "The indices 0, 1, 2, 3 and 4 add up to 10.",
+        "hi": "इंडेक्स 0, 1, 2, 3 और 4 का योग 10 होता है।"
+      }
+    },
+    {
+      "id": "03-functions",
+      "title": {
+        "en": "Repair a typed function",
+        "hi": "टाइप्ड फ़ंक्शन सुधारें"
+      },
+      "task": {
+        "en": "The current square function doubles its input instead of squaring it. Fix the return expression so square(6) prints 36.",
+        "hi": "वर्तमान square फ़ंक्शन इनपुट को दोगुना करता है, उसका वर्ग नहीं निकालता। return व्यंजक सुधारें ताकि square(6) से 36 प्रिंट हो।"
+      },
+      "hint": {
+        "en": "A square is the input multiplied by itself; keep the function parameter and return type unchanged.",
+        "hi": "वर्ग का अर्थ संख्या को स्वयं से गुणा करना है। फ़ंक्शन पैरामीटर और return type न बदलें।"
+      },
+      "explanation": {
+        "en": "value * value evaluates to 36 when value is 6.",
+        "hi": "value = 6 होने पर value * value का मान 36 होता है।"
+      }
+    },
+    {
+      "id": "04-collections",
+      "title": {
+        "en": "Average a vector",
+        "hi": "वेक्टर का औसत"
+      },
+      "task": {
+        "en": "Keep the four numeric values unchanged. Print their mean, 2.5, instead of their total.",
+        "hi": "चार संख्यात्मक मान न बदलें। उनके योग के बजाय औसत 2.5 प्रिंट करें।"
+      },
+      "hint": {
+        "en": "The published compiler provides a mean function for numeric vectors.",
+        "hi": "प्रकाशित कंपाइलर में संख्यात्मक वेक्टर के लिए mean फ़ंक्शन उपलब्ध है।"
+      },
+      "explanation": {
+        "en": "The numbers sum to 10.0; mean divides by four, producing 2.5.",
+        "hi": "संख्याओं का योग 10.0 है। mean उसे चार से भाग देकर 2.5 देता है।"
+      }
+    },
+    {
+      "id": "05-modules",
+      "title": {
+        "en": "Use a public module binding",
+        "hi": "मॉड्यूल की public binding इस्तेमाल करें"
+      },
+      "task": {
+        "en": "Import the included helper module and print twice its public value, obtaining 42. Do not edit the helper file.",
+        "hi": "दिए गए helper मॉड्यूल को import करके उसके public मान का दोगुना प्रिंट करें, ताकि 42 मिले। helper फ़ाइल न बदलें।"
+      },
+      "hint": {
+        "en": "The import already works. Apply multiplication to values.value in the print call.",
+        "hi": "import पहले से सही है। print में values.value को 2 से गुणा करें।"
+      },
+      "explanation": {
+        "en": "The helper exports value = 21; the importer prints 21 × 2 = 42.",
+        "hi": "helper से value = 21 export होता है; import करने वाला प्रोग्राम 21 × 2 = 42 प्रिंट करता है।"
+      }
+    },
+    {
+      "id": "06-ai-foundations",
+      "title": {
+        "en": "Choose a class as a one-hot vector",
+        "hi": "वर्ग को one-hot वेक्टर में बदलें"
+      },
+      "task": {
+        "en": "The starter prints the winning class index. Instead, print a one-hot vector identifying the largest score among [1.0, 4.0, 2.0].",
+        "hi": "स्टार्टर विजेता वर्ग का index प्रिंट करता है। इसके बजाय [1.0, 4.0, 2.0] में सबसे बड़े स्कोर को दर्शाने वाला one-hot वेक्टर प्रिंट करें।"
+      },
+      "hint": {
+        "en": "Combine len(scores), argmax(scores) and the onehot function supported by the pinned compiler.",
+        "hi": "पिन किए गए कंपाइलर के len(scores), argmax(scores) और onehot फ़ंक्शन को साथ इस्तेमाल करें।"
+      },
+      "explanation": {
+        "en": "The largest score is at index 1, so onehot(3, 1) returns [0.0, 1.0, 0.0].",
+        "hi": "सबसे बड़ा स्कोर index 1 पर है, इसलिए onehot(3, 1) का परिणाम [0.0, 1.0, 0.0] है।"
+      }
+    }
+  ]
+}

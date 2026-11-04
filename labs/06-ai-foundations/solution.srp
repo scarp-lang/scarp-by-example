@@ -1,0 +1,3 @@
+// Create a one-hot vector for the class with the highest score.
+bind scores = [1.0, 4.0, 2.0];
+print(onehot(len(scores), argmax(scores)));

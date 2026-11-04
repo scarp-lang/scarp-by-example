@@ -1,0 +1,6 @@
+// Sum zero-based indices 0, 1, 2, 3, and 4.
+var total = 0;
+repeat 5 as index {
+    total += index;
+}
+print(total);
