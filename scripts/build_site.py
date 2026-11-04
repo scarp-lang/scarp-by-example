@@ -515,7 +515,7 @@ def render_project_page(target: dict) -> str:
     source_bytes = entry_path.read_bytes()
     expected_bytes = expected_path.read_bytes()
     if manifest_bytes != b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n":
-        raise ValueError("the alpha.4 sample manifest has changed; review the tutorial")
+        raise ValueError("the verified project manifest has changed; review the tutorial")
     if source_bytes != b'print("Hello from Scarp!");\n':
         raise ValueError("the sample project source differs from the verified scaffold")
     reference = (EXAMPLES / "01-basics/01-hello.stdout").read_bytes()
