@@ -170,6 +170,11 @@ class SiteTests(unittest.TestCase):
             self.assertTrue((output / "progress.js").is_file())
             self.assertIn('data-progress-index="search-index.json"',
                           (output / "index.html").read_text(encoding="utf-8"))
+            homepage = (output / "index.html").read_text(encoding="utf-8")
+            self.assertIn('data-progress-export', homepage)
+            self.assertIn('data-progress-import', homepage)
+            self.assertIn('data-progress-file', homepage)
+            self.assertIn('aria-live="polite" data-progress-message', homepage)
             self.assertEqual(
                 (output / "index.html").read_text(encoding="utf-8").count("data-progress-chapter="), 6
             )

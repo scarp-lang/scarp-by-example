@@ -5,6 +5,7 @@
 
   const KEY = "scarp-by-example:completed:v1";
   const SCHEMA = 1;
+  const MAX_BACKUP_BYTES = 64 * 1024;
   const ID_RE = /^[0-9]{2}-[a-z0-9-]+\/[0-9]{2}-[a-z0-9-]+$/;
   const URL_RE = /^lessons\/[0-9]{2}-[a-z0-9-]+\/[0-9]{2}-[a-z0-9-]+\/index\.html$/;
 
@@ -46,6 +47,24 @@
     });
   }
 
+  // Reject malformed backups instead of silently treating them as empty progress.
+  // Unknown lesson IDs from a different course revision are safely ignored.
+  function parseProgressBackup(raw, manifest) {
+    if (typeof raw !== "string" || raw.length > MAX_BACKUP_BYTES) return null;
+    try {
+      const payload = JSON.parse(raw);
+      if (!payload || payload.version !== SCHEMA ||
+          !Array.isArray(payload.completed) || payload.completed.length > 2000 ||
+          !payload.completed.every(id => typeof id === "string" && ID_RE.test(id))) {
+        return null;
+      }
+      const allowed = new Set(manifest.map(item => item.id));
+      return new Set(payload.completed.filter(id => allowed.has(id)));
+    } catch (_) {
+      return null;
+    }
+  }
+
   function firstIncomplete(manifest, completed, chapter = null) {
     return manifest.find(item =>
       (!chapter || item.id.startsWith(chapter + "/")) && !completed.has(item.id)
@@ -60,7 +79,7 @@
 
   const helpers = Object.freeze({
     KEY, validLesson, normalizeManifest, readCompleted, serializeCompleted,
-    firstIncomplete, completedCount
+    parseProgressBackup, firstIncomplete, completedCount
   });
   if (typeof module !== "undefined" && module.exports) module.exports = helpers;
   if (typeof document === "undefined") return;
@@ -101,6 +120,11 @@
     let completed = readCompleted(storage.getItem(KEY), manifest);
     const toggle = panel.querySelector("[data-progress-toggle]");
     const clear = panel.querySelector("[data-progress-clear]");
+    const exportButton = panel.querySelector("[data-progress-export]");
+    const importButton = panel.querySelector("[data-progress-import]");
+    const fileInput = panel.querySelector("[data-progress-file]");
+    const feedback = panel.querySelector("[data-progress-message]");
+    const say = message => { if (feedback) feedback.textContent = message; };
 
     function render() {
       const total = manifest.filter(item => !chapterId || item.id.startsWith(chapterId + "/")).length;
@@ -156,9 +180,10 @@
         storage.setItem(KEY, serializeCompleted(next, manifest));
         completed = next;
         render();
+        return true;
       } catch (_) {
-        const message = panel.querySelector("[data-progress-message]");
-        if (message) message.textContent = "Progress could not be saved in this browser.";
+        say("Progress could not be saved in this browser.");
+        return false;
       }
     }
 
@@ -176,10 +201,70 @@
         completed = new Set();
         render();
       } catch (_) {
-        const message = panel.querySelector("[data-progress-message]");
-        if (message) message.textContent = "Progress could not be cleared.";
+        say("Progress could not be cleared.");
       }
     });
+
+    // Backups never leave the browser. They contain lesson IDs only, no account data.
+    if (exportButton) {
+      if (typeof Blob === "undefined" || !window.URL ||
+          typeof window.URL.createObjectURL !== "function") {
+        exportButton.hidden = true;
+      } else {
+        exportButton.addEventListener("click", () => {
+          const readable = JSON.stringify(JSON.parse(serializeCompleted(completed, manifest)), null, 2) + "\n";
+          let url;
+          try {
+            url = window.URL.createObjectURL(new Blob([readable], {type: "application/json"}));
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "scarp-by-example-progress.json";
+            link.click();
+            say("Backup downloaded to this device. Keep the JSON file somewhere safe.");
+          } catch (_) {
+            say("Could not export the backup in this browser.");
+          } finally {
+            if (url) window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+          }
+        });
+      }
+    }
+
+    if (importButton) {
+      if (!fileInput || typeof fileInput.click !== "function") {
+        importButton.hidden = true;
+      } else {
+        importButton.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", async () => {
+          const file = fileInput.files && fileInput.files[0];
+          fileInput.value = "";
+          if (!file) return;
+          if (file.size > MAX_BACKUP_BYTES) {
+            say("Backup is too large. Choose a Scarp progress JSON file under 64 KB.");
+            return;
+          }
+          try {
+            const imported = parseProgressBackup(await file.text(), manifest);
+            if (imported === null) {
+              say("Invalid or unsupported backup. Your current progress was not changed.");
+              return;
+            }
+            const next = new Set([...completed, ...imported]);
+            const added = next.size - completed.size;
+            if (added === 0) {
+              say("Backup read successfully. No new completed lessons to restore.");
+              return;
+            }
+            if (persist(next)) {
+              say("Restored " + added + " completed lesson" + (added === 1 ? "" : "s") +
+                  ". Existing progress was preserved.");
+            }
+          } catch (_) {
+            say("Could not read that backup. Your current progress was not changed.");
+          }
+        });
+      }
+    }
 
     window.addEventListener("storage", event => {
       if (event.key !== KEY && event.key !== null) return;

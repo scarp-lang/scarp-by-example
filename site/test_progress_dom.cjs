@@ -6,6 +6,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const { Blob } = require("node:buffer");
 const { KEY } = require("./progress.js");
 
 const lessons = [
@@ -21,7 +22,8 @@ function element(attrs = {}) {
     attributes: { ...attrs }, listeners,
     setAttribute(key, value) { this.attributes[key] = value; },
     getAttribute(key) { return this.attributes[key] ?? null; },
-    addEventListener(key, fn) { listeners[key] = fn; }
+    addEventListener(key, fn) { listeners[key] = fn; },
+    click() { this.clicked = true; }
   };
 }
 
@@ -42,6 +44,10 @@ async function boot({ blocked = false, chapter = null } = {}) {
   };
   const toggle = element();
   const clear = element();
+  const exportButton = element();
+  const importButton = element();
+  const fileInput = element();
+  fileInput.files = [];
   const count = element({"data-progress-count": chapter || "all"});
   const bar = element();
   const badge = element();
@@ -59,6 +65,9 @@ async function boot({ blocked = false, chapter = null } = {}) {
   panel.querySelector = selector => ({
     "[data-progress-toggle]": toggle,
     "[data-progress-clear]": clear,
+    "[data-progress-export]": exportButton,
+    "[data-progress-import]": importButton,
+    "[data-progress-file]": fileInput,
     "[data-progress-message]": error
   })[selector] || null;
   const selectors = {
@@ -77,19 +86,33 @@ async function boot({ blocked = false, chapter = null } = {}) {
     querySelectorAll(selector) { return selectors[selector] || []; }
   };
   const events = {};
+  const downloads = [];
+  let backupBlob;
+  document.createElement = tag => {
+    assert.equal(tag, "a");
+    const link = element();
+    link.click = () => downloads.push({href: link.href, download: link.download});
+    return link;
+  };
   const window = {
     localStorage: storage,
     confirm() { return true; },
+    URL: {
+      createObjectURL(blob) { backupBlob = blob; return "blob:course-backup"; },
+      revokeObjectURL() {}
+    },
+    setTimeout(fn) { fn(); },
     addEventListener(key, fn) { events[key] = fn; }
   };
-  const context = { document, window, fetch: async () => ({
+  const context = { document, window, Blob, fetch: async () => ({
     ok: true, json: async () => lessons
   }) };
   const script = fs.readFileSync(path.join(__dirname, "progress.js"), "utf8");
   vm.runInNewContext(script, context, { timeout: 2000 });
   await new Promise(resolve => setImmediate(resolve));
-  return { panel, toggle, clear, count, bar, badge, resume, status, error,
-    entries, storage, writeKeys, events };
+  return { panel, toggle, clear, exportButton, importButton, fileInput,
+    count, bar, badge, resume, status, error,
+    entries, storage, writeKeys, events, downloads, backupBlob: () => backupBlob };
 }
 
 test("does not save completion until explicit user click", async () => {
@@ -137,4 +160,48 @@ test("chapter scope counts only its own lessons", async () => {
   ui.toggle.listeners.click();
   assert.equal(ui.count.textContent, "1 of 2 completed");
   assert.equal(ui.bar.value, 1);
+});
+
+test("restoring a local backup merges completed lessons without losing existing progress", async () => {
+  const ui = await boot();
+  ui.toggle.listeners.click();
+  ui.importButton.listeners.click();
+  assert.equal(ui.fileInput.clicked, true);
+  ui.fileInput.files = [{
+    size: 100,
+    text: async () => JSON.stringify({
+      version: 1, completed: [lessons[1].id, "09-old/01-retired"]
+    })
+  }];
+  await ui.fileInput.listeners.change();
+  assert.equal(ui.count.textContent, "2 of 3 completed");
+  assert.equal(ui.bar.value, 2);
+  assert.equal(ui.resume.href, "lessons/02-control-flow/01-decisions/");
+  assert.match(ui.error.textContent, /Restored 1 completed lesson/);
+  assert.equal(ui.fileInput.value, "");
+});
+
+test("invalid and oversized backups do not overwrite progress", async () => {
+  const ui = await boot();
+  ui.toggle.listeners.click();
+  ui.fileInput.files = [{size: 100, text: async () => "invalid json"}];
+  await ui.fileInput.listeners.change();
+  assert.match(ui.error.textContent, /Invalid or unsupported/);
+  assert.equal(ui.count.textContent, "1 of 3 completed");
+  ui.fileInput.files = [{size: 65537, text: async () => { throw new Error("must not read"); }}];
+  await ui.fileInput.listeners.change();
+  assert.match(ui.error.textContent, /too large/);
+  assert.equal(ui.count.textContent, "1 of 3 completed");
+});
+
+test("export downloads only the selected lesson IDs as a local JSON file", async () => {
+  const ui = await boot();
+  ui.toggle.listeners.click();
+  ui.exportButton.listeners.click();
+  assert.deepEqual(ui.downloads, [{
+    href: "blob:course-backup", download: "scarp-by-example-progress.json"
+  }]);
+  const contents = JSON.parse(await ui.backupBlob().text());
+  assert.deepEqual(contents, {version: 1, completed: [lessons[0].id]});
+  assert.match(ui.error.textContent, /Backup downloaded/);
 });

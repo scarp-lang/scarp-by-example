@@ -58,3 +58,25 @@ test("chapter and course counts derive from the actual manifest", () => {
   assert.equal(progress.completedCount(source, done, "02-control-flow"), 1);
   assert.equal(progress.completedCount(source, done, "03-functions"), 0);
 });
+
+test("backups restore only known lesson IDs and preserve version compatibility", () => {
+  const backup = progress.serializeCompleted(new Set([source[0].id, source[2].id]), source);
+  assert.deepEqual(progress.parseProgressBackup(backup, source),
+    new Set([source[0].id, source[2].id]));
+  const fromOlderCourse = JSON.stringify({
+    version: 1, completed: [source[1].id, "09-old/01-retired"]
+  });
+  assert.deepEqual(progress.parseProgressBackup(fromOlderCourse, source),
+    new Set([source[1].id]));
+});
+
+test("corrupt and oversized imports fail closed, never becoming empty restores", () => {
+  assert.equal(progress.parseProgressBackup("not json", source), null);
+  assert.equal(progress.parseProgressBackup(JSON.stringify({version: 2, completed: []}), source), null);
+  assert.equal(progress.parseProgressBackup(JSON.stringify({version: 1, completed: "bad"}), source), null);
+  assert.equal(progress.parseProgressBackup(JSON.stringify({version: 1, completed: [null]}), source), null);
+  assert.equal(progress.parseProgressBackup(JSON.stringify({version: 1, completed: ["../evil"]}), source), null);
+  assert.equal(progress.parseProgressBackup(JSON.stringify({version: 1, completed: Array(2001).fill(source[0].id)}), source), null);
+  assert.equal(progress.parseProgressBackup(" ".repeat(65537), source), null);
+  assert.deepEqual(progress.parseProgressBackup(JSON.stringify({version: 1, completed: []}), source), new Set());
+});

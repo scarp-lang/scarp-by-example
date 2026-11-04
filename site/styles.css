@@ -310,6 +310,10 @@ html.js-ready .language-switch { display: flex; }
   background: var(--surface);
   box-shadow: var(--shadow);
 }
+.progress-dashboard[hidden], .chapter-progress-panel[hidden],
+.lesson-progress-panel[hidden], [data-progress-resume][hidden],
+[data-progress-complete][hidden], [data-progress-export][hidden],
+[data-progress-import][hidden] { display: none !important; }
 .progress-dashboard {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

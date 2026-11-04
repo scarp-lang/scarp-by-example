@@ -246,8 +246,12 @@ def render_catalog() -> tuple[str, int]:
 <p class="progress-count"><strong data-progress-count="all">0 of {len(lessons)} completed</strong></p></div>
 <div class="progress-actions"><a class="primary-button" data-progress-resume
  href="{escape(rel("index.html", first.url))}">Start learning →</a>
+<button class="progress-reset" type="button" data-progress-export>Export progress</button>
+<button class="progress-reset" type="button" data-progress-import>Import progress</button>
+<input type="file" accept=".json,application/json" data-progress-file hidden
+ aria-label="Select a Scarp progress backup JSON file">
 <button class="progress-reset" type="button" data-progress-clear>Clear saved progress</button>
-<p class="progress-feedback" role="status" data-progress-message></p></div>
+<p class="progress-feedback" role="status" aria-live="polite" data-progress-message></p></div>
 </section>
 <section class="search-area container-wide" id="search-area" aria-labelledby="search-heading">
 <div class="section-heading"><div><p class="eyebrow">FIND A TOPIC</p><h2 id="search-heading">Find your next example</h2></div><p>Search titles, syntax topics and chapters.</p></div>
