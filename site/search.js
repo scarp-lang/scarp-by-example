@@ -51,6 +51,9 @@
       const showHindi = lang === "hi";
       english.hidden = showHindi;
       hindi.hidden = !showHindi;
+      for (const span of document.querySelectorAll("[data-checkpoint-lang]")) {
+        span.hidden = span.dataset.checkpointLang !== lang;
+      }
       languageButtons.forEach(button => {
         const selected = button.dataset.noteSwitch === lang;
         button.setAttribute("aria-pressed", String(selected));

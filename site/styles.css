@@ -409,3 +409,47 @@ html.js-ready .language-switch { display: flex; }
   .project-steps { grid-template-columns: 1fr; }
   .project-source-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Source-backed, bilingual checkpoints. No browser compiler is implied. */
+.checkpoint-card {
+  margin: 1.75rem 0;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+.checkpoint-card h2 { margin: .25rem 0 1rem; font-size: 1.45rem; }
+.checkpoint-question { font-size: 1.02rem; font-weight: 650; line-height: 1.65; }
+.checkpoint-question [data-checkpoint-lang], .checkpoint-option [data-checkpoint-lang] { margin-right: .55rem; }
+.checkpoint-card fieldset { border: 0; padding: 0; min-width: 0; margin: 1.2rem 0; }
+.checkpoint-card legend { color: var(--muted); font-weight: 600; margin-bottom: .7rem; }
+.checkpoint-options { display: grid; grid-template-columns: 1fr; gap: .65rem; }
+.checkpoint-option {
+  display: flex; gap: .75rem; align-items: flex-start; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface-alt);
+  border-radius: 12px; padding: .85rem 1rem; line-height: 1.6;
+}
+.checkpoint-option:hover, .checkpoint-option:focus-within { border-color: var(--mint); }
+.checkpoint-option input { margin-top: .3rem; accent-color: var(--mint); flex: none; }
+.checkpoint-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }
+.checkpoint-feedback { margin: 1rem 0 0; font-weight: 650; }
+.checkpoint-feedback:empty { display: none; }
+.checkpoint-explanation, .checkpoint-fallback {
+  margin-top: 1rem; padding: 1rem 1.2rem;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface-alt);
+}
+.checkpoint-explanation p, .checkpoint-fallback p { margin: .4rem 0; line-height: 1.65; }
+.checkpoint-fallback summary { cursor: pointer; font-weight: 700; }
+.checkpoint-footnote { color: var(--muted); font-size: .82rem; margin: 1rem 0 0; }
+[data-checkpoint-interactive][hidden], [data-checkpoint-fallback][hidden],
+[data-checkpoint-explanation][hidden], [data-checkpoint-lang][hidden] {
+  display: none !important;
+}
+@media print {
+  .checkpoint-buttons, .checkpoint-feedback { display: none !important; }
+  .checkpoint-fallback { display: block !important; }
+}

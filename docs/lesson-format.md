@@ -7,6 +7,8 @@ Each runnable lesson needs:
 - A matching numbered Hindi teaching section in `docs/hi/NN-topic.md` with the same original source and stdout links and a practical `**अभ्यास:**` question. The site publishes these notes directly on the standalone lesson page.
 - A known upstream compiler reference and a successful compiler run before merge.
 
+**Optional interactive checkpoint:** Curated quiz questions live in [`practice-questions.json`](practice-questions.json), not in `.srp` source or stdout fixtures. Each entry names an existing source file, an **exact line** from its compiler-verified stdout fixture (`evidence_line`), three bilingual answer options, the correct index, a bilingual question and an explanation. A build-time validator rejects missing translations, incorrect evidence lines, duplicate options and non-existent lessons. See [the checkpoint authoring standard](practice-checkpoints.md). The website displays these as comprehension checks only; it does not execute Scarp in the browser or record a score.
+
 Avoid environment-dependent output, interactive prompts and speculative runtime features. Use the documented `scarp exec PATH` command and syntax supported by the pinned compiler commit. Both `print` and `println` appear in compiler-verified examples, but older prereleases may differ.
 
 The verifier treats every `.srp` outside an `_support` directory as a lesson, requires one fixture per lesson, and fails on unmatched fixtures. All tested examples pass silent static `verify` and byte-for-byte `exec` output checks; legacy `check` semantics are tested separately. Read the [CLI guide](cli-quickstart.md) for command distinctions.

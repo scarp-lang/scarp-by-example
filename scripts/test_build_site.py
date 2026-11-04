@@ -168,6 +168,26 @@ class SiteTests(unittest.TestCase):
             self.assertIn('id="en-notes"', html)
             self.assertIn("79141329176f", html)
             self.assertTrue((output / "progress.js").is_file())
+            self.assertTrue((output / "checkpoint.js").is_file())
+            for chapter, lesson_name in (
+                ("01-basics", "01-hello"),
+                ("02-control-flow", "01-decisions"),
+                ("03-functions", "01-typed-functions"),
+                ("04-collections", "01-vectors"),
+                ("05-modules", "01-modular-inference"),
+                ("06-ai-foundations", "01-matrix-inference"),
+            ):
+                checkpoint_html = (output / "lessons" / chapter /
+                                   lesson_name / "index.html").read_text(encoding="utf-8")
+                self.assertIn('data-checkpoint-answer=', checkpoint_html)
+                self.assertIn('data-checkpoint-form', checkpoint_html)
+                self.assertIn('data-checkpoint-lang="en"', checkpoint_html)
+                self.assertIn('data-checkpoint-lang="hi"', checkpoint_html)
+                self.assertIn('data-checkpoint-fallback', checkpoint_html)
+                self.assertIn('src="../../../checkpoint.js"', checkpoint_html)
+            self.assertNotIn('data-checkpoint-answer=',
+                             (output / "lessons/01-basics/02-bindings/index.html")
+                             .read_text(encoding="utf-8"))
             self.assertIn('data-progress-index="search-index.json"',
                           (output / "index.html").read_text(encoding="utf-8"))
             homepage = (output / "index.html").read_text(encoding="utf-8")
