@@ -43,7 +43,7 @@ def validate_question(question: object, fixtures: dict[str, bytes]) -> str:
         raise ValueError(f"{source}: require exactly three answer options")
     for i, option in enumerate(options):
         language_pair(option, f"{source}: option {i}")
-    for lang in LANGUAGES:
+    for lang in ("en", "hi"):
         if len({option[lang].strip().casefold() for option in options}) != 3:
             raise ValueError(f"{source}: duplicate {lang} answer options")
     correct = question["correct"]
