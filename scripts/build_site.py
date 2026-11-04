@@ -14,6 +14,7 @@ from pathlib import Path, PurePosixPath
 
 from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_stdout
 from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
+from practice_questions import read_practice_questions
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -159,6 +160,8 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     home = escape(rel(page, "index.html"))
     style = escape(rel(page, "styles.css"))
     script = escape(rel(page, "search.js"))
+    checkpoint_script = (f'<script src="{escape(rel(page, "checkpoint.js"))}" defer></script>'
+                         if layout == "lesson-layout" else "")
     return f"""<!doctype html>
 <html lang="en" data-theme="dark">
 <head>
@@ -171,6 +174,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <link rel="canonical" href="{escape(PUBLIC_SITE + page.removesuffix("index.html"))}">
 <script src="{script}" defer></script>
 <script src="{escape(rel(page, "progress.js"))}" defer></script>
+{checkpoint_script}
 </head>
 <body class="{escape(layout)}">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -458,7 +462,57 @@ The Scarp program and output are unchanged.</p>
 </section>"""
 
 
-def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[Lesson], target: dict, hindi: HindiNote) -> str:
+
+def checkpoint_translation(values: dict[str, str]) -> str:
+    """Two localizable spans; without JavaScript both remain readable."""
+    return (
+        '<span data-checkpoint-lang="en" lang="en">' + escape(values["en"]) + '</span>'
+        '<span data-checkpoint-lang="hi" lang="hi">' + escape(values["hi"]) + '</span>'
+    )
+
+
+def render_checkpoint(lesson: Lesson, questions: dict[str, dict]) -> str:
+    """Progressively enhanced multiple-choice checkpoint, never fake code execution."""
+    question = questions.get(lesson.source_path)
+    if question is None:
+        return ""
+    options = "".join(
+        '<label class="checkpoint-option"><input type="radio" name="checkpoint-choice"'
+        + f' value="{index}" required><span>{checkpoint_translation(option)}</span></label>'
+        for index, option in enumerate(question["options"])
+    )
+    correct = question["options"][question["correct"]]
+    explanation = question["explanation"]
+    revealed = {
+        language: correct[language] + " — " + explanation[language]
+        for language in ("en", "hi")
+    }
+    return f"""<section class="checkpoint-card" data-checkpoint
+ data-checkpoint-answer="{question["correct"]}" aria-labelledby="checkpoint-title">
+<p class="eyebrow">SOURCE-BACKED SELF-CHECK · स्रोत-आधारित अभ्यास</p>
+<h2 id="checkpoint-title">Quick checkpoint / त्वरित अभ्यास</h2>
+<p class="checkpoint-question">{checkpoint_translation(question["question"])}</p>
+<div data-checkpoint-interactive hidden>
+<form data-checkpoint-form>
+<fieldset><legend>Choose one answer / एक उत्तर चुनें</legend>
+<div class="checkpoint-options">{options}</div></fieldset>
+<div class="checkpoint-buttons"><button type="submit" class="progress-toggle">Check answer / उत्तर जाँचें</button>
+<button type="reset" class="progress-reset">Try again / दोबारा प्रयास</button></div>
+<p class="checkpoint-feedback" data-checkpoint-feedback role="status" aria-live="polite"></p>
+<div class="checkpoint-explanation" data-checkpoint-explanation hidden>
+<p>{checkpoint_translation(revealed)}</p></div>
+</form></div>
+<details class="checkpoint-fallback" data-checkpoint-fallback>
+<summary>Reveal the source-backed answer / सही उत्तर देखें</summary>
+<p>{checkpoint_translation(revealed)}</p>
+</details>
+<p class="checkpoint-footnote">This question checks understanding of a recorded
+ compiler output. It does not run Scarp in the browser.
+ यह प्रश्न सत्यापित आउटपुट पर आधारित है; ब्राउज़र में Scarp नहीं चलता।</p>
+</section>"""
+
+
+def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[Lesson], target: dict, hindi: HindiNote, questions: dict[str, dict] | None = None) -> str:
     page = lesson.url
     i = all_lessons.index(lesson)
     sidebar = "".join(
@@ -478,6 +532,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     after = all_lessons[i + 1] if i + 1 < len(all_lessons) else None
     code = render_lesson(lesson.source, lesson.stdout, lesson.description)
     notes = render_notes(lesson, hindi)
+    checkpoint = render_checkpoint(lesson, questions or {})
     main = f"""<main id="main-content" class="container-wide detail-layout">
 <aside class="sidebar" aria-label="This chapter's lessons">
 <div class="sidebar-heading"><span class="eyebrow">CHAPTER {escape(lesson.section[:2])}</span><strong>{escape(lesson.chapter)}</strong></div>
@@ -494,6 +549,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 <a lang="hi" href="#hi-notes">हिन्दी में समझें ↓</a></div></header>
 {code}
 {notes}
+{checkpoint}
 <section class="lesson-progress-panel" data-progress-index="{escape(rel(page, "search-index.json"))}"
  data-progress-root="{escape(rel(page, "index.html"))}"
  data-progress-current="{escape(lesson.section + "/" + lesson.source.stem)}" hidden
@@ -524,6 +580,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
+    questions = read_practice_questions(ROOT)
     home, count = render_catalog()
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(home, encoding="utf-8", newline="\n")
@@ -546,7 +603,7 @@ def build(destination: Path) -> int:
         path = destination / lesson.url
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_lesson_page(lesson, lessons, chapters[lesson.section],
-                                           target, hindi_notes[lesson.source_path]),
+                                           target, hindi_notes[lesson.source_path], questions),
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
     urls = ["index.html", "projects/index.html"]
@@ -560,7 +617,7 @@ def build(destination: Path) -> int:
     )
     sitemap += "</urlset>\n"
     (destination / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-    for asset in ("styles.css", "search.js", "progress.js"):
+    for asset in ("styles.css", "search.js", "progress.js", "checkpoint.js"):
         shutil.copyfile(ASSETS / asset, destination / asset)
     (destination / ".nojekyll").write_text("", encoding="utf-8")
     return count
