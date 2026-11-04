@@ -1,0 +1,6 @@
+// Lab: add the actual loop index rather than a constant.
+var total = 0;
+repeat 5 as index {
+    total += 1;
+}
+print(total);
