@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guard the second editorial prerelease against an incomplete or unpinned course.
+"""Guard the third editorial prerelease against an incomplete or unpinned course.
 
 Only the prerelease workflow invokes this milestone-specific check. Ordinary
 course CI intentionally stays version-agnostic for later lesson additions.
@@ -13,8 +13,10 @@ import sys
 from pathlib import Path
 
 from verify_examples import ROOT, discover_examples
+from guided_labs import read_labs
+from practice_questions import read_practice_questions
 
-TAG = "v0.1.0-alpha.2"
+TAG = "v0.1.0-alpha.3"
 COMPILER_SHA = "79141329176f5dce51457e90a6652902f6432135"
 
 
@@ -35,10 +37,20 @@ def check_prerelease(root: Path = ROOT) -> str:
         raise ValueError(f"expected 50 executable lessons; found {len(lessons)}")
     if sum(src.parent.name == "05-modules" for src, _ in lessons) != 5:
         raise ValueError("expected five module chapter lessons")
+    questions = read_practice_questions(root)
+    chapter_counts = {chapter: sum(src.startswith(f"examples/{chapter}/") for src in questions)
+                      for chapter in {src.parent.name for src, _ in lessons}}
+    if len(questions) != 18 or set(chapter_counts.values()) != {3}:
+        raise ValueError("alpha.3 requires exactly three verified checkpoints per chapter")
+    labs = read_labs(root)
+    if len(labs) != 6 or {lab.identifier for lab in labs} != set(chapter_counts):
+        raise ValueError("alpha.3 requires one verified guided lab per chapter")
     required = (
         "LICENSE", "LICENSE-APACHE-2.0", "THIRD_PARTY_NOTICES.md", "README.md",
         "docs/hi/README.md", "docs/cli-quickstart.md", "docs/hi/cli-quickstart.md",
         "scripts/verify_examples.py", "scripts/verify_cli.py",
+        "scripts/verify_guided_labs.py", "scripts/test_mobile_navigation.py",
+        "scripts/test_learning_paths.py", "site/test_mobile_navigation.cjs",
         f"docs/releases/{TAG}.md",
     )
     for rel in required:
@@ -66,7 +78,8 @@ def check_prerelease(root: Path = ROOT) -> str:
     if not all(part in notes for part in
                (TAG, "course prerelease", "not a Scarp compiler release", COMPILER_SHA)):
         raise ValueError("release notes must identify scope, version and exact pin")
-    return f"PASS: {TAG}, 50 lessons, alpha.4 project and compiler SHA {COMPILER_SHA[:12]}"
+    return (f"PASS: {TAG}, 50 lessons, 18 checkpoints, 6 guided labs, "
+            f"alpha.4 compiler SHA {COMPILER_SHA[:12]}")
 
 
 def main() -> int:
