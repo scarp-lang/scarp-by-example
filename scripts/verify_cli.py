@@ -14,7 +14,7 @@ from verify_examples import ROOT, read_expected_stdout
 
 
 class CliSmokeError(RuntimeError):
-    """Observed CLI behavior differs from the pinned alpha.4 CLI contract."""
+    """Observed CLI behavior differs from the pinned published CLI contract."""
 
 
 def invoke(compiler: Path, *arguments: str, timeout: int = 15) -> subprocess.CompletedProcess[bytes]:
@@ -59,7 +59,7 @@ def require(
 
 
 def smoke_test(compiler: Path, timeout: int = 15) -> None:
-    """Prove published alpha.4 commands, static checks and real project workflows."""
+    """Prove published source-pinned commands, static checks and project workflows."""
     version = invoke(compiler, "version", timeout=timeout)
     require(version, "version", nonempty_stdout=True, stderr=b"")
     require(invoke(compiler, "--version", timeout=timeout), "--version",
@@ -84,8 +84,9 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
             or capabilities.get("static_verify") is not True
             or capabilities.get("native_executable") is not False):
         raise CliSmokeError("diagnose --json: misleading or unsupported capabilities")
-    if capabilities.get("version") != "0.0.5-alpha.4" or capabilities.get("project_workflow") is not True:
-        raise CliSmokeError("diagnose --json: expected published alpha.4 project capabilities")
+    target = json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))
+    if capabilities.get("version") != target["version"] or capabilities.get("project_workflow") is not True:
+        raise CliSmokeError("diagnose --json: expected pinned published compiler capabilities")
     expected_version = f"scarp {capabilities['version']}\n".encode("utf-8")
     if version.stdout != expected_version:
         raise CliSmokeError("version and diagnose disagree")
@@ -136,7 +137,8 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
                 code=1, stdout=b"", nonempty_stderr=True)
 
     project_smoke(compiler, timeout)
-    print("PASS: Scarp-first CLI, legacy migration, static validation, inspection and projects.")
+    project_inspection_smoke(compiler, timeout)
+    print("PASS: Scarp-first CLI, legacy migration, static validation, project-directory inspection and launch.")
 
 
 def project_smoke(compiler: Path, timeout: int) -> None:
@@ -191,6 +193,68 @@ def project_smoke(compiler: Path, timeout: int) -> None:
             raise CliSmokeError("invalid manifest did not produce JSON diagnostic") from error
         if diagnostic.get("schema_version") != 1:
             raise CliSmokeError("invalid manifest diagnostic schema differs from v1")
+
+
+def project_inspection_smoke(compiler: Path, timeout: int) -> None:
+    """Alpha.5: source and project-directory imports have identical read-only metadata."""
+    project = ROOT / "tutorials/module-inspection"
+    source = project / "src/main.srp"
+    expected = read_expected_stdout(project / "expected.stdout")
+    require(invoke(compiler, "verify", str(project), timeout=timeout),
+            "verify two-module project", stdout=b"", stderr=b"")
+    require(invoke(compiler, "launch", str(project), timeout=timeout),
+            "launch two-module project", stdout=expected, stderr=b"")
+    file_inspect = invoke(compiler, "inspect", "modules", "--json", str(source), timeout=timeout)
+    project_inspect = invoke(compiler, "inspect", "modules", "--json", str(project), timeout=timeout)
+    old_alias = invoke(compiler, "modules", "--json", str(project), timeout=timeout)
+    for label, result in (("file modules", file_inspect),
+                          ("project modules", project_inspect),
+                          ("legacy project modules", old_alias)):
+        require(result, label, nonempty_stdout=True, stderr=b"")
+    try:
+        from_file = json.loads(file_inspect.stdout)
+        from_project = json.loads(project_inspect.stdout)
+        from_alias = json.loads(old_alias.stdout)
+    except (ValueError, UnicodeError) as error:
+        raise CliSmokeError("module inspection did not produce schema-v1 JSON") from error
+    if (from_file.get("schema_version") != 1
+            or not isinstance(from_file.get("modules"), list)
+            or len(from_file["modules"]) != 2):
+        raise CliSmokeError("project module inspection: unexpected two-module inventory")
+    if from_project != from_file or from_alias != from_project:
+        raise CliSmokeError("source, project and legacy module inventories differ")
+
+    # Static inspection must not evaluate ordinary runtime statements.
+    with tempfile.TemporaryDirectory(prefix="scarp-inspection-smoke-") as directory:
+        folder = Path(directory)
+        (folder / "Scarp.project").write_text(
+            "scarp-project: 1\nname: inspect-only\nentry: src/main.srp\n", encoding="utf-8"
+        )
+        (folder / "src").mkdir()
+        (folder / "src/main.srp").write_text("print(1 / 0);\n", encoding="utf-8")
+        inspection = invoke(compiler, "inspect", "modules", "--json", str(folder), timeout=timeout)
+        require(inspection, "inspection must not execute runtime division",
+                nonempty_stdout=True, stderr=b"")
+        if json.loads(inspection.stdout).get("schema_version") != 1:
+            raise CliSmokeError("static inspection schema changed")
+        require(invoke(compiler, "launch", str(folder), timeout=timeout),
+                "launch does execute runtime division", code=1, stdout=b"",
+                nonempty_stderr=True)
+        # Manifest path traversal must fail without leaking a partial inventory.
+        (folder / "Scarp.project").write_text(
+            "scarp-project: 1\nname: inspect-only\nentry: ../outside.srp\n",
+            encoding="utf-8",
+        )
+        invalid = invoke(compiler, "inspect", "modules", "--json",
+                         "--diagnostic-format=json", str(folder), timeout=timeout)
+        require(invalid, "project inspection rejects traversal",
+                code=1, stdout=b"", nonempty_stderr=True)
+        try:
+            problem = json.loads(invalid.stderr)
+        except (ValueError, UnicodeError) as error:
+            raise CliSmokeError("bad project manifest did not provide JSON diagnostic") from error
+        if problem.get("schema_version") != 1:
+            raise CliSmokeError("invalid project manifest diagnostic schema changed")
 
 
 def main(argv: list[str] | None = None) -> int:
