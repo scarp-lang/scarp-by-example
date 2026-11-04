@@ -14,12 +14,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: scarp-by-example-alpha2-prerelease
+  group: scarp-by-example-alpha3-prerelease
   cancel-in-progress: false
 
 jobs:
   publish:
-    name: Gate and publish v0.1.0-alpha.2
+    name: Gate and publish v0.1.0-alpha.3
     if: >-
       ${{
         github.event.workflow_run.conclusion == 'success' &&
@@ -38,7 +38,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
-          TAG: v0.1.0-alpha.2
+          TAG: v0.1.0-alpha.3
         run: |
           set -euo pipefail
           if [[ ! "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
@@ -82,7 +82,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
-          TAG: v0.1.0-alpha.2
+          TAG: v0.1.0-alpha.3
         run: |
           set -euo pipefail
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
@@ -93,5 +93,5 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$SOURCE_SHA" \
             --prerelease \
-            --title "Scarp by Example v0.1.0-alpha.2 — Verified alpha.4 projects" \
-            --notes-file docs/releases/v0.1.0-alpha.2.md
+            --title "Scarp by Example v0.1.0-alpha.3 — Guided labs and learning paths" \
+            --notes-file docs/releases/v0.1.0-alpha.3.md
