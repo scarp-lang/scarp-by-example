@@ -14,7 +14,7 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 **Scarp-first CLI quickstart:** [English guide](docs/cli-quickstart.md) · [हिन्दी गाइड](docs/hi/cli-quickstart.md). Static `verify` is different from the older `check`, which can evaluate runtime expressions.
 
-**Local progress:** On a lesson page, choose **Mark lesson complete** to save that lesson's ID in this browser only. The homepage shows overall completion and lets you resume the next unfinished lesson or clear your saved progress. Nothing is sent to the server, and no account is needed. On browsers without local storage, normal lesson navigation still works.
+**Local progress:** On a lesson page, choose **Mark lesson complete** to save that lesson's ID in this browser only. The homepage shows overall completion and lets you resume the next unfinished lesson, **export a JSON backup**, **import a backup to merge progress** across browsers or devices, or clear saved progress. Backups contain only completed lesson IDs and are processed locally without upload, account or tracking. Import rejects corrupt and oversized files and never deletes existing completions. On browsers without local storage, normal lesson navigation still works.
 
 **Website navigation:** Open a chapter from the home page, then select an example. For a direct link, use a path like [01 · Hello](https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/). The same source and output fixtures remain in Git; [site development notes](site/README.md) document the generated routes.
 
