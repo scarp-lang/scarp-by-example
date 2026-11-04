@@ -54,7 +54,8 @@ class ProjectInspectionTests(unittest.TestCase):
             def read(path):
                 if path == fake_manifest:
                     return original.replace(b"module-inspection", b"wrong-project")
-                return Path.open(path, "rb").read()
+                with Path.open(path, "rb") as stream:
+                    return stream.read()
             reader.side_effect = read
             with self.assertRaisesRegex(ValueError, "manifest differs"):
                 render_project_inspection_page(self.target)
