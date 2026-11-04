@@ -683,7 +683,7 @@ Compare imports, dependencies and symbols. Schema-v1 module display labels may d
 <code>42</code> प्रिंट करता है।</p>
 <div class="practice-challenge"><p><strong>अभ्यास:</strong> पहले project फ़ोल्डर
 की inspection करें, फिर उसके <code>src/main.srp</code> को inspect करें।
-दोनों schema-v1 JSON inventories की तुलना करें।</p></div></div>
+दोनों JSON inventories में imports, dependencies और symbols की तुलना करें। Display path अलग हो सकता है।</p></div></div>
 <p class="notes-provenance">Pinned compiler
 <a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>,
 source <code>{escape(target["source_commit"][:12])}</code>.
