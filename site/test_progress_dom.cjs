@@ -6,6 +6,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const { Blob } = require("node:buffer");
 const { KEY } = require("./progress.js");
 
 const lessons = [
@@ -85,12 +86,25 @@ async function boot({ blocked = false, chapter = null } = {}) {
     querySelectorAll(selector) { return selectors[selector] || []; }
   };
   const events = {};
+  const downloads = [];
+  let backupBlob;
+  document.createElement = tag => {
+    assert.equal(tag, "a");
+    const link = element();
+    link.click = () => downloads.push({href: link.href, download: link.download});
+    return link;
+  };
   const window = {
     localStorage: storage,
     confirm() { return true; },
+    URL: {
+      createObjectURL(blob) { backupBlob = blob; return "blob:course-backup"; },
+      revokeObjectURL() {}
+    },
+    setTimeout(fn) { fn(); },
     addEventListener(key, fn) { events[key] = fn; }
   };
-  const context = { document, window, fetch: async () => ({
+  const context = { document, window, Blob, fetch: async () => ({
     ok: true, json: async () => lessons
   }) };
   const script = fs.readFileSync(path.join(__dirname, "progress.js"), "utf8");
@@ -98,7 +112,7 @@ async function boot({ blocked = false, chapter = null } = {}) {
   await new Promise(resolve => setImmediate(resolve));
   return { panel, toggle, clear, exportButton, importButton, fileInput,
     count, bar, badge, resume, status, error,
-    entries, storage, writeKeys, events };
+    entries, storage, writeKeys, events, downloads, backupBlob: () => backupBlob };
 }
 
 test("does not save completion until explicit user click", async () => {
@@ -178,4 +192,16 @@ test("invalid and oversized backups do not overwrite progress", async () => {
   await ui.fileInput.listeners.change();
   assert.match(ui.error.textContent, /too large/);
   assert.equal(ui.count.textContent, "1 of 3 completed");
+});
+
+test("export downloads only the selected lesson IDs as a local JSON file", async () => {
+  const ui = await boot();
+  ui.toggle.listeners.click();
+  ui.exportButton.listeners.click();
+  assert.deepEqual(ui.downloads, [{
+    href: "blob:course-backup", download: "scarp-by-example-progress.json"
+  }]);
+  const contents = JSON.parse(await ui.backupBlob().text());
+  assert.deepEqual(contents, {version: 1, completed: [lessons[0].id]});
+  assert.match(ui.error.textContent, /Backup downloaded/);
 });
