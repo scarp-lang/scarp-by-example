@@ -1,0 +1,5 @@
+// Return the mathematical square, then call the typed function.
+pure funcra square(value: integer) -> integer {
+    return value * value;
+}
+print(square(6));
