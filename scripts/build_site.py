@@ -515,7 +515,7 @@ def render_project_page(target: dict) -> str:
     source_bytes = entry_path.read_bytes()
     expected_bytes = expected_path.read_bytes()
     if manifest_bytes != b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n":
-        raise ValueError("the alpha.4 sample manifest has changed; review the tutorial")
+        raise ValueError("the verified project manifest has changed; review the tutorial")
     if source_bytes != b'print("Hello from Scarp!");\n':
         raise ValueError("the sample project source differs from the verified scaffold")
     reference = (EXAMPLES / "01-basics/01-hello.stdout").read_bytes()
@@ -583,9 +583,117 @@ scarp launch tutorials/first-project</code></pre>
 <section class="run-panel"><p class="eyebrow">IMPORTANT LIMITS</p>
 <h2>Interpreter projects, not native builds</h2>
 <p>The development manifest is limited to 4,096 bytes and three ordered fields. Project entrypoints cannot escape the project root. These commands do not provide native executable generation, package downloads, lockfiles, a registry or a stable workspace format.</p></section>
+<p><a class="secondary-button" href="{escape(rel(page, "projects/module-inspection/index.html"))}">Inspect a project\u0027s modules →</a></p>
 <p class="fine-print">Pinned published compiler: <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> · source <code>{escape(target["source_commit"][:12])}</code>. No browser execution or fabricated output.</p>
 </main>"""
     return page_shell(page, title, "Learn the real Scarp project CLI workflow in English and Hindi, with verified source and output.", main, "project-layout")
+
+
+
+def render_project_inspection_page(target: dict) -> str:
+    """Present a checked-in multi-module project and the read-only alpha.5 CLI."""
+    page = "projects/module-inspection/index.html"
+    folder = ROOT / "tutorials/module-inspection"
+    manifest = (folder / "Scarp.project").read_bytes()
+    entry = (folder / "src/main.srp").read_bytes()
+    helper = (folder / "src/lib/math.srp").read_bytes()
+    expected = read_expected_stdout(folder / "expected.stdout")
+    if manifest != b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n":
+        raise ValueError("module inspection manifest differs from the tested example")
+    if entry != b'import "lib/math.srp" as math;\nprint(math.answer);\n':
+        raise ValueError("module inspection entry differs from the tested example")
+    if not helper.endswith(b"pub bind answer = 21 * 2;\n") or expected != b"42\n":
+        raise ValueError("module inspection module or output differs from the tested example")
+    root_link = REPOSITORY + "/blob/main/tutorials/module-inspection/"
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<a href="{escape(rel(page, "projects/index.html"))}">Projects</a><span>/</span>
+<span aria-current="page">Inspect project modules</span></nav>
+<header class="page-heading">
+<p class="eyebrow">PUBLISHED SCARP v{escape(target["version"])} · SOURCE-VERIFIED</p>
+<h1>Inspect a Scarp project's modules</h1>
+<p class="lead">Use the published Scarp-first CLI to inspect a full project module graph
+without executing its program. This project includes a real import, public constant and
+byte-exact interpreter output.</p>
+<div class="guide-links">
+<a href="{REPOSITORY}/blob/main/docs/project-inspection.md">English tutorial ↗</a>
+<a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/project-inspection.md">हिन्दी ट्यूटोरियल ↗</a>
+</div></header>
+<section class="project-steps" aria-label="Project inspection commands">
+<div class="project-step"><span>01</span><h2>Verify</h2>
+<code>scarp verify tutorials/module-inspection</code></div>
+<div class="project-step"><span>02</span><h2>Inspect</h2>
+<code>scarp inspect modules --json tutorials/module-inspection</code></div>
+<div class="project-step"><span>03</span><h2>Launch</h2>
+<code>scarp launch tutorials/module-inspection</code></div></section>
+<p class="project-warning">Inspection does not execute the program. It is <strong>static</strong> and emits
+schema-v1 metadata, not program output. The JSON includes project-relative
+file/module metadata and should not be confused with a compiler execution result.
+<code>launch</code> uses the interpreter. There is no <code>scarp compile</code> command.</p>
+<div class="project-source-grid">
+<section class="code-panel" aria-labelledby="inspect-manifest">
+<div class="panel-heading"><div><span class="eyebrow">REAL PROJECT MANIFEST</span>
+<h2 id="inspect-manifest">Scarp.project</h2></div></div>
+<pre><code>{escape(manifest.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{root_link}Scarp.project">View manifest ↗</a></div></section>
+<section class="code-panel" aria-labelledby="inspect-main">
+<div class="panel-heading"><div><span class="eyebrow">IMPORTED ENTRYPOINT</span>
+<h2 id="inspect-main">src/main.srp</h2></div>
+<button type="button" class="copy-button" data-copy="scarp-code">Copy code</button></div>
+<pre><code id="scarp-code">{highlight_scarp(entry.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{root_link}src/main.srp">View entrypoint ↗</a></div></section>
+<section class="code-panel" aria-labelledby="inspect-helper">
+<div class="panel-heading"><div><span class="eyebrow">REAL SUPPORT MODULE</span>
+<h2 id="inspect-helper">src/lib/math.srp</h2></div></div>
+<pre><code>{highlight_scarp(helper.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{root_link}src/lib/math.srp">View helper ↗</a></div></section>
+<section class="code-panel output-panel" aria-labelledby="inspect-output">
+<div class="panel-heading"><div><span class="eyebrow">LAUNCH STDOUT FIXTURE</span>
+<h2 id="inspect-output">expected.stdout</h2></div><span class="verified-tag">Real compiler</span></div>
+<pre><code>{escape(expected.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{root_link}expected.stdout">View fixture ↗</a></div></section>
+</div>
+<section class="lesson-notes" aria-labelledby="inspection-explain">
+<div class="notes-heading"><div><p class="eyebrow">WHAT IS INSPECTED?</p>
+<h2 id="inspection-explain">Read the project without running it</h2></div>
+<div class="language-switch" role="group" aria-label="Explanation language">
+<button class="note-lang-button" type="button" data-note-switch="en"
+aria-controls="en-notes" aria-pressed="true">English</button>
+<button class="note-lang-button" type="button" data-note-switch="hi"
+aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button>
+</div></div>
+<div class="note-content" id="en-notes" lang="en">
+<p>The manifest selects <code>src/main.srp</code> as the entrypoint.
+It imports <code>lib/math.srp</code>, which exposes a public compile-time scalar
+constant. <strong>inspect modules --json DIRECTORY</strong> checks the actual graph and
+returns metadata without evaluating <code>print</code>.
+<strong>launch DIRECTORY</strong> executes the entrypoint and prints the verified
+result <code>42</code>.</p>
+<div class="practice-challenge"><p><strong>Try it:</strong> Run inspection against
+the project directory, then against <code>tutorials/module-inspection/src/main.srp</code>.
+Compare imports, dependencies and symbols. Schema-v1 module display labels may differ across platforms; the checked-in CLI tests compare the underlying graph.</p></div>
+</div>
+<div class="note-content" id="hi-notes" lang="hi">
+<p><code>Scarp.project</code> में <code>src/main.srp</code> को entrypoint चुना गया है।
+यह <code>lib/math.srp</code> मॉड्यूल import करता है।
+<strong>inspect modules --json DIRECTORY</strong> बिना <code>print</code> चलाए
+मॉड्यूल और dependencies की सूची देता है।
+<strong>launch DIRECTORY</strong> interpreter से प्रोग्राम चलाकर सत्यापित आउटपुट
+<code>42</code> प्रिंट करता है।</p>
+<div class="practice-challenge"><p><strong>अभ्यास:</strong> पहले project फ़ोल्डर
+की inspection करें, फिर उसके <code>src/main.srp</code> को inspect करें।
+दोनों JSON inventories में imports, dependencies और symbols की तुलना करें। Display path अलग हो सकता है।</p></div></div>
+<p class="notes-provenance">Pinned compiler
+<a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>,
+source <code>{escape(target["source_commit"][:12])}</code>.
+No browser Scarp execution or simulated JSON results.</p></section>
+<p class="fine-print"><a href="{escape(rel(page, "projects/index.html"))}">← Your first Scarp project</a>
+· <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Published compiler compatibility</a></p>
+</main>"""
+    return page_shell(page, "Project module inspection",
+                      "Read a real Scarp project's module graph using published compiler metadata.",
+                      main, "project-layout")
 
 
 def render_lesson(source: Path, stdout: Path, description: str) -> str:
@@ -793,6 +901,9 @@ def build(destination: Path) -> int:
     project_path = destination / "projects/index.html"
     project_path.parent.mkdir(parents=True, exist_ok=True)
     project_path.write_text(render_project_page(target), encoding="utf-8", newline="\n")
+    inspect_path = destination / "projects/module-inspection/index.html"
+    inspect_path.parent.mkdir(parents=True, exist_ok=True)
+    inspect_path.write_text(render_project_inspection_page(target), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -806,7 +917,8 @@ def build(destination: Path) -> int:
                                            target, hindi_notes[lesson.source_path], questions),
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
-    urls = ["index.html", "projects/index.html", "labs/index.html"]
+    urls = ["index.html", "projects/index.html",
+            "projects/module-inspection/index.html", "labs/index.html"]
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)

@@ -1,7 +1,7 @@
 {
-  "version": "0.0.5-alpha.4",
-  "release_tag": "v0.0.5-alpha.4",
-  "source_commit": "79141329176f5dce51457e90a6652902f6432135",
-  "release_url": "https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.4",
+  "version": "0.0.5-alpha.5",
+  "release_tag": "v0.0.5-alpha.5",
+  "source_commit": "2eeed0aa52ccb59523307841ad8ffbd83f8911a8",
+  "release_url": "https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.5",
   "status": "prerelease"
 }

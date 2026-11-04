@@ -148,9 +148,16 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 65)
+            self.assertEqual(len(locations), 66)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/", locations)
+            inspect = (output / "projects/module-inspection/index.html").read_text(encoding="utf-8")
+            self.assertIn("scarp inspect modules --json tutorials/module-inspection", inspect)
+            self.assertIn("scarp launch tutorials/module-inspection", inspect)
+            self.assertIn('src/lib/math.srp', inspect)
+            self.assertIn('lang="hi"', inspect)
+            self.assertIn("2eeed0aa52cc", inspect)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/",
                 locations,
@@ -167,7 +174,7 @@ class SiteTests(unittest.TestCase):
             self.assertIn("Hello from Scarp!", html)
             self.assertIn('id="hi-notes"', html)
             self.assertIn('id="en-notes"', html)
-            self.assertIn("79141329176f", html)
+            self.assertIn("2eeed0aa52cc", html)
             self.assertTrue((output / "progress.js").is_file())
             self.assertTrue((output / "checkpoint.js").is_file())
             question_paths = set(read_practice_questions())
@@ -201,7 +208,7 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(
                 sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
                     for page in pages), 18)
-            self.assertEqual(len(list(output.rglob("index.html"))), 65)
+            self.assertEqual(len(list(output.rglob("index.html"))), 66)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 50)
             self.assertEqual(sum(item["has_checkpoint"] for item in search), 18)

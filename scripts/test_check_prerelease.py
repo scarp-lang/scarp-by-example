@@ -6,8 +6,8 @@ from check_prerelease import valid_prerelease_tag, check_prerelease
 
 
 class TagPolicyTests(unittest.TestCase):
-    def test_alpha3_release_snapshot_is_complete(self):
-        self.assertIn("v0.1.0-alpha.3", check_prerelease())
+    def test_alpha4_release_snapshot_is_complete(self):
+        self.assertIn("v0.1.0-alpha.4", check_prerelease())
         self.assertIn("18 checkpoints", check_prerelease())
         self.assertIn("6 guided labs", check_prerelease())
 

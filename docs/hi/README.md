@@ -13,13 +13,15 @@
 
 **कुल: 50 पाठ, 6 अध्याय।** [अंग्रेज़ी पाठ्यक्रम](../../README.md#course) में वही मूल `.srp` स्रोत और अपेक्षित आउटपुट हैं।
 
-**नया:** [Scarp में अपना पहला प्रोजेक्ट (alpha.4)](project-workflow.md) — `create`, `verify DIRECTORY` और `launch` को असली कम्पाइलर के साथ सीखें।
+**नया:** [Scarp में अपना पहला प्रोजेक्ट (alpha.4 से उपलब्ध)](project-workflow.md) — `create`, `verify DIRECTORY` और `launch` का प्रयोग सीखें।
+
+**प्रकाशित alpha.5:** [दो मॉड्यूल वाले प्रोजेक्ट को बिना चलाए inspect करें](project-inspection.md) — `scarp inspect modules --json DIRECTORY` की वास्तविक static जानकारी।
 
 ## Scarp चलाने का तरीका
 
 नए CLI कमांड जानने के लिए [हिन्दी CLI गाइड](cli-quickstart.md) पढ़ें। इसमें `verify` और पुराने `check` का वास्तविक अंतर भी है।
 
-पहले [आधिकारिक कम्पाइलर](https://github.com/scarp-lang/scarp) का संस्करण जाँचें। यह प्रोजेक्ट **Scarp v0.0.5-alpha.3 के सटीक स्रोत कमिट `7715c28`** पर उदाहरणों को जाँचता है; पुराने प्री-रिलीज़ का सिंटैक्स अलग हो सकता है। [संगतता नीति](../compatibility.md) देखें।
+पहले [आधिकारिक कम्पाइलर](https://github.com/scarp-lang/scarp) का संस्करण जाँचें। यह प्रोजेक्ट **प्रकाशित Scarp v0.0.5-alpha.5 के सटीक स्रोत कमिट `2eeed0a`** पर उदाहरणों को जाँचता है; पुराने प्री-रिलीज़ का सिंटैक्स अलग हो सकता है। [संगतता नीति](../compatibility.md) देखें।
 
 ```sh
 scarp verify examples/01-basics/01-hello.srp

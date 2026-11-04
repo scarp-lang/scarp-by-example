@@ -1,0 +1,2 @@
+// Public compile-time scalar binding imported by main.srp.
+pub bind answer = 21 * 2;
