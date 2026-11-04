@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "questions": [
+    {
+      "source": "examples/01-basics/01-hello.srp",
+      "evidence_line": "Hello from Scarp!",
+      "question": {
+        "en": "What exact text does this first program print?",
+        "hi": "यह पहला प्रोग्राम ठीक कौन-सा टेक्स्ट प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "Hello Scarp",
+          "hi": "Hello Scarp"
+        },
+        {
+          "en": "Hello from Scarp!",
+          "hi": "Hello from Scarp!"
+        },
+        {
+          "en": "Scarp!",
+          "hi": "Scarp!"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "The source calls print with the string literal \"Hello from Scarp!\", so the fixture contains that line.",
+        "hi": "स्रोत में print को \"Hello from Scarp!\" स्ट्रिंग दी गई है, इसलिए अपेक्षित आउटपुट में यही पंक्ति है।"
+      }
+    },
+    {
+      "source": "examples/02-control-flow/01-decisions.srp",
+      "evidence_line": "B",
+      "question": {
+        "en": "Which grade is printed when score is 73?",
+        "hi": "जब score का मान 73 है, तो कौन-सा ग्रेड प्रिंट होगा?"
+      },
+      "options": [
+        {
+          "en": "A",
+          "hi": "A"
+        },
+        {
+          "en": "C",
+          "hi": "C"
+        },
+        {
+          "en": "B",
+          "hi": "B"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "73 does not satisfy score >= 90, but it satisfies score >= 60 and score < 90, so grade becomes B.",
+        "hi": "73, 90 से कम और 60 से अधिक या बराबर है। इसलिए elif की शर्त सही होती है और grade का मान B बनता है।"
+      }
+    },
+    {
+      "source": "examples/03-functions/01-typed-functions.srp",
+      "evidence_line": "35",
+      "question": {
+        "en": "What is the first number printed by add(10, square(5))?",
+        "hi": "add(10, square(5)) से प्रिंट होने वाली पहली संख्या क्या है?"
+      },
+      "options": [
+        {
+          "en": "35",
+          "hi": "35"
+        },
+        {
+          "en": "25",
+          "hi": "25"
+        },
+        {
+          "en": "15",
+          "hi": "15"
+        }
+      ],
+      "correct": 0,
+      "explanation": {
+        "en": "square(5) returns 25; add(10, 25) returns 35. The source calls these functions before their declarations.",
+        "hi": "square(5) का परिणाम 25 है। फिर add(10, 25) का परिणाम 35 होता है।"
+      }
+    },
+    {
+      "source": "examples/04-collections/01-vectors.srp",
+      "evidence_line": "10.0 2.5",
+      "question": {
+        "en": "What mean does mean(values) print for [1.0, 2.0, 3.0, 4.0]?",
+        "hi": "[1.0, 2.0, 3.0, 4.0] के लिए mean(values) क्या प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "4.0",
+          "hi": "4.0"
+        },
+        {
+          "en": "2.5",
+          "hi": "2.5"
+        },
+        {
+          "en": "10.0",
+          "hi": "10.0"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "The four values sum to 10.0. Dividing by their count (4) gives a mean of 2.5.",
+        "hi": "चार संख्याओं का योग 10.0 है। 10.0 को 4 से भाग देने पर औसत 2.5 मिलता है।"
+      }
+    },
+    {
+      "source": "examples/05-modules/01-modular-inference.srp",
+      "evidence_line": "[4.0, 1.0]",
+      "question": {
+        "en": "Which score vector is returned by linear.predict([2.0, 1.0]) in this example?",
+        "hi": "इस उदाहरण में linear.predict([2.0, 1.0]) कौन-सा स्कोर वेक्टर देता है?"
+      },
+      "options": [
+        {
+          "en": "[1.0, 4.0]",
+          "hi": "[1.0, 4.0]"
+        },
+        {
+          "en": "[2.0, 1.0]",
+          "hi": "[2.0, 1.0]"
+        },
+        {
+          "en": "[4.0, 1.0]",
+          "hi": "[4.0, 1.0]"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "The imported linear module computes the scores. The pinned fixture for this lesson prints [4.0, 1.0].",
+        "hi": "इम्पोर्ट किया गया linear मॉड्यूल स्कोर निकालता है। इस पाठ के सत्यापित आउटपुट में [4.0, 1.0] प्रिंट होता है।"
+      }
+    },
+    {
+      "source": "examples/06-ai-foundations/01-matrix-inference.srp",
+      "evidence_line": "[4.0, 1.0]",
+      "question": {
+        "en": "What output does matvec(weights, features) produce?",
+        "hi": "matvec(weights, features) का आउटपुट क्या है?"
+      },
+      "options": [
+        {
+          "en": "[4.0, 1.0]",
+          "hi": "[4.0, 1.0]"
+        },
+        {
+          "en": "[2.0, 3.0]",
+          "hi": "[2.0, 3.0]"
+        },
+        {
+          "en": "[1.0, 4.0]",
+          "hi": "[1.0, 4.0]"
+        }
+      ],
+      "correct": 0,
+      "explanation": {
+        "en": "With rows [1.0, 2.0] and [-1.0, 3.0], multiplying by [2.0, 1.0] gives 4.0 and 1.0.",
+        "hi": "मैट्रिक्स की पंक्तियाँ [1.0, 2.0] और [-1.0, 3.0] हैं। इन्हें [2.0, 1.0] से गुणा करने पर 4.0 और 1.0 मिलते हैं।"
+      }
+    }
+  ]
+}
