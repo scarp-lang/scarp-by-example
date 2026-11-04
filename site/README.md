@@ -10,9 +10,11 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `chapters/NN-topic/index.html` | Chapter overview with links to its runnable lessons |
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
 | `projects/index.html` | Source-backed English/Hindi guide to published alpha.4 `create`, project `verify` and `launch` |
+| `labs/index.html` | Overview of six standalone verified bilingual coding labs |
+| `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands |
 | `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
 
-A course with 50 runnable examples produces **58 HTML documents** (home, six chapters, fifty lessons and one project workflow page). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
+A course with 50 runnable examples and six guided labs produces **65 HTML documents** (home, six chapters, fifty lessons, one project workflow, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
 
 ## Browser behavior
 
@@ -22,11 +24,14 @@ Displayed source is escaped as text, not evaluated. Control-character output suc
 
 The project page reads an actual checked-in `Scarp.project`, `.srp` file and exact stdout fixture. It is not counted as a numbered lesson, and includes no simulated browser execution.\n\nThe website renders English descriptions and documented expected results directly from the chapter tables. Hindi notes and practice questions are extracted from the six authoritative Hindi Markdown chapter guides. The generator rejects missing, duplicated, misnumbered or wrongly linked notes, rather than publishing partial translations. Original chapter guides remain linked for context. Scarp is prerelease software; all examples are pinned to the exact compiler commit in `docs/compiler-target.json`.
 
+Guided labs are generated from checked-in `labs/NN-topic/` sources and `docs/guided-labs.json` bilingual teaching text. Each starter and solution must pass the actual pinned Scarp compiler; the starter intentionally produces a different result from the exact reference fixture. The pages use native HTML hint/answer disclosures, do not execute Scarp in the browser, and do not save or upload attempts. See [the lab contributor guide](../docs/guided-labs.md).
+
 ## Build and test
 
 ```sh
 python -m unittest discover -s scripts -p 'test_*.py'
 python scripts/build_site.py --output dist
+python scripts/verify_guided_labs.py --compiler /absolute/path/to/scarp
 node --check site/progress.js
 node --check site/checkpoint.js
 node --test site/test_progress.cjs site/test_progress_dom.cjs site/test_checkpoint.cjs
