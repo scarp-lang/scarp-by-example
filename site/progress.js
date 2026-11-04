@@ -173,6 +173,14 @@
         const done = completedCount(manifest, completed, chapter);
         badge.textContent = done + " / " + howMany + " complete";
       }
+      // A chapter path reflects only explicitly saved lesson completions.
+      // Quiz and coding-lab results are deliberately not claimed or tracked.
+      for (const step of document.querySelectorAll("[data-path-lesson-status]")) {
+        const chapter = step.dataset.pathLessonStatus;
+        const howMany = manifest.filter(item => item.id.startsWith(chapter + "/")).length;
+        const done = completedCount(manifest, completed, chapter);
+        step.textContent = done + " / " + howMany + " lessons marked complete on this device.";
+      }
     }
 
     function persist(next) {

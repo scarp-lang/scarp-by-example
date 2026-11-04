@@ -54,6 +54,8 @@ async function boot({ blocked = false, chapter = null } = {}) {
   badge.dataset.progressComplete = lessons[0].id;
   const resume = element();
   const status = element();
+  const pathStatus = element();
+  pathStatus.dataset.pathLessonStatus = chapter || "01-basics";
   const error = element();
   const panel = element();
   panel.dataset = {
@@ -76,7 +78,8 @@ async function boot({ blocked = false, chapter = null } = {}) {
     "[data-progress-complete]": [badge],
     "[data-progress-status]": [status],
     "[data-progress-resume]": [resume],
-    "[data-progress-chapter]": []
+    "[data-progress-chapter]": [],
+    "[data-path-lesson-status]": chapter ? [pathStatus] : []
   };
   const document = {
     querySelector(selector) {
@@ -111,7 +114,7 @@ async function boot({ blocked = false, chapter = null } = {}) {
   vm.runInNewContext(script, context, { timeout: 2000 });
   await new Promise(resolve => setImmediate(resolve));
   return { panel, toggle, clear, exportButton, importButton, fileInput,
-    count, bar, badge, resume, status, error,
+    count, bar, badge, resume, status, pathStatus, error,
     entries, storage, writeKeys, events, downloads, backupBlob: () => backupBlob };
 }
 
@@ -156,9 +159,11 @@ test("storage-disabled browsers never show non-functional controls", async () =>
 test("chapter scope counts only its own lessons", async () => {
   const ui = await boot({ chapter: "01-basics" });
   assert.equal(ui.count.textContent, "0 of 2 completed");
+  assert.equal(ui.pathStatus.textContent, "0 / 2 lessons marked complete on this device.");
   assert.equal(ui.bar.max, 2);
   ui.toggle.listeners.click();
   assert.equal(ui.count.textContent, "1 of 2 completed");
+  assert.equal(ui.pathStatus.textContent, "1 / 2 lessons marked complete on this device.");
   assert.equal(ui.bar.value, 1);
 });
 

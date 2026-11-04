@@ -6,6 +6,8 @@ and a byte-exact `solution.stdout` fixture. Every starter must compile successfu
 but produce **different** output from its solution. No browser Scarp interpreter
 or automated judging service is provided.
 
+For a guided order of study, start from the [Basics chapter learning path](https://scarp-lang.github.io/scarp-by-example/chapters/01-basics/#chapter-path): first read source-backed lessons, then practice three English/Hindi self-checks, and finally open the chapter's coding lab. All six chapter pages offer this sequence. Your optional saved lesson completion count is separate from quiz results and any attempts you run in the compiler.
+
 ## Start a lab
 
 1. Open the [online lab index](https://scarp-lang.github.io/scarp-by-example/labs/) and select a chapter.
