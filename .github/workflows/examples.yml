@@ -55,6 +55,14 @@ jobs:
         if: runner.os == 'Windows'
         run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp.exe
 
+      - name: Verify guided labs (Linux and macOS)
+        if: runner.os != 'Windows'
+        run: python scripts/verify_guided_labs.py --compiler .compiler/target/debug/scarp
+
+      - name: Verify guided labs (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_guided_labs.py --compiler .compiler/target/debug/scarp.exe
+
       - name: Smoke-test Scarp-first CLI
         if: runner.os != 'Windows'
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
