@@ -627,7 +627,7 @@ byte-exact interpreter output.</p>
 <code>scarp inspect modules --json tutorials/module-inspection</code></div>
 <div class="project-step"><span>03</span><h2>Launch</h2>
 <code>scarp launch tutorials/module-inspection</code></div></section>
-<p class="project-warning">Inspection is <strong>static</strong> and emits
+<p class="project-warning">Inspection does not execute the program. It is <strong>static</strong> and emits
 schema-v1 metadata, not program output. The JSON includes project-relative
 file/module metadata and should not be confused with a compiler execution result.
 <code>launch</code> uses the interpreter. There is no <code>scarp compile</code> command.</p>
