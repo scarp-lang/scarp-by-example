@@ -4,6 +4,20 @@
   const root = document.documentElement;
   root.classList.add("js-ready");
   const toggle = document.querySelector("#theme-toggle");
+  const mobileMenu = document.querySelector("[data-mobile-nav]");
+  if (mobileMenu) {
+    // Escape closes the menu and returns keyboard focus to its trigger.
+    // Native <details> remains fully usable when JavaScript is disabled.
+    mobileMenu.addEventListener("keydown", event => {
+      if (event.key !== "Escape" || !mobileMenu.open) return;
+      mobileMenu.open = false;
+      mobileMenu.querySelector("summary")?.focus();
+      event.preventDefault();
+    });
+    for (const link of mobileMenu.querySelectorAll("a")) {
+      link.addEventListener("click", () => { mobileMenu.open = false; });
+    }
+  }
 
   function setTheme(theme) {
     root.dataset.theme = theme;

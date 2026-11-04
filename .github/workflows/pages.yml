@@ -48,6 +48,9 @@ jobs:
       - name: Test source-backed bilingual checkpoints
         run: node --test site/test_checkpoint.cjs
 
+      - name: Test accessible mobile navigation
+        run: node --test site/test_mobile_navigation.cjs
+
       - name: Test local progress tracking (no external packages)
         run: |
           node --check site/progress.js

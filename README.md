@@ -22,6 +22,8 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 **Guided coding labs:** Six **English/Hindi compiler-verified challenges** (one per chapter) now have runnable starter programs, exact target output, hints, and reference solutions. The starter is deliberately different from the solution but still passes the pinned compiler. Practice locally; the website neither runs Scarp nor collects your attempts. [Open the coding lab index](https://scarp-lang.github.io/scarp-by-example/labs/) or [read the workflow](docs/guided-labs.md).
 
+**Mobile and keyboard navigation:** On narrow screens, the site uses an accessible **Menu** disclosure rather than a horizontally scrolling header. It works without JavaScript, and keyboard users can close it with Escape and return focus to the menu trigger. Chapter, search, project, lab, compiler and GitHub destinations stay consistent across desktop and mobile. The skip-to-content link remains available on every page.
+
 **Website navigation:** Open a chapter from the home page, then select an example. For a direct link, use a path like [01 · Hello](https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/). The same source and output fixtures remain in Git; [site development notes](site/README.md) document the generated routes.
 
 ## Start here

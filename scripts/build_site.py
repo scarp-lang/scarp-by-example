@@ -163,6 +163,14 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     script = escape(rel(page, "search.js"))
     checkpoint_script = (f'<script src="{escape(rel(page, "checkpoint.js"))}" defer></script>'
                          if layout == "lesson-layout" else "")
+    # Keep both navigation views in sync, with native disclosure on small screens.
+    # This works without JavaScript and avoids forcing horizontal page scrolling.
+    nav_links = f"""<a href="{home}#chapters">Chapters</a>
+<a href="{home}#search-area">Search</a>
+<a href="{escape(rel(page, "projects/index.html"))}">Projects</a>
+<a href="{escape(rel(page, "labs/index.html"))}">Coding labs</a>
+<a href="{COMPILER}">Compiler</a>
+<a href="{REPOSITORY}">GitHub</a>"""
     return f"""<!doctype html>
 <html lang="en" data-theme="dark">
 <head>
@@ -183,14 +191,11 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <a class="brand" href="{home}" aria-label="Scarp by Example home">
   <span class="brand-icon" aria-hidden="true">S</span>
   <span>scarp<span class="brand-muted"> / by example</span></span></a>
-<nav class="top-nav" aria-label="Primary navigation">
-  <a href="{home}#chapters">Chapters</a>
-  <a href="{home}#search-area">Search</a>
-  <a href="{escape(rel(page, "projects/index.html"))}">Projects</a>
-  <a href="{escape(rel(page, "labs/index.html"))}">Coding labs</a>
-  <a href="{COMPILER}">Compiler</a>
-  <a href="{REPOSITORY}">GitHub</a>
-</nav>
+<nav class="top-nav" aria-label="Primary navigation">{nav_links}</nav>
+<details class="mobile-nav" data-mobile-nav>
+<summary>Menu</summary>
+<nav class="mobile-menu-links" aria-label="Mobile navigation">{nav_links}</nav>
+</details>
 <button id="theme-toggle" class="theme-button" type="button"
   aria-label="Switch to light theme">☀ <span>Light</span></button>
 </div></header>
