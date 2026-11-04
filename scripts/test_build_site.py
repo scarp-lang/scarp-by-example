@@ -148,7 +148,7 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 58)
+            self.assertEqual(len(locations), 65)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
             self.assertIn(
@@ -201,7 +201,7 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(
                 sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
                     for page in pages), 18)
-            self.assertEqual(len(list(output.rglob("index.html"))), 58)
+            self.assertEqual(len(list(output.rglob("index.html"))), 65)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 50)
             self.assertEqual(sum(item["has_checkpoint"] for item in search), 18)
