@@ -14,6 +14,7 @@ from build_site import (
     render_lesson, section_heading, table_cells, plain_markdown,
 )
 from verify_examples import EXAMPLES, discover_examples
+from practice_questions import read_practice_questions
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -169,16 +170,12 @@ class SiteTests(unittest.TestCase):
             self.assertIn("79141329176f", html)
             self.assertTrue((output / "progress.js").is_file())
             self.assertTrue((output / "checkpoint.js").is_file())
-            for chapter, lesson_name in (
-                ("01-basics", "01-hello"),
-                ("02-control-flow", "01-decisions"),
-                ("03-functions", "01-typed-functions"),
-                ("04-collections", "01-vectors"),
-                ("05-modules", "01-modular-inference"),
-                ("06-ai-foundations", "01-matrix-inference"),
-            ):
-                checkpoint_html = (output / "lessons" / chapter /
-                                   lesson_name / "index.html").read_text(encoding="utf-8")
+            question_paths = set(read_practice_questions())
+            self.assertEqual(len(question_paths), 18)
+            for source_path in question_paths:
+                source = Path(source_path)
+                checkpoint_html = (output / "lessons" / source.parent.name /
+                                   source.stem / "index.html").read_text(encoding="utf-8")
                 self.assertIn('data-checkpoint-answer=', checkpoint_html)
                 self.assertIn('data-checkpoint-form', checkpoint_html)
                 self.assertIn('data-checkpoint-lang="en"', checkpoint_html)
@@ -186,7 +183,7 @@ class SiteTests(unittest.TestCase):
                 self.assertIn('data-checkpoint-fallback', checkpoint_html)
                 self.assertIn('src="../../../checkpoint.js"', checkpoint_html)
             self.assertNotIn('data-checkpoint-answer=',
-                             (output / "lessons/01-basics/02-bindings/index.html")
+                             (output / "lessons/01-basics/04-arithmetic/index.html")
                              .read_text(encoding="utf-8"))
             self.assertIn('data-progress-index="search-index.json"',
                           (output / "index.html").read_text(encoding="utf-8"))
@@ -201,9 +198,17 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
             pages = list((output / "lessons").glob("*/*/index.html"))
             self.assertEqual(len(pages), 50)
+            self.assertEqual(
+                sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
+                    for page in pages), 18)
             self.assertEqual(len(list(output.rglob("index.html"))), 58)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 50)
+            self.assertEqual(sum(item["has_checkpoint"] for item in search), 18)
+            self.assertEqual(
+                {"examples/" + item["id"] + ".srp" for item in search if item["has_checkpoint"]},
+                question_paths,
+            )
             self.assertEqual(len({x["url"] for x in search}), 50)
             self.assertEqual(len({x["id"] for x in search}), 50)
             for item in search:
@@ -257,6 +262,8 @@ class SiteTests(unittest.TestCase):
             self.assertIn('data-progress-toggle', lesson)
             self.assertIn('data-progress-complete="01-basics/01-hello"', lesson)
             chapter = (output / "chapters/01-basics/index.html").read_text(encoding="utf-8")
+            self.assertEqual(chapter.count('class="lesson-check-tag"'), 3)
+            self.assertIn('3 self-checks · प्रश्न', chapter)
             self.assertIn('data-progress-scope="01-basics"', chapter)
             self.assertIn('data-progress-count="01-basics"', chapter)
             self.assertIn('data-progress-resume', chapter)
