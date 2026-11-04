@@ -14,7 +14,7 @@ For a guided order of study, start from the [Basics chapter learning path](https
 2. Read the challenge in English or हिन्दी and inspect `labs/NN-topic/starter.srp`.
 3. In your local checkout, copy `starter.srp` to **`attempt.srp` in that same lab folder**.
 4. Change `attempt.srp` to achieve the output shown in `solution.stdout`.
-5. Verify and execute with the published **Scarp v0.0.5-alpha.4** CLI:
+5. Verify and execute with the published **Scarp v0.0.5-alpha.5** CLI:
 
 ```text
 scarp verify labs/01-basics/attempt.srp
@@ -24,7 +24,7 @@ scarp exec labs/01-basics/attempt.srp
 Replace `01-basics` with the lab chapter. The compiler executable must be on
 your PATH, or invoke it by its actual absolute executable path.
 Use the exact pinned compiler source commit
-`79141329176f5dce51457e90a6652902f6432135` when building from source;
+`2eeed0aa52ccb59523307841ad8ffbd83f8911a8` when building from source;
 see the [CLI quickstart](cli-quickstart.md).
 
 **Important for module imports:** the `05-modules` starter imports

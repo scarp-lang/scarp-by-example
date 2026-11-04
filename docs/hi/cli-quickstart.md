@@ -1,6 +1,6 @@
 # Scarp CLI — शुरुआत से सीखें (हिन्दी)
 
-यह गाइड **Scarp v0.0.5-alpha.4** के प्रकाशित स्रोत कमिट `79141329176f5dce51457e90a6652902f6432135` के लिए है। Scarp अभी **प्री-रिलीज़** है। यहाँ बताए गए कमांड इसी संस्करण के वास्तविक कम्पाइलर स्रोत पर आधारित हैं।
+यह गाइड **Scarp v0.0.5-alpha.5** के प्रकाशित स्रोत कमिट `2eeed0aa52ccb59523307841ad8ffbd83f8911a8` के लिए है। Scarp अभी **प्री-रिलीज़** है। यहाँ बताए गए कमांड इसी संस्करण के वास्तविक कम्पाइलर स्रोत पर आधारित हैं।
 
 यह कमांड सीखने की गाइड है। `inspect` का आउटपुट बदल सकने वाला डिबग डेटा है, इसलिए इसके लिए नई `.srp`/`.stdout` पाठ फ़ाइलें नहीं बनाई जातीं।
 
@@ -74,13 +74,16 @@ scarp inspect tokens examples/01-basics/01-hello.srp
 scarp inspect ast examples/01-basics/01-hello.srp
 scarp inspect modules examples/05-modules/01-modular-inference.srp
 scarp inspect modules --json examples/05-modules/01-modular-inference.srp
+scarp inspect modules --json tutorials/module-inspection
 ```
 
 | कमांड | वास्तविक उपयोग |
 | --- | --- |
 | `inspect tokens` | सिर्फ़ शब्दों/टोकन और उनके स्थान की जाँच; पूरा parsing या type-checking नहीं |
 | `inspect ast` | स्रोत का syntax tree दिखाता है; इम्पोर्ट resolve नहीं करता, प्रकार नहीं जाँचता और प्रोग्राम नहीं चलाता |
-| `inspect modules` | इम्पोर्ट सहित मॉड्यूलों की स्थिर जाँच और सूची; `--json` यहाँ उपलब्ध है |
+| `inspect modules` | इम्पोर्ट सहित मॉड्यूलों की स्थिर जाँच और सूची; प्रकाशित alpha.5 में `Scarp.project` डायरेक्टरी भी स्वीकार करता है |
+
+**नया alpha.5:** ऊपर दिया `inspect modules --json tutorials/module-inspection` कमांड प्रोजेक्ट की स्थिर जानकारी देता है; वह प्रोग्राम चलाकर आउटपुट नहीं बनाता। [पूरा दो-मॉड्यूल हिंदी उदाहरण](project-inspection.md) देखें। प्रयोगात्मक C11 backend सिर्फ Rust embedding API है, `scarp compile` CLI नहीं।
 
 `inspect ast` का परिणाम बदल सकने वाला **debug format** है, स्थायी JSON API नहीं। `inspect ast --json` और `inspect tokens --json` उपलब्ध नहीं हैं। इनका आउटपुट प्रोग्राम के `.stdout` से अलग होता है।
 

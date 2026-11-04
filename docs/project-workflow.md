@@ -1,6 +1,6 @@
-# Your first real Scarp project (v0.0.5-alpha.4)
+# Your first real Scarp project (v0.0.5-alpha.5)
 
-This guide teaches the **published** Scarp v0.0.5-alpha.4 project commands. It is based on the exact tagged source commit `79141329176f5dce51457e90a6652902f6432135`, not unmerged compiler PRs. [Compiler compatibility](compatibility.md) · [हिन्दी गाइड](hi/project-workflow.md)
+This guide teaches the **published** Scarp v0.0.5-alpha.5 project commands (originally available from alpha.4). It is based on the exact tagged source commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`, not unmerged compiler PRs. [Compiler compatibility](compatibility.md) · [हिन्दी गाइड](hi/project-workflow.md)
 
 A project is a directory containing a manifest `Scarp.project` and a selected `.srp` entrypoint. Alpha.4's project workflow uses the real **interpreter**, not native executable generation or package distribution.
 
@@ -84,7 +84,7 @@ A second useful experiment is to use a syntactically valid runtime error, such a
 
 ## Manifest constraints and security boundaries
 
-| Rule | Published alpha.4 behavior |
+| Rule | Published alpha.5 behavior |
 | --- | --- |
 | Format | UTF-8 with exactly three ordered lines: version, name, entry |
 | Version | `scarp-project: 1` |
@@ -103,4 +103,4 @@ To see structured error details use `scarp verify --diagnostic-format=json YOUR_
 
 `create`/`launch` do **not** provide a registry, dependency resolution, a lockfile, general workspace discovery, multiple project entrypoints, a source-to-native executable compiler or package publishing. Future language features must not be inferred from these commands.
 
-[Course homepage](../README.md) · [CLI quickstart](cli-quickstart.md) · [Published compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.4)
+[Inspect project modules in alpha.5](project-inspection.md) · [Course homepage](../README.md) · [CLI quickstart](cli-quickstart.md) · [Published compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.5)

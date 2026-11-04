@@ -1,6 +1,6 @@
 # Scarp में पहला असली प्रोजेक्ट — हिन्दी
 
-यह गाइड **प्रकाशित Scarp v0.0.5-alpha.4** पर आधारित है। आधिकारिक स्रोत कमिट `79141329176f5dce51457e90a6652902f6432135` है। यह कोई भविष्य का प्रस्ताव नहीं है। [English guide](../project-workflow.md) · [कम्पाइलर संगतता](../compatibility.md)
+यह गाइड **प्रकाशित Scarp v0.0.5-alpha.5** पर आधारित है। आधिकारिक स्रोत कमिट `2eeed0aa52ccb59523307841ad8ffbd83f8911a8` है। यह कोई भविष्य का प्रस्ताव नहीं है। [English guide](../project-workflow.md) · [कम्पाइलर संगतता](../compatibility.md)
 
 Scarp प्रोजेक्ट एक डायरेक्टरी होती है जिसमें `Scarp.project` नाम की manifest फ़ाइल और एक `.srp` entrypoint फ़ाइल होती है। अभी `launch` प्रोग्राम को **interpreter** से चलाता है; native executable नहीं बनाता।
 
@@ -93,4 +93,4 @@ print(6 * 7);
 
 **सीमा:** `create`, `verify` और `launch` का होना native compiler, package registry, dependency lockfile, GPU, autograd या language-level async के लागू होने का प्रमाण नहीं है। यह अभी शुरुआती development manifest format है।
 
-[हिन्दी पाठ सूची](README.md) · [CLI हिंदी गाइड](cli-quickstart.md) · [Official compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.4)
+[alpha.5 में मॉड्यूल inspection](project-inspection.md) · [हिन्दी पाठ सूची](README.md) · [CLI हिंदी गाइड](cli-quickstart.md) · [Official compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.5)

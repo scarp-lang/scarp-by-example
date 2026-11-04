@@ -1,6 +1,6 @@
-# Scarp CLI quickstart (v0.0.5-alpha.4)
+# Scarp CLI quickstart (v0.0.5-alpha.5)
 
-Use this guide with the **published Scarp v0.0.5-alpha.4 source at commit `79141329176f5dce51457e90a6652902f6432135`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
+Use this guide with the **published Scarp v0.0.5-alpha.5 source at commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
 
 This is a **tooling guide**, not a new runnable `.srp` lesson. Command outputs such as tokens or an AST are development-oriented and deliberately do not have `.stdout` fixtures.
 
@@ -34,7 +34,7 @@ scarp verify examples/05-modules/01-modular-inference.srp
 scarp exec examples/05-modules/01-modular-inference.srp
 ```
 
-## 3. Create, verify and launch a project (new in published alpha.4)
+## 3. Create, verify and launch a project (available since alpha.4)
 
 From a working directory where `hello-world` does **not already exist**, run:
 
@@ -71,13 +71,16 @@ scarp inspect tokens examples/01-basics/01-hello.srp
 scarp inspect ast examples/01-basics/01-hello.srp
 scarp inspect modules examples/05-modules/01-modular-inference.srp
 scarp inspect modules --json examples/05-modules/01-modular-inference.srp
+scarp inspect modules --json tutorials/module-inspection
 ```
 
 | Command | What it actually checks | Output |
 | --- | --- | --- |
 | `inspect tokens` | Lexes the entry file only; does not parse names or types | Tokens and source locations |
 | `inspect ast` | Parses the entry file; does not resolve imports or type-check | Human-readable **unstable** debug syntax tree |
-| `inspect modules` | Loads and statically checks the module graph, including supported compile-time constants | Module inventory; `--json` is available here only, with schema version 1 |
+| `inspect modules` | Loads and statically checks the module graph, including supported compile-time constants; in alpha.5 also accepts a `Scarp.project` directory | Module inventory; `--json` is available here only, with schema version 1 |
+
+**New in published alpha.5:** The directory inspection command above checks the included two-module project without running its entrypoint. It returns the same schema-v1 module graph as inspecting `tutorials/module-inspection/src/main.srp` directly. See the [English tutorial](project-inspection.md) and [हिन्दी गाइड](hi/project-inspection.md). The native C11 emitter is an experimental **Rust embedding API**, not a `scarp compile` command.
 
 The inspect commands do not execute the lesson's runtime statements. Successful AST output is **not** a stable JSON API; `--json` does **not** apply to `inspect ast` or `inspect tokens`. Inspection output is not the lesson's expected program stdout.
 
@@ -103,7 +106,7 @@ print(1 / 0);
 | `scarp exec FILE` | Execute one source program |
 | `scarp inspect tokens FILE` | Inspect lexer output |
 | `scarp inspect ast FILE` | Inspect parser's development tree |
-| `scarp inspect modules [--json] FILE` | Inspect the statically checked module graph |
+| `scarp inspect modules [--json] FILE or DIRECTORY` | Inspect the statically checked module graph, including explicit project directories in published alpha.5 |
 | `scarp run FILE` / `scarp check FILE` | Older compatibility commands; check evaluates code |
 
 Success typically returns exit code `0`; source or execution failures return `1`, invalid CLI usage returns `2`. Runtime diagnostics may be printed to stderr, while `exec` program output goes to stdout. When debugging a file, `scarp guide exec` or `scarp guide verify` shows focused help.

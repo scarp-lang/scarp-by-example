@@ -9,12 +9,13 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `index.html` | Homepage, six chapter cards and a client-side lesson finder |
 | `chapters/NN-topic/index.html` | Chapter overview with links to its runnable lessons |
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
-| `projects/index.html` | Source-backed English/Hindi guide to published alpha.4 `create`, project `verify` and `launch` |
+| `projects/index.html` | Source-backed English/Hindi guide to `create`, project `verify` and `launch` (available since alpha.4) |
+| `projects/module-inspection/index.html` | Alpha.5 bilingual source-backed project directory inspection, real imports and verified runtime output |
 | `labs/index.html` | Overview of six standalone verified bilingual coding labs |
 | `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands |
 | `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
 
-A course with 50 runnable examples and six guided labs produces **65 HTML documents** (home, six chapters, fifty lessons, one project workflow, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
+A course with 50 runnable examples and six guided labs produces **66 HTML documents** (home, six chapters, fifty lessons, two project tutorials, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
 
 **Connected chapter paths:** Each of the six existing chapter pages includes a read → self-check → code sequence assembled from the verified lesson, checkpoint and lab inventories. Each quiz links to the stable `#checkpoint` anchor in its corresponding lesson, and the lab and lesson pages return to `#chapter-path`. The optional local progress count shown in the path measures only lessons learners explicitly marked complete. Neither quiz correctness nor external code execution is tracked or inferred. The feature works without JavaScript; only the optional lesson count uses browser storage.
 
