@@ -29,6 +29,60 @@
       }
     },
     {
+      "source": "examples/01-basics/02-bindings.srp",
+      "evidence_line": "42",
+      "question": {
+        "en": "What number is printed for area after width = 6 and height = 7?",
+        "hi": "width = 6 और height = 7 होने पर area के लिए कौन-सी संख्या प्रिंट होती है?"
+      },
+      "options": [
+        {
+          "en": "13",
+          "hi": "13"
+        },
+        {
+          "en": "42",
+          "hi": "42"
+        },
+        {
+          "en": "36",
+          "hi": "36"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "The binding area multiplies width by height: 6 × 7 = 42. The verified output prints 42 after the Area label.",
+        "hi": "area में width × height की गणना होती है: 6 × 7 = 42। सत्यापित आउटपुट में Area के बाद 42 प्रिंट होता है."
+      }
+    },
+    {
+      "source": "examples/01-basics/03-mutable.srp",
+      "evidence_line": "2",
+      "question": {
+        "en": "After count is changed several times, what does the immutable original still print?",
+        "hi": "count को कई बार बदलने के बाद immutable original का कौन-सा मान प्रिंट होता है?"
+      },
+      "options": [
+        {
+          "en": "2",
+          "hi": "2"
+        },
+        {
+          "en": "7",
+          "hi": "7"
+        },
+        {
+          "en": "5",
+          "hi": "5"
+        }
+      ],
+      "correct": 0,
+      "explanation": {
+        "en": "original captures count when its value is 2. Later changes to count do not change original.",
+        "hi": "original में count का शुरुआती मान 2 रखा जाता है। बाद में count बदलने से original नहीं बदलता।"
+      }
+    },
+    {
       "source": "examples/02-control-flow/01-decisions.srp",
       "evidence_line": "B",
       "question": {
@@ -53,6 +107,60 @@
       "explanation": {
         "en": "73 does not satisfy score >= 90, but it satisfies score >= 60 and score < 90, so grade becomes B.",
         "hi": "73, 90 से कम और 60 से अधिक या बराबर है। इसलिए elif की शर्त सही होती है और grade का मान B बनता है।"
+      }
+    },
+    {
+      "source": "examples/02-control-flow/02-while-loops.srp",
+      "evidence_line": "12",
+      "question": {
+        "en": "What total does the while loop print after skipping 3 and breaking above 5?",
+        "hi": "3 को छोड़ने और 5 से ऊपर जाने पर लूप रोकने के बाद while लूप कौन-सा total प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "15",
+          "hi": "15"
+        },
+        {
+          "en": "12",
+          "hi": "12"
+        },
+        {
+          "en": "10",
+          "hi": "10"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "The loop adds 1, 2, 4 and 5. It skips 3 with continue and exits at 6, so the sum is 12.",
+        "hi": "लूप 1, 2, 4 और 5 को जोड़ता है। continue से 3 छूट जाता है और 6 पर break होता है, इसलिए योग 12 है।"
+      }
+    },
+    {
+      "source": "examples/02-control-flow/03-repeat.srp",
+      "evidence_line": "8",
+      "question": {
+        "en": "What total is printed when repeat skips index 2?",
+        "hi": "repeat में index 2 को छोड़ने पर कौन-सा total प्रिंट होता है?"
+      },
+      "options": [
+        {
+          "en": "10",
+          "hi": "10"
+        },
+        {
+          "en": "5",
+          "hi": "5"
+        },
+        {
+          "en": "8",
+          "hi": "8"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "repeat saves the initial count of five iterations. The indices 0, 1, 3 and 4 sum to 8; assigning count = 0 does not shorten the loop.",
+        "hi": "repeat शुरुआत की पाँच पुनरावृत्तियाँ तय कर लेता है। index 0, 1, 3 और 4 का योग 8 है; count = 0 करने से लूप छोटा नहीं होता।"
       }
     },
     {
@@ -83,6 +191,60 @@
       }
     },
     {
+      "source": "examples/03-functions/02-recursion.srp",
+      "evidence_line": "55",
+      "question": {
+        "en": "What does fib(10) print in this recursive example?",
+        "hi": "इस recursive उदाहरण में fib(10) क्या प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "34",
+          "hi": "34"
+        },
+        {
+          "en": "55",
+          "hi": "55"
+        },
+        {
+          "en": "89",
+          "hi": "89"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "The function returns n when n is at most 1 and otherwise adds fib(n - 1) and fib(n - 2); fib(10) is 55.",
+        "hi": "n का मान 1 या उससे कम होने पर फ़ंक्शन n लौटाता है; अन्यथा पिछले दो Fibonacci मान जोड़ता है। fib(10) = 55 है।"
+      }
+    },
+    {
+      "source": "examples/03-functions/03-function-contracts.srp",
+      "evidence_line": "10",
+      "question": {
+        "en": "What does clipped(x: 15) return with the default maximum of 10?",
+        "hi": "डिफ़ॉल्ट अधिकतम 10 होने पर clipped(x: 15) क्या लौटाता है?"
+      },
+      "options": [
+        {
+          "en": "15",
+          "hi": "15"
+        },
+        {
+          "en": "0",
+          "hi": "0"
+        },
+        {
+          "en": "10",
+          "hi": "10"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "clipped uses defaults lo = 0 and hi = 10. Because x is greater than hi, it returns 10.",
+        "hi": "clipped में डिफ़ॉल्ट lo = 0 और hi = 10 हैं। x, hi से अधिक है, इसलिए फ़ंक्शन 10 लौटाता है।"
+      }
+    },
+    {
       "source": "examples/04-collections/01-vectors.srp",
       "evidence_line": "10.0 2.5",
       "question": {
@@ -107,6 +269,60 @@
       "explanation": {
         "en": "The four values sum to 10.0. Dividing by their count (4) gives a mean of 2.5.",
         "hi": "चार संख्याओं का योग 10.0 है। 10.0 को 4 से भाग देने पर औसत 2.5 मिलता है।"
+      }
+    },
+    {
+      "source": "examples/04-collections/02-vector-windows.srp",
+      "evidence_line": "[20.0, 30.0]",
+      "question": {
+        "en": "Which values are printed for window(values, 1, 2)?",
+        "hi": "window(values, 1, 2) के लिए कौन-से मान प्रिंट होते हैं?"
+      },
+      "options": [
+        {
+          "en": "[10.0, 20.0]",
+          "hi": "[10.0, 20.0]"
+        },
+        {
+          "en": "[20.0, 30.0]",
+          "hi": "[20.0, 30.0]"
+        },
+        {
+          "en": "[30.0, 40.0]",
+          "hi": "[30.0, 40.0]"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "Starting at index 1 selects the second and third values of [10.0, 20.0, 30.0, 40.0].",
+        "hi": "index 1 से शुरू करने पर [10.0, 20.0, 30.0, 40.0] में दूसरे और तीसरे मान चुने जाते हैं।"
+      }
+    },
+    {
+      "source": "examples/04-collections/03-integer-collections.srp",
+      "evidence_line": "[integer: 1, 2, 3, 4, 5] [integer: 9, 2, 3, 4, 5] [integer: 2, 3, 4] 9",
+      "question": {
+        "en": "What total is produced by summing the integer window [2, 3, 4]?",
+        "hi": "integer window [2, 3, 4] का योग कितना होता है?"
+      },
+      "options": [
+        {
+          "en": "12",
+          "hi": "12"
+        },
+        {
+          "en": "8",
+          "hi": "8"
+        },
+        {
+          "en": "9",
+          "hi": "9"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "ints_window selects 2, 3 and 4, and the repeat loop adds these three integers to obtain 9.",
+        "hi": "ints_window से 2, 3 और 4 चुने जाते हैं। repeat लूप इन्हें जोड़कर 9 प्राप्त करता है।"
       }
     },
     {
@@ -137,6 +353,60 @@
       }
     },
     {
+      "source": "examples/05-modules/02-constant-expressions.srp",
+      "evidence_line": "constant expressions 42 84 true 0.75 42",
+      "question": {
+        "en": "What is the value of doubled when constants.answer is 42?",
+        "hi": "constants.answer का मान 42 होने पर doubled का मान क्या होता है?"
+      },
+      "options": [
+        {
+          "en": "84",
+          "hi": "84"
+        },
+        {
+          "en": "42",
+          "hi": "42"
+        },
+        {
+          "en": "21",
+          "hi": "21"
+        }
+      ],
+      "correct": 0,
+      "explanation": {
+        "en": "The exported binding doubled is constants.answer multiplied by 2. With answer = 42, doubled is 84.",
+        "hi": "exported binding doubled में constants.answer को 2 से गुणा किया गया है। 42 × 2 = 84।"
+      }
+    },
+    {
+      "source": "examples/05-modules/03-integer-series.srp",
+      "evidence_line": "[integer: -1, 0] 0.5 3",
+      "question": {
+        "en": "What value does series.low_bits & 0x3 print in this example?",
+        "hi": "इस उदाहरण में series.low_bits & 0x3 कौन-सा मान प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "2",
+          "hi": "2"
+        },
+        {
+          "en": "3",
+          "hi": "3"
+        },
+        {
+          "en": "1",
+          "hi": "1"
+        }
+      ],
+      "correct": 1,
+      "explanation": {
+        "en": "The bitwise AND mask 0x3 keeps the lowest two bits; the checked output ends with 3.",
+        "hi": "bitwise AND मास्क 0x3 सबसे निचले दो बिट रखता है; सत्यापित आउटपुट का अंतिम मान 3 है।"
+      }
+    },
+    {
       "source": "examples/06-ai-foundations/01-matrix-inference.srp",
       "evidence_line": "[4.0, 1.0]",
       "question": {
@@ -161,6 +431,60 @@
       "explanation": {
         "en": "With rows [1.0, 2.0] and [-1.0, 3.0], multiplying by [2.0, 1.0] gives 4.0 and 1.0.",
         "hi": "मैट्रिक्स की पंक्तियाँ [1.0, 2.0] और [-1.0, 3.0] हैं। इन्हें [2.0, 1.0] से गुणा करने पर 4.0 और 1.0 मिलते हैं।"
+      }
+    },
+    {
+      "source": "examples/06-ai-foundations/02-classification-gradient.srp",
+      "evidence_line": "[0.5, -0.5]",
+      "question": {
+        "en": "What gradient does lossgrad([0.0, 0.0], 1) print?",
+        "hi": "lossgrad([0.0, 0.0], 1) कौन-सा gradient प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "[-0.5, 0.5]",
+          "hi": "[-0.5, 0.5]"
+        },
+        {
+          "en": "[0.0, 1.0]",
+          "hi": "[0.0, 1.0]"
+        },
+        {
+          "en": "[0.5, -0.5]",
+          "hi": "[0.5, -0.5]"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "Equal logits imply probabilities of 0.5 for both classes. The loss gradient subtracts the one-hot target for class 1, producing [0.5, -0.5].",
+        "hi": "समान logits के लिए दोनों वर्गों की संभावना 0.5 होती है। class 1 के one-hot target को घटाने पर gradient [0.5, -0.5] मिलता है।"
+      }
+    },
+    {
+      "source": "examples/06-ai-foundations/03-classification-loss.srp",
+      "evidence_line": "1",
+      "question": {
+        "en": "Which index does argmax([1.0, 4.0, 2.0]) print?",
+        "hi": "argmax([1.0, 4.0, 2.0]) कौन-सा index प्रिंट करता है?"
+      },
+      "options": [
+        {
+          "en": "0",
+          "hi": "0"
+        },
+        {
+          "en": "2",
+          "hi": "2"
+        },
+        {
+          "en": "1",
+          "hi": "1"
+        }
+      ],
+      "correct": 2,
+      "explanation": {
+        "en": "The maximum value is 4.0, which is at zero-based index 1. The fixture prints 1.",
+        "hi": "सबसे बड़ा मान 4.0 है, जो शून्य-आधारित index 1 पर है। इसलिए आउटपुट 1 है."
       }
     }
   ]
