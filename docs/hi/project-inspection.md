@@ -54,7 +54,7 @@ scarp launch tutorials/module-inspection
 ```
 
 - **verify DIRECTORY** manifest और इम्पोर्ट की स्थिर जाँच करता है; प्रोग्राम नहीं चलाता।
-- **inspect modules --json DIRECTORY** imports, dependencies और modules की schema-v1 JSON जानकारी देता है। इसी entrypoint वाली `.srp` फ़ाइल inspect करने पर जानकारी समान होनी चाहिए।
+- **inspect modules --json DIRECTORY** imports, dependencies और modules की schema-v1 JSON जानकारी देता है। इसी entrypoint वाली `.srp` फ़ाइल inspect करने पर imports, dependencies और symbols समान होने चाहिए। schema-v1 में module का `path` केवल display label है, जो प्लेटफ़ॉर्म के अनुसार अलग दिख सकता है।
 - **launch DIRECTORY** वास्तविक interpreter से प्रोग्राम चलाकर `42` तथा newline प्रिंट करता है।
 
 पुराना `scarp modules --json DIRECTORY` कमांड संगतता के लिए मौजूद है, लेकिन नए निर्देशों में `scarp inspect modules` का प्रयोग करें।
