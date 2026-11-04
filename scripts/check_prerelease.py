@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guard the third editorial prerelease against an incomplete or unpinned course.
+"""Guard the fourth editorial prerelease against an incomplete or unpinned course.
 
 Only the prerelease workflow invokes this milestone-specific check. Ordinary
 course CI intentionally stays version-agnostic for later lesson additions.
@@ -41,10 +41,10 @@ def check_prerelease(root: Path = ROOT) -> str:
     chapter_counts = {chapter: sum(src.startswith(f"examples/{chapter}/") for src in questions)
                       for chapter in {src.parent.name for src, _ in lessons}}
     if len(questions) != 18 or set(chapter_counts.values()) != {3}:
-        raise ValueError("alpha.3 requires exactly three verified checkpoints per chapter")
+        raise ValueError("alpha.4 requires exactly three verified checkpoints per chapter")
     labs = read_labs(root)
     if len(labs) != 6 or {lab.identifier for lab in labs} != set(chapter_counts):
-        raise ValueError("alpha.3 requires one verified guided lab per chapter")
+        raise ValueError("alpha.4 requires one verified guided lab per chapter")
     required = (
         "LICENSE", "LICENSE-APACHE-2.0", "THIRD_PARTY_NOTICES.md", "README.md",
         "docs/hi/README.md", "docs/cli-quickstart.md", "docs/hi/cli-quickstart.md",
@@ -70,14 +70,14 @@ def check_prerelease(root: Path = ROOT) -> str:
         raise ValueError("project output diverges from the verified hello lesson")
     inspected = root / "tutorials/module-inspection"
     if (inspected / "Scarp.project").read_bytes() != (
-        b"scarp-project: 1\\nname: module-inspection\\nentry: src/main.srp\\n"
+        b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n"
     ):
         raise ValueError("alpha.5 module inspection manifest was changed")
     if (inspected / "src/main.srp").read_bytes() != (
-        b'import "lib/math.srp" as math;\\nprint(math.answer);\\n'
+        b'import "lib/math.srp" as math;\nprint(math.answer);\n'
     ):
         raise ValueError("alpha.5 module inspection entrypoint was changed")
-    if (inspected / "expected.stdout").read_bytes() != b"42\\n":
+    if (inspected / "expected.stdout").read_bytes() != b"42\n":
         raise ValueError("alpha.5 module project fixture was changed")
     for path in ("docs/project-workflow.md", "docs/hi/project-workflow.md"):
         if not (root / path).is_file():
