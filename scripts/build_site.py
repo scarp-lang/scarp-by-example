@@ -202,25 +202,30 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 """
 
 
-def lesson_card(lesson: Lesson, page: str) -> str:
+def lesson_card(lesson: Lesson, page: str, question_paths: set[str] | None = None) -> str:
     link = escape(rel(page, lesson.url))
+    checkpoint = ('<small class="lesson-check-tag">Quick check · प्रश्न</small>'
+                  if lesson.source_path in (question_paths or set()) else "")
     return f"""<a class="lesson-card" href="{link}">
 <span class="lesson-number">{escape(lesson.source.stem[:2])}</span>
 <span class="lesson-description"><strong>{escape(lesson.title)}</strong>
-<span>{escape(lesson.description)}</span></span>
+<span>{escape(lesson.description)}</span>{checkpoint}</span>
 <span class="lesson-arrow" aria-hidden="true">↗</span></a>"""
 
 
-def render_catalog() -> tuple[str, int]:
+def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
     lessons, chapters, target = read_course()
+    questions = read_practice_questions(ROOT) if questions is None else questions
     first = lessons[0]
     tiles = []
     for section, chapter in chapters.items():
         chapter_title = chapter[0].chapter
+        checkpoint_count = sum(item.source_path in questions for item in chapter)
         tiles.append(f"""<a class="chapter-tile" href="{escape(rel("index.html", chapter_url(section)))}">
 <span class="eyebrow">CHAPTER {escape(section[:2])} · {len(chapter)} LESSONS</span>
 <h3>{escape(chapter_title.split("·", 1)[-1].strip())}</h3>
 <p>{escape(section_intro(EXAMPLES / section / "README.md"))}</p>
+<span class="chapter-check-count">{checkpoint_count} self-checks · प्रश्न</span>
 <span class="chapter-progress" data-progress-chapter="{escape(section)}" aria-live="polite"></span>
 <span class="chapter-action">Explore chapter <span aria-hidden="true">↗</span></span></a>""")
     hello_source = escape(first.source.read_text(encoding="utf-8"))
@@ -292,11 +297,12 @@ scarp launch hello-world</code></pre></div>
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
 
 
-def render_chapter(section: str, lessons: list[Lesson], target: dict) -> str:
+def render_chapter(section: str, lessons: list[Lesson], target: dict,
+                   question_paths: set[str] | None = None) -> str:
     page = chapter_url(section)
     title = lessons[0].chapter
     summary = section_intro(EXAMPLES / section / "README.md")
-    cards = "".join(lesson_card(item, page) for item in lessons)
+    cards = "".join(lesson_card(item, page, question_paths) for item in lessons)
     main = f"""<main id="main-content" class="container-wide chapter-page">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(page, "index.html"))}">All chapters</a><span>/</span><span aria-current="page">{escape(title)}</span></nav>
 <header class="page-heading"><p class="eyebrow">CHAPTER {escape(section[:2])} · {len(lessons)} LESSONS</p>
@@ -581,13 +587,14 @@ def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
     questions = read_practice_questions(ROOT)
-    home, count = render_catalog()
+    home, count = render_catalog(questions)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(home, encoding="utf-8", newline="\n")
     index = [{"id": l.section + "/" + l.source.stem,
               "title": l.title, "chapter": l.chapter, "description": l.description,
               "hindi_title": hindi_notes[l.source_path].title,
               "hindi_summary": hindi_notes[l.source_path].summary,
+              "has_checkpoint": l.source_path in questions,
               "url": l.url} for l in lessons]
     (destination / "search-index.json").write_text(
         json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -598,7 +605,8 @@ def build(destination: Path) -> int:
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render_chapter(section, chapter, target), encoding="utf-8", newline="\n")
+        path.write_text(render_chapter(section, chapter, target, set(questions)),
+                        encoding="utf-8", newline="\n")
     for lesson in lessons:
         path = destination / lesson.url
         path.parent.mkdir(parents=True, exist_ok=True)
