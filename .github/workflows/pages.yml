@@ -59,6 +59,9 @@ jobs:
       - name: Verify runnable examples before publication
         run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp
 
+      - name: Verify guided lab starters and exact solution outputs
+        run: python scripts/verify_guided_labs.py --compiler .compiler/target/debug/scarp
+
       - name: Smoke-test Scarp-first CLI before publishing
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
 
