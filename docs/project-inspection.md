@@ -59,7 +59,7 @@ scarp launch tutorials/module-inspection
 
 You can also run `scarp modules --json tutorials/module-inspection` for legacy compatibility, but prefer the Scarp-first `inspect modules` spelling in new tooling. Use `scarp guide inspect modules` for current help.
 
-The course's `scripts/verify_cli.py` tests the directory and file inventory parity on the pinned compiler. It also asserts inspection does not run a runtime-failing statement, and that an invalid manifest is rejected without partial JSON output.
+The course's `scripts/verify_cli.py` tests directory/file semantic inventory parity on the pinned compiler, ignoring only platform-dependent module display labels. It also asserts inspection does not run a runtime-failing statement, and that an invalid manifest is rejected without partial JSON output.
 
 ## 3. Try a small experiment
 
