@@ -72,7 +72,7 @@ class LearningPathTests(unittest.TestCase):
                 self.assertIn('href="../../chapters/' + chapter +
                               '/index.html#chapter-path"', lab_markup)
                 self.assertNotIn('data-path-lab-passed', lab_markup)
-            self.assertEqual(len(list(destination.rglob("index.html"))), 67)
+            self.assertEqual(len(list(destination.rglob("index.html"))), 68)
 
 
 if __name__ == "__main__":
