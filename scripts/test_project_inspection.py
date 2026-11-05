@@ -35,6 +35,9 @@ class ProjectInspectionTests(unittest.TestCase):
         for fragment in (
             "scarp verify tutorials/module-inspection",
             "scarp inspect modules --json tutorials/module-inspection",
+            "scarp inspect symbols --json tutorials/module-inspection",
+            "scarp inspect references --json tutorials/module-inspection",
+            "docs/source-navigation.md", "docs/hi/source-navigation.md",
             "scarp launch tutorials/module-inspection",
             "src/main.srp", "src/lib/math.srp", "expected.stdout",
             'id="en-notes"', 'id="hi-notes"',

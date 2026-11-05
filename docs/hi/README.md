@@ -15,6 +15,8 @@
 
 **नया:** [Scarp में अपना पहला प्रोजेक्ट (alpha.4 से उपलब्ध)](project-workflow.md) — `create`, `verify DIRECTORY` और `launch` का प्रयोग सीखें।
 
+**प्रकाशित alpha.6:** [स्रोत में नाम और संदर्भ खोजें](source-navigation.md) — बिना प्रोग्राम चलाए `inspect symbols` और `inspect references` से घोषणाएँ और प्रयोग देखें।
+
 **प्रकाशित alpha.5:** [दो मॉड्यूल वाले प्रोजेक्ट को बिना चलाए inspect करें](project-inspection.md) — `scarp inspect modules --json DIRECTORY` की वास्तविक static जानकारी।
 
 ## Scarp चलाने का तरीका
