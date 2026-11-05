@@ -1,6 +1,6 @@
-# Scarp CLI quickstart (v0.0.5-alpha.5)
+# Scarp CLI quickstart (v0.0.6-alpha.1)
 
-Use this guide with the **published Scarp v0.0.5-alpha.5 source at commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
+Use this guide with the **published Scarp v0.0.6-alpha.1 source at commit `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
 
 This is a **tooling guide**, not a new runnable `.srp` lesson. Command outputs such as tokens or an AST are development-oriented and deliberately do not have `.stdout` fixtures.
 
@@ -72,17 +72,23 @@ scarp inspect ast examples/01-basics/01-hello.srp
 scarp inspect modules examples/05-modules/01-modular-inference.srp
 scarp inspect modules --json examples/05-modules/01-modular-inference.srp
 scarp inspect modules --json tutorials/module-inspection
+scarp inspect symbols --json tutorials/module-inspection
+scarp inspect references --json tutorials/module-inspection
 ```
 
 | Command | What it actually checks | Output |
 | --- | --- | --- |
 | `inspect tokens` | Lexes the entry file only; does not parse names or types | Tokens and source locations |
 | `inspect ast` | Parses the entry file; does not resolve imports or type-check | Human-readable **unstable** debug syntax tree |
-| `inspect modules` | Loads and statically checks the module graph, including supported compile-time constants; in alpha.5 also accepts a `Scarp.project` directory | Module inventory; `--json` is available here only, with schema version 1 |
+| `inspect modules` | Loads and statically checks the module graph; accepts a `Scarp.project` directory since alpha.5 | Module inventory; optional schema-v1 JSON |
+| `inspect symbols` | Resolves declarations, imports and identities without executing statements (alpha.6) | Symbol inventory; optional schema-v1 JSON |
+| `inspect references` | Resolves read/write/call/reference sites without executing statements (alpha.6) | Symbol and reference sites; optional schema-v1 JSON |
 
 **New in published alpha.5:** The directory inspection command above checks the included two-module project without running its entrypoint. It returns the same schema-v1 module graph as inspecting `tutorials/module-inspection/src/main.srp` directly. See the [English tutorial](project-inspection.md) and [हिन्दी गाइड](hi/project-inspection.md). The native C11 emitter is an experimental **Rust embedding API**, not a `scarp compile` command.
 
-The inspect commands do not execute the lesson's runtime statements. Successful AST output is **not** a stable JSON API; `--json` does **not** apply to `inspect ast` or `inspect tokens`. Inspection output is not the lesson's expected program stdout.
+**New in published alpha.6:** [Source navigation](source-navigation.md) ([हिन्दी](hi/source-navigation.md)) explains the new `symbols` and `references` views, their versioned JSON metadata and limits. They are not a live LSP, code execution or cross-edit-stable index.
+
+The inspect commands do not execute the lesson's runtime statements. Successful AST output is **not** a stable JSON API; `--json` applies to modules/symbols/references, **not** to `inspect ast` or `inspect tokens`. Inspection output is not the lesson's expected program stdout.
 
 ## 5. Why `verify` and `check` are different
 

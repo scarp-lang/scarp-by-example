@@ -6,10 +6,11 @@ from check_prerelease import valid_prerelease_tag, check_prerelease
 
 
 class TagPolicyTests(unittest.TestCase):
-    def test_alpha4_release_snapshot_is_complete(self):
-        self.assertIn("v0.1.0-alpha.4", check_prerelease())
-        self.assertIn("18 checkpoints", check_prerelease())
-        self.assertIn("6 guided labs", check_prerelease())
+    def test_published_alpha4_gate_rejects_later_course_snapshot(self):
+        # The historical alpha.4 gate is deliberately fixed to its published
+        # contents; a new compiler target must not qualify as that release.
+        with self.assertRaisesRegex(ValueError, "compiler pin no longer matches"):
+            check_prerelease()
 
     def test_accepts_prerelease_tags(self):
         for tag in ("v0.1.0-alpha.1", "v0.1.0-beta.2", "v0.1.0-rc.1"):

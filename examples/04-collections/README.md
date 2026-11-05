@@ -15,6 +15,7 @@
 | [09 · Vector norm](09-vector-norm.srp) | `norm` length and immutable `normalize` for a 3-4 vector | `5.0`, then `[0.6, 0.8]` |
 | [10 · Float refinement](10-float-refinement.srp) | Newton-style square-root refinement, bounded steps, typed contracts | `sqrt2 checked true`, then `sqrt9 3.0` |
 | [11 · Vector allocation](11-vector-allocation.srp) | `fill`, `len` and `sum` on a three-element numerical vector | `3.0 3` |
+| [12 · Root mean square](12-root-mean-square.srp) | Stable `rms` on signals and visible vector windows | `balanced 2.0`, `window 2.5`, `finite true`, `zero 0.0` |
 
 Run `scarp run examples/04-collections/01-vectors.srp` from this repository root or pass an absolute lesson path. Compare the exact `.stdout` beside each file.
 
@@ -41,3 +42,9 @@ Run `scarp run examples/04-collections/01-vectors.srp` from this repository root
 **11 · Vector creation:** `fill(1.0, 3)` generates three floating-point values. `sum` gives 3.0 and `len` gives 3. An upstream source comment discusses its payload-byte representation, but that detail is not asserted as a cross-platform memory API by this course.
 
 **Practice:** Which input to `normalize` has length five? How many Newton update steps are used by default? Why should `len(numbers)` be 3?
+
+## Root mean square (published compiler alpha.6)
+
+**12 · Stable RMS:** `rms(samples)` computes the root mean square of a nonempty finite vector. Four samples `[2.0, -2.0, 2.0, -2.0]` give RMS 2.0. Selecting `[3.0, 4.0, 0.0, 0.0]` through `window` gives RMS 2.5. The compiler uses scaling so the tested large finite values remain finite without squaring them directly. An empty vector is a runtime error. This requires Scarp v0.0.6-alpha.1; the operation neither modifies the input nor trains a model.
+
+**Practice:** Square the four window values, add, divide by four, and take the square root. Why is the result different from `norm`?

@@ -138,7 +138,8 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
 
     project_smoke(compiler, timeout)
     project_inspection_smoke(compiler, timeout)
-    print("PASS: Scarp-first CLI, legacy migration, static validation, project-directory inspection and launch.")
+    symbol_navigation_smoke(compiler, timeout)
+    print("PASS: Scarp-first CLI, static project/metadata validation, symbol navigation and launch.")
 
 
 def project_smoke(compiler: Path, timeout: int) -> None:
@@ -280,6 +281,103 @@ def project_inspection_smoke(compiler: Path, timeout: int) -> None:
             raise CliSmokeError("bad project manifest did not provide JSON diagnostic") from error
         if problem.get("schema_version") != 1:
             raise CliSmokeError("invalid project manifest diagnostic schema changed")
+
+
+def validate_navigation_inventory(payload: bytes, kind: str) -> dict:
+    """Check the published schema before using any version-local symbol IDs."""
+    try:
+        data = json.loads(payload)
+    except (ValueError, UnicodeError) as error:
+        raise CliSmokeError(f"inspect {kind}: invalid JSON") from error
+    expected = {
+        "schema_version": 1,
+        "kind": f"scarp.{kind}",
+        "span_encoding": "utf-8-bytes",
+        "column_encoding": "unicode-scalar",
+        "position_base": 1,
+    }
+    if not isinstance(data, dict) or any(data.get(k) != v for k, v in expected.items()):
+        raise CliSmokeError(f"inspect {kind}: unsupported schema or position encoding")
+    if not isinstance(data.get("files"), list) or not isinstance(data.get("symbols"), list):
+        raise CliSmokeError(f"inspect {kind}: missing file or symbol inventory")
+    if not all(isinstance(f, dict) and isinstance(f.get("path"), str) and
+               isinstance(f.get("id"), int) and not isinstance(f.get("id"), bool)
+               for f in data["files"]):
+        raise CliSmokeError(f"inspect {kind}: malformed file records")
+    ids = []
+    for symbol in data["symbols"]:
+        if not isinstance(symbol, dict) or not isinstance(symbol.get("id"), int) or (
+            isinstance(symbol.get("id"), bool)
+        ) or not isinstance(symbol.get("name"), str) or not isinstance(symbol.get("kind"), str):
+            raise CliSmokeError(f"inspect {kind}: malformed symbol")
+        ids.append(symbol["id"])
+    if len(ids) != len(set(ids)):
+        raise CliSmokeError(f"inspect {kind}: duplicate symbol ids")
+    if kind == "references":
+        references = data.get("references")
+        if not isinstance(references, list):
+            raise CliSmokeError("inspect references: missing reference inventory")
+        for ref in references:
+            if (not isinstance(ref, dict) or ref.get("target") not in ids
+                    or not isinstance(ref.get("kind"), str)
+                    or not isinstance(ref.get("location"), dict)):
+                raise CliSmokeError("inspect references: dangling or malformed reference")
+    return data
+
+
+def symbol_navigation_smoke(compiler: Path, timeout: int) -> None:
+    """Alpha.6 symbol/reference inspection must be static and project-aware."""
+    project = ROOT / "tutorials/module-inspection"
+    source = project / "src/main.srp"
+    for kind in ("symbols", "references"):
+        project_result = invoke(compiler, "inspect", kind, "--json", str(project), timeout=timeout)
+        source_result = invoke(compiler, "inspect", kind, "--json", str(source), timeout=timeout)
+        require(project_result, f"project inspect {kind}", nonempty_stdout=True, stderr=b"")
+        require(source_result, f"file inspect {kind}", nonempty_stdout=True, stderr=b"")
+        project_data = validate_navigation_inventory(project_result.stdout, kind)
+        source_data = validate_navigation_inventory(source_result.stdout, kind)
+        # Display path spelling may differ when inspecting a file vs a directory;
+        # symbol membership and reference counts must still describe one graph.
+        for label, data in (("project", project_data), ("file", source_data)):
+            if len(data["files"]) != 2:
+                raise CliSmokeError(f"{kind}: {label} should include both source files")
+            names = {s["name"] for s in data["symbols"]}
+            if not {"math", "answer"}.issubset(names):
+                raise CliSmokeError(f"{kind}: {label} lost the imported public binding")
+        # The source loader can use different module display names when the
+        # entrypoint is a project directory rather than a source file. Module
+        # identities are intentionally local to an inspection, so compare the
+        # public example binding and import alias rather than all path-derived
+        # module symbol names.
+        def example_symbols(data: dict) -> list[tuple]:
+            return sorted(
+                (symbol["name"], symbol["kind"],
+                 symbol.get("public"), symbol.get("mutable"))
+                for symbol in data["symbols"]
+                if symbol["name"] in {"math", "answer"}
+            )
+
+        if example_symbols(project_data) != example_symbols(source_data):
+            raise CliSmokeError(f"{kind}: import alias or public binding changed")
+        if kind == "references":
+            if not project_data["references"] or len(project_data["references"]) != len(
+                source_data["references"]
+            ):
+                raise CliSmokeError("references: project and file use sites disagree")
+
+    with tempfile.TemporaryDirectory(prefix="scarp-symbols-smoke-") as directory:
+        witness = Path(directory) / "static-only.srp"
+        witness.write_text("print(1 / 0);\n", encoding="utf-8")
+        for kind in ("symbols", "references"):
+            checked = invoke(compiler, "inspect", kind, "--json", str(witness), timeout=timeout)
+            require(checked, f"static {kind} does not run program", nonempty_stdout=True,
+                    stderr=b"")
+            validate_navigation_inventory(checked.stdout, kind)
+        witness.write_text("print(undefined_symbol);\n", encoding="utf-8")
+        for kind in ("symbols", "references"):
+            invalid = invoke(compiler, "inspect", kind, "--json", str(witness), timeout=timeout)
+            require(invalid, f"{kind} rejects unbound name without partial JSON",
+                    code=1, stdout=b"", nonempty_stderr=True)
 
 
 def main(argv: list[str] | None = None) -> int:

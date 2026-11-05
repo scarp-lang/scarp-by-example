@@ -18,10 +18,10 @@ class ProjectInspectionTests(unittest.TestCase):
         cls.root = ROOT / "tutorials/module-inspection"
         cls.target = read_course()[2]
 
-    def test_exact_published_alpha5_target_and_two_module_fixture(self):
-        self.assertEqual(self.target["release_tag"], "v0.0.5-alpha.5")
+    def test_published_alpha6_target_preserves_alpha5_project_fixture(self):
+        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.1")
         self.assertEqual(self.target["source_commit"],
-                         "2eeed0aa52ccb59523307841ad8ffbd83f8911a8")
+                         "aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8")
         self.assertEqual((self.root / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n")
         self.assertEqual((self.root / "src/main.srp").read_bytes(),
@@ -35,6 +35,9 @@ class ProjectInspectionTests(unittest.TestCase):
         for fragment in (
             "scarp verify tutorials/module-inspection",
             "scarp inspect modules --json tutorials/module-inspection",
+            "scarp inspect symbols --json tutorials/module-inspection",
+            "scarp inspect references --json tutorials/module-inspection",
+            "docs/source-navigation.md", "docs/hi/source-navigation.md",
             "scarp launch tutorials/module-inspection",
             "src/main.srp", "src/lib/math.srp", "expected.stdout",
             'id="en-notes"', 'id="hi-notes"',
@@ -63,9 +66,9 @@ class ProjectInspectionTests(unittest.TestCase):
     def test_course_build_publishes_one_independent_inspection_page(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            self.assertEqual(build(target), 50)
+            self.assertEqual(build(target), 51)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 66)
+            self.assertEqual(len(pages), 67)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")

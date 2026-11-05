@@ -619,6 +619,8 @@ byte-exact interpreter output.</p>
 <div class="guide-links">
 <a href="{REPOSITORY}/blob/main/docs/project-inspection.md">English tutorial ↗</a>
 <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/project-inspection.md">हिन्दी ट्यूटोरियल ↗</a>
+<a href="{REPOSITORY}/blob/main/docs/source-navigation.md">Symbol/reference navigation ↗</a>
+<a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/source-navigation.md">नाम और संदर्भ गाइड ↗</a>
 </div></header>
 <section class="project-steps" aria-label="Project inspection commands">
 <div class="project-step"><span>01</span><h2>Verify</h2>
@@ -631,6 +633,7 @@ byte-exact interpreter output.</p>
 schema-v1 metadata, not program output. The JSON includes project-relative
 file/module metadata and should not be confused with a compiler execution result.
 <code>launch</code> uses the interpreter. There is no <code>scarp compile</code> command.</p>
+<p class="project-warning">Compiler alpha.6 also supports <code>scarp inspect symbols --json tutorials/module-inspection</code> and <code>scarp inspect references --json tutorials/module-inspection</code>. These show definitions and use sites without executing code. IDs are local to one inspection, not permanent editor identities.</p>
 <div class="project-source-grid">
 <section class="code-panel" aria-labelledby="inspect-manifest">
 <div class="panel-heading"><div><span class="eyebrow">REAL PROJECT MANIFEST</span>
