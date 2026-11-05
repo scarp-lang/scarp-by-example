@@ -11,7 +11,7 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
 | `projects/index.html` | Source-backed English/Hindi guide to `create`, project `verify` and `launch` (available since alpha.4) |
 | `projects/module-inspection/index.html` | Bilingual source-backed project inspection with alpha.6 symbol/reference navigation links, real imports and verified runtime output |
-| `projects/source-navigation/index.html` | Bilingual compiler-tested workshop with shadowed bindings, imported definitions, named argument labels and exact interpreter output |
+| `projects/source-navigation/index.html` | Bilingual clickable reference explorer: annotated source links checked against real alpha.6 compiler metadata, with a static fallback and exact stdout fixture |
 | `labs/index.html` | Overview of six standalone verified bilingual coding labs |
 | `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands |
 | `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |

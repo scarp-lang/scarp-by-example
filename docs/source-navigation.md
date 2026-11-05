@@ -53,3 +53,7 @@ scarp launch tutorials/source-navigation
 The main source defines `base` twice, in separate scopes. The inner binding's initializer reads the **outer** `base`; `total += base` reads the **inner** one. The named argument `value:` points to the parameter of `twice`, and `n:` to the parameter of imported `adjust`. The imported `private_seed` remains private.
 
 **Try it:** find both source-backed definitions and their references; predict the final output before calling `launch`. CI checks the actual compiler's source spans and reference relationships, not unstable IDs or a fabricated JSON fixture. A generated website page displays source and exact stdout without executing Scarp.
+
+### Follow the actual links in the browser
+
+The [workshop reference explorer](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) highlights **11 authored symbol definitions and 20 use sites** after the course build validates their locations. Select either `base` declaration to see its separate references, including a reference inside the other declaration's initializer. The UI works with keyboard-activated links, has a readable no-JavaScript anchor fallback and stores no browsing state. Its annotations are human-readable teaching data verified against the published alpha.6 compiler by CI; **they are not live compiler JSON or a language server**. The `Scarp.project`, `.srp` files and exact `.stdout` fixture remain authoritative.
