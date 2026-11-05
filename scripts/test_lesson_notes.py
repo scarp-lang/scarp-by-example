@@ -17,7 +17,7 @@ class HindiNoteTests(unittest.TestCase):
         lessons = discover_examples(EXAMPLES)
         notes = read_hindi_notes()
         self.assertEqual(len(notes), len(lessons))
-        self.assertEqual(len(notes), 50)
+        self.assertEqual(len(notes), 51)
         for source, stdout in lessons:
             key = source.relative_to(ROOT).as_posix()
             with self.subTest(lesson=key):
