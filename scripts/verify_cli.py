@@ -139,7 +139,8 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
     project_smoke(compiler, timeout)
     project_inspection_smoke(compiler, timeout)
     symbol_navigation_smoke(compiler, timeout)
-    print("PASS: Scarp-first CLI, static project/metadata validation, symbol navigation and launch.")
+    source_navigation_project_smoke(compiler, timeout)
+    print("PASS: Scarp-first CLI, projects, source-navigation workshop, static inspection and launch.")
 
 
 def project_smoke(compiler: Path, timeout: int) -> None:
@@ -378,6 +379,152 @@ def symbol_navigation_smoke(compiler: Path, timeout: int) -> None:
             invalid = invoke(compiler, "inspect", kind, "--json", str(witness), timeout=timeout)
             require(invalid, f"{kind} rejects unbound name without partial JSON",
                     code=1, stdout=b"", nonempty_stderr=True)
+
+
+def source_navigation_project_smoke(compiler: Path, timeout: int) -> None:
+    """Exercise alpha.6's cross-file definitions, shadowing and named-argument links.
+
+    Keep symbol IDs local to each JSON snapshot. Do not assume that the file and
+    project loaders agree on the *name* of an implicit module symbol.
+    """
+    folder = ROOT / "tutorials/source-navigation"
+    entry = folder / "src/main.srp"
+    helper = folder / "src/lib/navigation_values.srp"
+    expected = read_expected_stdout(folder / "expected.stdout")
+    if expected != b"30\n":
+        raise CliSmokeError("source-navigation workshop output fixture changed")
+    require(invoke(compiler, "verify", str(folder), timeout=timeout),
+            "verify source-navigation project", stdout=b"", stderr=b"")
+    require(invoke(compiler, "launch", str(folder), timeout=timeout),
+            "launch source-navigation project", stdout=expected, stderr=b"")
+    require(invoke(compiler, "exec", str(entry), timeout=timeout),
+            "execute source-navigation entrypoint", stdout=expected, stderr=b"")
+
+    source_data = {"main.srp": entry.read_bytes(), "navigation_values.srp": helper.read_bytes()}
+
+    def file_id_map(inventory: dict) -> dict[str, int]:
+        by_name: dict[str, int] = {}
+        for f in inventory["files"]:
+            normalized = f["path"].replace("\\", "/")
+            filename = normalized.rsplit("/", 1)[-1]
+            if filename not in source_data or filename in by_name:
+                raise CliSmokeError(f"navigation: unexpected or duplicate source {filename}")
+            by_name[filename] = f["id"]
+        if set(by_name) != set(source_data):
+            raise CliSmokeError("navigation: source graph must contain exactly two files")
+        return by_name
+
+    def validate_semantics(data: dict) -> set[tuple]:
+        source_ids = file_id_map(data)
+        symbols = data["symbols"]
+        named = [s for s in symbols if s["name"] in {
+            "library", "base", "twice", "value", "total", "step",
+            "private_seed", "offset", "adjust", "n",
+        }]
+        observed = [(s["name"], s["kind"],
+                     "main.srp" if s.get("location") and
+                     s["location"]["source"] == source_ids["main.srp"] else
+                     "navigation_values.srp") for s in named]
+        expected_names = {
+            ("library", "import_alias", "main.srp"),
+            ("base", "binding", "main.srp"),
+            ("twice", "function", "main.srp"),
+            ("value", "parameter", "main.srp"),
+            ("total", "binding", "main.srp"),
+            ("step", "repeat_index", "main.srp"),
+            ("private_seed", "constant", "navigation_values.srp"),
+            ("offset", "constant", "navigation_values.srp"),
+            ("adjust", "function", "navigation_values.srp"),
+            ("n", "parameter", "navigation_values.srp"),
+        }
+        if set(observed) != expected_names or observed.count(
+                ("base", "binding", "main.srp")) != 2:
+            raise CliSmokeError("navigation: declarations or shadowed bindings changed")
+        by_name = {name: [s for s in symbols if s["name"] == name]
+                   for name in ("base", "offset", "adjust", "private_seed")}
+        if (len(by_name["base"]) != 2
+                or any(s.get("public") is not True for name in ("offset", "adjust")
+                       for s in by_name[name])
+                or by_name["private_seed"][0].get("public") is not False):
+            raise CliSmokeError("navigation: shadowing or import privacy changed")
+
+        # Source spans are bytes in the *original* UTF-8 files, not characters.
+        for s in named:
+            loc = s.get("location")
+            if not isinstance(loc, dict):
+                raise CliSmokeError("navigation: missing source-backed declaration")
+            raw = (source_data["main.srp"] if loc.get("source") ==
+                   source_ids["main.srp"] else source_data["navigation_values.srp"])
+            span = loc.get("span")
+            if (not isinstance(span, list) or len(span) != 2 or
+                    not all(type(x) is int for x in span) or
+                    not 0 <= span[0] < span[1] <= len(raw) or
+                    raw[span[0]:span[1]].decode("utf-8") != s["name"]):
+                raise CliSmokeError(f"navigation: invalid declaration span for {s['name']}")
+
+        if data["kind"] == "scarp.symbols":
+            return set(observed)
+
+        refs = data["references"]
+        symbols_by_id = {s["id"]: s for s in symbols}
+        referenced = set()
+        seen_kinds: set[tuple[str, str]] = set()
+        for ref in refs:
+            sym = symbols_by_id[ref["target"]]
+            loc = ref["location"]
+            span = loc.get("span")
+            source_id = loc.get("source")
+            if source_id not in source_ids.values() or not isinstance(span, list) or len(span) != 2:
+                raise CliSmokeError("navigation: invalid reference source/span")
+            filename = next(k for k, v in source_ids.items() if v == source_id)
+            raw = source_data[filename]
+            if (not all(type(x) is int for x in span)
+                    or not 0 <= span[0] < span[1] <= len(raw)):
+                raise CliSmokeError("navigation: reference byte span exceeds source")
+            referenced.add(ref["target"])
+            seen_kinds.add((sym["name"], ref["kind"]))
+            if sym["name"] in {"base", "value", "n", "step", "twice", "adjust"}:
+                if raw[span[0]:span[1]].decode("utf-8") != sym["name"]:
+                    raise CliSmokeError("navigation: reference does not match source token")
+        base_ids = {s["id"] for s in by_name["base"]}
+        if not base_ids.issubset(referenced):
+            raise CliSmokeError("navigation: one shadowed base was never referenced")
+        required = {
+            ("base", "read"),
+            ("value", "argument_label"),
+            ("n", "argument_label"),
+            ("step", "read"),
+            ("twice", "call"),
+            ("adjust", "call"),
+            ("total", "read_write"),
+        }
+        if not required.issubset(seen_kinds):
+            raise CliSmokeError(f"navigation: missing reference classes {required - seen_kinds}")
+        return set(observed)
+
+    views: dict[str, dict[str, dict]] = {}
+    for target, arg in (("project", folder), ("entrypoint", entry)):
+        views[target] = {}
+        for kind in ("symbols", "references"):
+            result = invoke(compiler, "inspect", kind, "--json", str(arg), timeout=timeout)
+            require(result, f"{target} inspect {kind}", nonempty_stdout=True, stderr=b"")
+            data = validate_navigation_inventory(result.stdout, kind)
+            validate_semantics(data)
+            views[target][kind] = data
+        # Both snapshots should describe the same named definitions and use sites.
+        for kind in ("symbols", "references"):
+            if len(views[target][kind]["files"]) != 2:
+                raise CliSmokeError(f"navigation: {target} missing imported file")
+
+    # Stable behavior is the semantic graph, NOT file display names or symbol IDs.
+    for kind in ("symbols", "references"):
+        a = views["project"][kind]
+        b = views["entrypoint"][kind]
+        if len(a["symbols"]) != len(b["symbols"]):
+            raise CliSmokeError(f"navigation: {kind} differs by invocation mode")
+        if kind == "references" and len(a["references"]) != len(b["references"]):
+            raise CliSmokeError("navigation: reference site count differs by invocation mode")
+
 
 
 def main(argv: list[str] | None = None) -> int:
