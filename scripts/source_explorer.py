@@ -178,7 +178,7 @@ def render_reference_explorer(root: Path = ROOT) -> str:
             fragments.append(html.escape(line[cursor:], quote=True))
             code_lines.append(
                 f'<span class="ref-code-line" data-line="{number}">'
-                f'{"".join(fragments)}</span>'
+                f'{"".join(fragments)}\n</span>'
             )
         panels.append(
             f'<section class="ref-source-panel" aria-label="{html.escape(file)}">'
