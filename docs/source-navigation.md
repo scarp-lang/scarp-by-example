@@ -37,3 +37,19 @@ Try a disposable file with `print(1 / 0);`. `inspect symbols --json FILE` and `i
 **Exercise:** inspect the two-module project, locate the `answer` declaration and the reference in the entrypoint, then compare the file and directory views while ignoring platform-specific display paths.
 
 See the [compiler's versioned index contract](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.1/docs/symbol-index.md) and [Hindi companion guide](hi/source-navigation.md). No general editor integration or browser-side Scarp execution is implied.
+
+## Advanced workshop: shadowing and named arguments
+
+Continue with the [source-navigation workshop](../tutorials/source-navigation/README.md) and its [website page](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/). The two-file source is adapted from the tagged alpha.6 compiler example and retains the upstream exact output of `30` followed by a newline.
+
+```sh
+scarp verify tutorials/source-navigation
+scarp inspect symbols --json tutorials/source-navigation
+scarp inspect references --json tutorials/source-navigation
+scarp inspect references --json tutorials/source-navigation/src/main.srp
+scarp launch tutorials/source-navigation
+```
+
+The main source defines `base` twice, in separate scopes. The inner binding's initializer reads the **outer** `base`; `total += base` reads the **inner** one. The named argument `value:` points to the parameter of `twice`, and `n:` to the parameter of imported `adjust`. The imported `private_seed` remains private.
+
+**Try it:** find both source-backed definitions and their references; predict the final output before calling `launch`. CI checks the actual compiler's source spans and reference relationships, not unstable IDs or a fabricated JSON fixture. A generated website page displays source and exact stdout without executing Scarp.
