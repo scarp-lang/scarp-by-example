@@ -583,7 +583,8 @@ scarp launch tutorials/first-project</code></pre>
 <section class="run-panel"><p class="eyebrow">IMPORTANT LIMITS</p>
 <h2>Interpreter projects, not native builds</h2>
 <p>The development manifest is limited to 4,096 bytes and three ordered fields. Project entrypoints cannot escape the project root. These commands do not provide native executable generation, package downloads, lockfiles, a registry or a stable workspace format.</p></section>
-<p><a class="secondary-button" href="{escape(rel(page, "projects/module-inspection/index.html"))}">Inspect a project\u0027s modules →</a></p>
+<p><a class="secondary-button" href="{escape(rel(page, "projects/module-inspection/index.html"))}">Inspect a project\u0027s modules →</a>
+<a class="secondary-button" href="{escape(rel(page, "projects/source-navigation/index.html"))}">Trace symbols and references →</a></p>
 <p class="fine-print">Pinned published compiler: <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> · source <code>{escape(target["source_commit"][:12])}</code>. No browser execution or fabricated output.</p>
 </main>"""
     return page_shell(page, title, "Learn the real Scarp project CLI workflow in English and Hindi, with verified source and output.", main, "project-layout")
@@ -691,11 +692,138 @@ Compare imports, dependencies and symbols. Schema-v1 module display labels may d
 <a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>,
 source <code>{escape(target["source_commit"][:12])}</code>.
 No browser Scarp execution or simulated JSON results.</p></section>
+<p><a class="secondary-button" href="{escape(rel(page, "projects/source-navigation/index.html"))}">Next: trace declarations and uses →</a></p>
 <p class="fine-print"><a href="{escape(rel(page, "projects/index.html"))}">← Your first Scarp project</a>
 · <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Published compiler compatibility</a></p>
 </main>"""
     return page_shell(page, "Project module inspection",
                       "Read a real Scarp project's module graph using published compiler metadata.",
+                      main, "project-layout")
+
+
+def render_source_navigation_page(target: dict) -> str:
+    """Publish a source-backed alpha.6 workshop; do not simulate a compiler index."""
+    page = "projects/source-navigation/index.html"
+    folder = ROOT / "tutorials/source-navigation"
+    manifest = (folder / "Scarp.project").read_bytes()
+    entry = (folder / "src/main.srp").read_bytes()
+    helper = (folder / "src/lib/navigation_values.srp").read_bytes()
+    expected = read_expected_stdout(folder / "expected.stdout")
+    if manifest != b"scarp-project: 1\nname: source-navigation\nentry: src/main.srp\n":
+        raise ValueError("navigation workshop manifest differs from the reviewed source")
+    if (not entry.startswith(b'import "lib/navigation_values.srp" as library;\n')
+            or entry.count(b"bind base =") != 2
+            or b"twice(value: library.adjust(n: base + step))" not in entry
+            or b"print(total);\n" not in entry):
+        raise ValueError("navigation workshop entrypoint must be reviewed before publishing")
+    if (b"bind private_seed = 2;" not in helper
+            or b"pub bind offset = private_seed;" not in helper
+            or b"pub pure funcra adjust(n: integer)" not in helper
+            or expected != b"30\n"):
+        raise ValueError("navigation workshop helper or output differs from the verified upstream fixture")
+
+    origin = REPOSITORY + "/blob/main/tutorials/source-navigation/"
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<a href="{escape(rel(page, "projects/index.html"))}">Projects</a><span>/</span>
+<span aria-current="page">Trace symbols and references</span></nav>
+<header class="page-heading">
+<p class="eyebrow">SCARP v{escape(target["version"])} · COMPILER-VALIDATED WORKSHOP</p>
+<h1>Trace symbols across Scarp modules</h1>
+<p class="lead">Follow two different <code>base</code> bindings, imported public definitions,
+named arguments and a counted loop. Learn how <code>inspect symbols</code> differs
+from <code>inspect references</code> without executing ordinary statements.</p>
+<div class="guide-links">
+<a href="{REPOSITORY}/blob/main/docs/source-navigation.md">English walkthrough ↗</a>
+<a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/source-navigation.md">हिन्दी गाइड ↗</a>
+<a href="{origin}README.md">Original project instructions ↗</a>
+</div></header>
+<section class="project-steps" aria-label="Run the real compiler">
+<div class="project-step"><span>01</span><h2>Verify</h2>
+<code>scarp verify tutorials/source-navigation</code></div>
+<div class="project-step"><span>02</span><h2>Inspect</h2>
+<code>scarp inspect references --json tutorials/source-navigation</code></div>
+<div class="project-step"><span>03</span><h2>Launch</h2>
+<code>scarp launch tutorials/source-navigation</code></div></section>
+<p class="project-warning">Before launching, also try
+<code>scarp inspect symbols --json tutorials/source-navigation</code>.
+Both inspection commands type-check the source graph and emit metadata;
+they do <strong>not</strong> execute the interpreter or produce the checked-in output.
+Symbol IDs are local to a single inspection and file display paths vary.</p>
+<div class="project-source-grid">
+<section class="code-panel" aria-labelledby="navigation-entry-title">
+<div class="panel-heading"><div><span class="eyebrow">PROJECT ENTRYPOINT</span>
+<h2 id="navigation-entry-title">src/main.srp</h2></div>
+<button type="button" class="copy-button" data-copy="scarp-code">Copy code</button></div>
+<pre><code id="scarp-code">{highlight_scarp(entry.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{origin}src/main.srp">View source ↗</a></div></section>
+<section class="code-panel" aria-labelledby="navigation-helper-title">
+<div class="panel-heading"><div><span class="eyebrow">IMPORTED SOURCE</span>
+<h2 id="navigation-helper-title">src/lib/navigation_values.srp</h2></div></div>
+<pre><code>{highlight_scarp(helper.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{origin}src/lib/navigation_values.srp">View helper ↗</a></div></section>
+<section class="code-panel output-panel" aria-labelledby="navigation-stdout-title">
+<div class="panel-heading"><div><span class="eyebrow">EXACT INTERPRETER OUTPUT</span>
+<h2 id="navigation-stdout-title">expected.stdout</h2></div><span class="verified-tag">Real fixture</span></div>
+<pre><code>{escape(expected.decode("utf-8"))}</code></pre>
+<div class="panel-footer"><a href="{origin}expected.stdout">View exact bytes ↗</a></div></section>
+</div>
+<section class="lesson-notes" id="lesson-notes" aria-labelledby="navigation-explain">
+<div class="notes-heading"><div><p class="eyebrow">EXPLORE THE SOURCE</p>
+<h2 id="navigation-explain">Definitions are not the same as uses</h2></div>
+<div class="language-switch" role="group" aria-label="Explanation language">
+<button class="note-lang-button" type="button" data-note-switch="en"
+aria-controls="en-notes" aria-pressed="true">English</button>
+<button class="note-lang-button" type="button" data-note-switch="hi"
+aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button></div></div>
+<div class="note-content" id="en-notes" lang="en">
+<p><strong>Definitions:</strong> the imported module declares public
+<code>offset</code> and <code>adjust</code>, plus private
+<code>private_seed</code>. The entrypoint declares an import alias,
+a function named <code>twice</code>, and two separately scoped
+<code>base</code> bindings.</p>
+<p><strong>References:</strong> the inner <code>base</code> initializer reads
+the outer <code>base</code>, while <code>total += base</code> reads
+the inner one. Named argument labels <code>value:</code> and
+<code>n:</code> refer to function parameters. The counted
+<code>step</code> variable belongs to the <code>repeat</code> loop.</p>
+<div class="practice-challenge"><p><strong>Try it:</strong> inspect the project
+and the entrypoint file separately. Find both <code>base</code> definitions and
+their reference targets. Then launch and compare the program's only output
+line with the fixture. Do not compare symbol ID numbers between invocations.</p></div></div>
+<div class="note-content" id="hi-notes" lang="hi">
+<p><strong>घोषणाएँ:</strong> दूसरे मॉड्यूल में सार्वजनिक <code>offset</code> और
+<code>adjust</code> तथा निजी <code>private_seed</code> हैं।
+मुख्य फ़ाइल में <code>library</code> इम्पोर्ट नाम, <code>twice</code>
+फ़ंक्शन और अलग स्कोप के दो <code>base</code> बाइंडिंग हैं।</p>
+<p><strong>उपयोग:</strong> अंदर वाले <code>base</code> का प्रारम्भिक मान
+बाहर वाले <code>base</code> से बनता है। <code>total += base</code>
+अंदर वाले मान का उपयोग करता है। <code>value:</code> और <code>n:</code>
+फ़ंक्शन पैरामीटर के नाम हैं; <code>step</code> लूप की गिनती है।</p>
+<div class="practice-challenge"><p><strong>अभ्यास:</strong> प्रोजेक्ट और
+<code>src/main.srp</code> दोनों पर निरीक्षण चलाएँ। <code>base</code> की
+दो घोषणाएँ और उनके उपयोग खोजें। फिर <code>launch</code> का वास्तविक परिणाम
+<code>expected.stdout</code> से मिलाएँ। अलग-अलग जाँच की symbol IDs की
+तुलना न करें।</p></div></div>
+<p class="notes-provenance">Pinned published
+<a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>
+· source <code>{escape(target["source_commit"][:12])}</code>.
+Read-only metadata is not program output. The browser does not execute Scarp.</p></section>
+<section class="lab-reveals" aria-label="Self-check questions">
+<details><summary>Which <code>base</code> is read inside <code>twice(value: library.adjust(n: base + step))</code>?</summary>
+<p>The outer <code>base</code>. The inner binding is not visible until its initializer is resolved.</p>
+<p lang="hi">बाहर वाला <code>base</code>। अंदर वाले बाइंडिंग का नाम उसके initializer के बाद उपलब्ध होता है।</p></details>
+<details><summary>Why can the source inventory be inspected without printing <code>30</code>?</summary>
+<p>Inspection performs static name/type checking. Only <code>launch</code> executes the program and produces the exact stdout fixture.</p>
+<p lang="hi">निरीक्षण केवल नाम और प्रकार की स्थिर जाँच करता है; <code>launch</code> प्रोग्राम चलाकर <code>30</code> प्रिंट करता है।</p></details>
+</section>
+<p class="fine-print"><a href="{escape(rel(page, "projects/module-inspection/index.html"))}">← First inspect project modules</a>
+· <a href="{escape(rel(page, "projects/index.html"))}">Project basics</a>
+· <a href="{REPOSITORY}/blob/main/THIRD_PARTY_NOTICES.md">Source provenance and license</a></p>
+</main>"""
+    return page_shell(page, "Source navigation workshop",
+                      "Compiler-tested bilingual guide to definitions and references in Scarp.",
                       main, "project-layout")
 
 
@@ -907,6 +1035,9 @@ def build(destination: Path) -> int:
     inspect_path = destination / "projects/module-inspection/index.html"
     inspect_path.parent.mkdir(parents=True, exist_ok=True)
     inspect_path.write_text(render_project_inspection_page(target), encoding="utf-8", newline="\n")
+    navigation_path = destination / "projects/source-navigation/index.html"
+    navigation_path.parent.mkdir(parents=True, exist_ok=True)
+    navigation_path.write_text(render_source_navigation_page(target), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -921,7 +1052,8 @@ def build(destination: Path) -> int:
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
     urls = ["index.html", "projects/index.html",
-            "projects/module-inspection/index.html", "labs/index.html"]
+            "projects/module-inspection/index.html",
+            "projects/source-navigation/index.html", "labs/index.html"]
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)
@@ -944,7 +1076,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons, 6 chapters, and a project tutorial at {args.output.resolve()}")
+    print(f"Built {count} standalone lessons, 6 chapters, and three project tutorials at {args.output.resolve()}")
     return 0
 
 

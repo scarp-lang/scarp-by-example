@@ -22,6 +22,8 @@ This page separates course design from compiler implementation. A planned lesson
 **Published alpha.5 and retained in alpha.6:** The official compiler continues to support offline `Scarp.project` directories with `create`, static project `verify`, and interpreter-backed `launch`. See the [English tutorial](project-workflow.md) and [हिन्दी](hi/project-workflow.md). Alpha.5 additionally supports read-only **project-directory module inspection** with `scarp inspect modules --json DIRECTORY`; [English](project-inspection.md) and [हिन्दी](hi/project-inspection.md) tutorials show the actual module graph. This is a development manifest, **not** a package manager or native compiler. Alpha.5 also exposes a limited C11 emitter through Rust embedding APIs only; it does **not** ship `scarp compile`.
 
 
+The [compiler-tested source-navigation workshop](../tutorials/source-navigation/README.md) demonstrates shadowing, named arguments and imported declarations with a two-file project. Its [bilingual learning page](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) does not simulate execution.
+
 The pinned prerelease CLI is taught in separate [English](cli-quickstart.md) and [Hindi](hi/cli-quickstart.md) guides, backed by real-command smoke tests. Inspection metadata is **not** treated as a runnable `.srp` lesson; native compilation, an LSP and package tools remain outside the current verified feature set.
 
 ## Website

@@ -18,7 +18,7 @@ The annotated `v0.0.6-alpha.1` Git tag dereferences to the exact commit above. T
 
 - Pure `rms(vector) -> float` computes root mean square on nonempty finite vectors and visible windows; it is stable for the tested large finite magnitudes. The empty input is an error. See the [numbered lesson](../examples/04-collections/12-root-mean-square.srp) and [Hindi notes](hi/04-collections.md).
 - Read-only `scarp inspect symbols [--json] FILE|DIRECTORY` and `scarp inspect references [--json] FILE|DIRECTORY` provide typed, schema-v1 symbol/reference inventories without executing ordinary runtime statements. [English tutorial](source-navigation.md) · [हिन्दी गाइड](hi/source-navigation.md).
-- Previous alpha.5 project-directory module inspection remains supported. All three inspection views are static metadata, **not program output**.
+- Previous alpha.5 project-directory module inspection remains supported. The [source-navigation workshop](../tutorials/source-navigation/README.md) exercises alpha.6 shadowed bindings, imported definitions and named-argument references using the same compiler pin. All three inspection views are static metadata, **not program output**.
 
 The existing limited scalar C11 emitter remains experimental and exposed only through Rust embedding APIs. There is no public `scarp compile` executable command, LSP server, stable symbol IDs across edits, rename engine, general arrays/tuples, maps/records, structured error values, async runtime, package registry, GPU execution or automatic differentiation.
 

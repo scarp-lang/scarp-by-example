@@ -68,13 +68,14 @@ class ProjectInspectionTests(unittest.TestCase):
             target = Path(directory)
             self.assertEqual(build(target), 51)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 67)
+            self.assertEqual(len(pages), 68)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")
             )
             home_project = (target / "projects/index.html").read_text(encoding="utf-8")
             self.assertIn('href="module-inspection/index.html"', home_project)
+            self.assertIn('href="source-navigation/index.html"', home_project)
             page = (target / "projects/module-inspection/index.html").read_text(encoding="utf-8")
             self.assertIn('href="../../index.html"', page)
             self.assertIn("schema-v1", page)

@@ -33,3 +33,19 @@ scarp launch tutorials/module-inspection
 **अभ्यास:** प्रोजेक्ट में `answer` की घोषणा किस फ़ाइल में है? उसका उपयोग किस फ़ाइल में हुआ? `symbols` और `references` से तुलना करें।
 
 [English tutorial](../source-navigation.md) · [आधिकारिक कम्पाइलर अनुबंध](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.1/docs/symbol-index.md)
+
+## अगला अभ्यास: एक ही नाम के दो अलग बाइंडिंग
+
+[दो-मॉड्यूल source-navigation वर्कशॉप](../../tutorials/source-navigation/README.md) और इसका [वेबसाइट पृष्ठ](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) देखें। यह प्रकाशित alpha.6 कम्पाइलर के उदाहरण से बनाया गया है और वास्तविक आउटपुट `30` है।
+
+```sh
+scarp verify tutorials/source-navigation
+scarp inspect symbols --json tutorials/source-navigation
+scarp inspect references --json tutorials/source-navigation
+scarp inspect references --json tutorials/source-navigation/src/main.srp
+scarp launch tutorials/source-navigation
+```
+
+इस प्रोजेक्ट में `base` की **दो घोषणाएँ** हैं। अंदर वाले `base` का initializer बाहर वाले `base` को पढ़ता है; `total += base` अंदर वाले नाम का उपयोग करता है। `value:` नाम `twice` के पैरामीटर से और `n:` नाम दूसरे मॉड्यूल के `adjust` पैरामीटर से जुड़ा है। `private_seed` निजी घोषणा है।
+
+**अभ्यास:** दोनों `base` का declaration और reference खोजें; `launch` चलाने से पहले आउटपुट का अनुमान लगाएँ। CI में वास्तविक कम्पाइलर से span और पहचान की जाँच होती है; वेबसाइट पर JSON का नकली परिणाम या Scarp execution नहीं दिखाया जाता।
