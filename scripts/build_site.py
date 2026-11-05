@@ -16,6 +16,7 @@ from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_std
 from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
 from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
+from source_explorer import render_reference_explorer
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -163,6 +164,8 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     script = escape(rel(page, "search.js"))
     checkpoint_script = (f'<script src="{escape(rel(page, "checkpoint.js"))}" defer></script>'
                          if layout == "lesson-layout" else "")
+    reference_script = (f'<script src="{escape(rel(page, "reference-explorer.js"))}" defer></script>'
+                        if "reference-explorer-layout" in layout else "")
     # Keep both navigation views in sync, with native disclosure on small screens.
     # This works without JavaScript and avoids forcing horizontal page scrolling.
     nav_links = f"""<a href="{home}#chapters">Chapters</a>
@@ -184,6 +187,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <script src="{script}" defer></script>
 <script src="{escape(rel(page, "progress.js"))}" defer></script>
 {checkpoint_script}
+{reference_script}
 </head>
 <body class="{escape(layout)}">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -751,6 +755,8 @@ from <code>inspect references</code> without executing ordinary statements.</p>
 Both inspection commands type-check the source graph and emit metadata;
 they do <strong>not</strong> execute the interpreter or produce the checked-in output.
 Symbol IDs are local to a single inspection and file display paths vary.</p>
+{render_reference_explorer(ROOT)}
+<details class="ref-plain-sources"><summary>View unannotated files and copy code · मूल कोड देखें</summary>
 <div class="project-source-grid">
 <section class="code-panel" aria-labelledby="navigation-entry-title">
 <div class="panel-heading"><div><span class="eyebrow">PROJECT ENTRYPOINT</span>
@@ -763,6 +769,8 @@ Symbol IDs are local to a single inspection and file display paths vary.</p>
 <h2 id="navigation-helper-title">src/lib/navigation_values.srp</h2></div></div>
 <pre><code>{highlight_scarp(helper.decode("utf-8"))}</code></pre>
 <div class="panel-footer"><a href="{origin}src/lib/navigation_values.srp">View helper ↗</a></div></section>
+</div></details>
+<div class="project-source-grid">
 <section class="code-panel output-panel" aria-labelledby="navigation-stdout-title">
 <div class="panel-heading"><div><span class="eyebrow">EXACT INTERPRETER OUTPUT</span>
 <h2 id="navigation-stdout-title">expected.stdout</h2></div><span class="verified-tag">Real fixture</span></div>
@@ -824,7 +832,7 @@ Read-only metadata is not program output. The browser does not execute Scarp.</p
 </main>"""
     return page_shell(page, "Source navigation workshop",
                       "Compiler-tested bilingual guide to definitions and references in Scarp.",
-                      main, "project-layout")
+                      main, "project-layout reference-explorer-layout")
 
 
 def render_lesson(source: Path, stdout: Path, description: str) -> str:
@@ -1065,7 +1073,8 @@ def build(destination: Path) -> int:
     )
     sitemap += "</urlset>\n"
     (destination / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-    for asset in ("styles.css", "search.js", "progress.js", "checkpoint.js"):
+    for asset in ("styles.css", "search.js", "progress.js", "checkpoint.js",
+                  "reference-explorer.js"):
         shutil.copyfile(ASSETS / asset, destination / asset)
     (destination / ".nojekyll").write_text("", encoding="utf-8")
     return count

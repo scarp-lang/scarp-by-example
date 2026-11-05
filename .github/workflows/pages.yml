@@ -44,9 +44,13 @@ jobs:
         run: |
           node --check site/search.js
           node --check site/checkpoint.js
+          node --check site/reference-explorer.js
 
       - name: Test source-backed bilingual checkpoints
         run: node --test site/test_checkpoint.cjs
+
+      - name: Test interactive source reference explorer
+        run: node --test site/test_reference_explorer.cjs
 
       - name: Test accessible mobile navigation
         run: node --test site/test_mobile_navigation.cjs

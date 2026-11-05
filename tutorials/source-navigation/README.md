@@ -23,3 +23,9 @@ The read-only inspection commands never execute ordinary program statements. `la
 5. Compare file- and directory-based inspection. Display paths may differ, and `symbol.id` is local to one snapshot. Do not compare IDs across invocations.
 
 The browser website displays the original source, expected output and instructions, but it **does not run Scarp**. Read the [English teaching guide](../../docs/source-navigation.md), [Hindi guide](../../docs/hi/source-navigation.md) or [workshop page](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/).
+
+## Clickable, offline-safe reference explorer
+
+The [workshop site](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) now links **11 selected declarations** to **20 use sites** in both real source files. Click either a declaration or a use to highlight matching occurrences and show the English/Hindi explanations. With JavaScript disabled, each code link still jumps to its explanation. The code is *not* editable or executed in the browser.
+
+The human-readable [reference-map.json](reference-map.json) uses stable **course-local keys** such as `base-outer` and `base-inner`, not Scarp's compilation-local numeric symbol IDs. Every recorded declaration, use kind, target, source file, line and Unicode-scalar column is checked against the real `scarp inspect references --json` result in CI on Linux, Windows and macOS. A compiler change that changes the links fails verification instead of publishing an outdated diagram.

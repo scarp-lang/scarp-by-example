@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from build_site import build, read_course, render_source_navigation_page
+from source_explorer import load_reference_map, render_reference_explorer
 from verify_examples import ROOT, read_expected_stdout
 
 PROJECT = ROOT / "tutorials/source-navigation"
@@ -46,6 +47,10 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
                 self.assertIn(fragment.lower(), markup.lower())
         self.assertIn('href="../module-inspection/index.html"', markup)
         self.assertIn("aa329a22cf2b", markup)
+        self.assertIn('data-reference-explorer', markup)
+        self.assertIn('src="../../reference-explorer.js"', markup)
+        self.assertIn('href="#ref-card-base-outer"', markup)
+        self.assertIn('href="#ref-card-base-inner"', markup)
         self.assertNotIn("scarp compile tutorials/source-navigation", markup)
 
     def test_website_build_and_sitemap_include_workshop(self):
@@ -54,12 +59,26 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
             self.assertEqual(build(dest), 51)
             self.assertEqual(len(list(dest.rglob("index.html"))), 68)
             self.assertTrue((dest / "projects/source-navigation/index.html").is_file())
+            self.assertTrue((dest / "reference-explorer.js").is_file())
             self.assertIn("projects/source-navigation/",
                           (dest / "sitemap.xml").read_text(encoding="utf-8"))
             home = (dest / "projects/index.html").read_text(encoding="utf-8")
             self.assertIn('href="source-navigation/index.html"', home)
             previous = (dest / "projects/module-inspection/index.html").read_text(encoding="utf-8")
             self.assertIn('href="../source-navigation/index.html"', previous)
+
+    def test_bilingual_linked_source_is_checked_and_available_without_javascript(self):
+        mapping = load_reference_map()
+        self.assertEqual(len(mapping["symbols"]), 11)
+        self.assertEqual(sum(len(x["references"]) for x in mapping["symbols"]), 20)
+        markup = render_reference_explorer()
+        self.assertEqual(markup.count('class="ref-token"'), 31)
+        self.assertEqual(markup.count('class="ref-card"'), 11)
+        self.assertIn('data-ref-symbol="base-outer"', markup)
+        self.assertIn('data-ref-symbol="base-inner"', markup)
+        self.assertIn('lang="hi"', markup)
+        self.assertIn('href="#ref-card-value"', markup)
+        self.assertIn("browser does not execute Scarp", render_source_navigation_page(self.target))
 
     def test_project_manifest_corruption_fails_build(self):
         manifest = PROJECT / "Scarp.project"

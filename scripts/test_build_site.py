@@ -159,6 +159,9 @@ class SiteTests(unittest.TestCase):
             navigation = (output / "projects/source-navigation/index.html").read_text(encoding="utf-8")
             self.assertIn("scarp inspect references --json tutorials/source-navigation", navigation)
             self.assertIn("src/lib/navigation_values.srp", navigation)
+            self.assertIn('data-reference-explorer', navigation)
+            self.assertIn('src="../../reference-explorer.js"', navigation)
+            self.assertIn('data-ref-symbol="base-outer"', navigation)
             self.assertIn('id="hi-notes"', navigation)
             self.assertIn("<details>", navigation)
             self.assertIn('src/lib/math.srp', inspect)
@@ -183,6 +186,7 @@ class SiteTests(unittest.TestCase):
             self.assertIn("aa329a22cf2b", html)
             self.assertTrue((output / "progress.js").is_file())
             self.assertTrue((output / "checkpoint.js").is_file())
+            self.assertTrue((output / "reference-explorer.js").is_file())
             question_paths = set(read_practice_questions())
             self.assertEqual(len(question_paths), 18)
             for source_path in question_paths:

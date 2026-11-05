@@ -10,6 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from source_explorer import verify_reference_map
 from verify_examples import ROOT, read_expected_stdout
 
 
@@ -510,6 +511,13 @@ def source_navigation_project_smoke(compiler: Path, timeout: int) -> None:
             require(result, f"{target} inspect {kind}", nonempty_stdout=True, stderr=b"")
             data = validate_navigation_inventory(result.stdout, kind)
             validate_semantics(data)
+            if kind == "references":
+                try:
+                    verify_reference_map(data)
+                except ValueError as error:
+                    raise CliSmokeError(
+                        f"navigation: compiler disagrees with teaching map: {error}"
+                    ) from error
             views[target][kind] = data
         # Both snapshots should describe the same named definitions and use sites.
         for kind in ("symbols", "references"):
