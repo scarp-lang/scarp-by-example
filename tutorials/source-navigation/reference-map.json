@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "compiler_commit": "aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8",
+  "files": [
+    "src/main.srp",
+    "src/lib/navigation_values.srp"
+  ],
+  "symbols": [
+    {
+      "id": "library",
+      "name": "library",
+      "kind": "import_alias",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        1,
+        39
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          3,
+          13,
+          "namespace"
+        ],
+        [
+          "src/main.srp",
+          4,
+          36,
+          "namespace"
+        ],
+        [
+          "src/main.srp",
+          13,
+          30,
+          "namespace"
+        ]
+      ],
+      "explanation": {
+        "en": "Alias for the imported module. Each library.member access uses this namespace.",
+        "hi": "दूसरे मॉड्यूल के लिए इम्पोर्ट नाम। हर library.member में यही नाम प्रयोग होता है।"
+      }
+    },
+    {
+      "id": "base-outer",
+      "name": "base",
+      "kind": "binding",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        3,
+        6
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          13,
+          48,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "The outer base is declared before the loop. The inner base initializer reads this declaration.",
+        "hi": "लूप के पहले बाहर वाला base घोषित है। अंदर वाले base की शुरुआत इसी नाम से होती है।"
+      }
+    },
+    {
+      "id": "base-inner",
+      "name": "base",
+      "kind": "binding",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        13,
+        10
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          14,
+          14,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "The loop-local base is a different binding; the total accumulator reads this one.",
+        "hi": "लूप के अंदर वाला base अलग बाइंडिंग है। total में इसी का मान जोड़ा जाता है।"
+      }
+    },
+    {
+      "id": "twice",
+      "name": "twice",
+      "kind": "function",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        4,
+        13
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          13,
+          17,
+          "call"
+        ]
+      ],
+      "explanation": {
+        "en": "A pure function called from the loop. Its value argument is named.",
+        "hi": "लूप से कॉल किया जाने वाला pure फ़ंक्शन; इसका value नाम वाला पैरामीटर है।"
+      }
+    },
+    {
+      "id": "value",
+      "name": "value",
+      "kind": "parameter",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        4,
+        19
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          5,
+          11,
+          "read"
+        ],
+        [
+          "src/main.srp",
+          6,
+          23,
+          "read"
+        ],
+        [
+          "src/main.srp",
+          8,
+          12,
+          "read"
+        ],
+        [
+          "src/main.srp",
+          13,
+          23,
+          "argument_label"
+        ]
+      ],
+      "explanation": {
+        "en": "The named argument value: resolves to this parameter, not to another variable.",
+        "hi": "value: नाम वाला आर्गुमेंट इसी पैरामीटर से जुड़ता है।"
+      }
+    },
+    {
+      "id": "total",
+      "name": "total",
+      "kind": "binding",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        11,
+        5
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          14,
+          5,
+          "read_write"
+        ],
+        [
+          "src/main.srp",
+          16,
+          7,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "A mutable accumulator. += both reads and writes it before print reads it.",
+        "hi": "यह बदल सकने वाला कुल मान है; += इसे पढ़ता और लिखता है।"
+      }
+    },
+    {
+      "id": "step",
+      "name": "step",
+      "kind": "repeat_index",
+      "public": false,
+      "file": "src/main.srp",
+      "definition": [
+        12,
+        13
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          13,
+          55,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "The repeat loop index is referenced inside the inner initializer.",
+        "hi": "repeat लूप का इंडेक्स अंदर वाले initializer में उपयोग होता है।"
+      }
+    },
+    {
+      "id": "private-seed",
+      "name": "private_seed",
+      "kind": "constant",
+      "public": false,
+      "file": "src/lib/navigation_values.srp",
+      "definition": [
+        1,
+        6
+      ],
+      "references": [
+        [
+          "src/lib/navigation_values.srp",
+          2,
+          19,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "A private module constant used to initialize the public offset.",
+        "hi": "दूसरे मॉड्यूल की निजी स्थिर राशि, जिससे सार्वजनिक offset बनता है।"
+      }
+    },
+    {
+      "id": "offset",
+      "name": "offset",
+      "kind": "constant",
+      "public": true,
+      "file": "src/lib/navigation_values.srp",
+      "definition": [
+        2,
+        10
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          3,
+          21,
+          "read"
+        ],
+        [
+          "src/main.srp",
+          4,
+          44,
+          "read"
+        ],
+        [
+          "src/lib/navigation_values.srp",
+          3,
+          60,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "Public offset is referenced both from the entrypoint and inside its own module.",
+        "hi": "सार्वजनिक offset मुख्य फ़ाइल और अपने मॉड्यूल, दोनों से उपयोग होता है।"
+      }
+    },
+    {
+      "id": "adjust",
+      "name": "adjust",
+      "kind": "function",
+      "public": true,
+      "file": "src/lib/navigation_values.srp",
+      "definition": [
+        3,
+        17
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          13,
+          38,
+          "call"
+        ]
+      ],
+      "explanation": {
+        "en": "An imported public function called with the named argument n:.",
+        "hi": "दूसरे मॉड्यूल का सार्वजनिक फ़ंक्शन, जिसे n: नाम के आर्गुमेंट से बुलाते हैं।"
+      }
+    },
+    {
+      "id": "n",
+      "name": "n",
+      "kind": "parameter",
+      "public": false,
+      "file": "src/lib/navigation_values.srp",
+      "definition": [
+        3,
+        24
+      ],
+      "references": [
+        [
+          "src/main.srp",
+          13,
+          45,
+          "argument_label"
+        ],
+        [
+          "src/lib/navigation_values.srp",
+          3,
+          56,
+          "read"
+        ]
+      ],
+      "explanation": {
+        "en": "The named argument n: in the entrypoint links to this imported parameter.",
+        "hi": "मुख्य फ़ाइल का n: आर्गुमेंट इसी दूसरे मॉड्यूल के पैरामीटर से जुड़ता है।"
+      }
+    }
+  ]
+}
