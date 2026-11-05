@@ -1,8 +1,8 @@
 # Scarp प्रोजेक्ट के मॉड्यूल बिना प्रोग्राम चलाए देखें
 
-**प्रकाशित कंपाइलर:** [Scarp v0.0.5-alpha.5](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.5), वास्तविक source commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`। यह **प्री-रिलीज़** है, stable संस्करण नहीं।
+**इस कोर्स का वर्तमान कंपाइलर:** [Scarp v0.0.6-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.1), स्रोत कमिट `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8`। यह **प्री-रिलीज़** है, stable नहीं। मॉड्यूल निरीक्षण पहली बार alpha.5 में आया था।
 
-प्रकाशित alpha.5 में `scarp inspect modules --json PROJECT_DIRECTORY` उपलब्ध है। यह `Scarp.project` फ़ाइल पढ़कर entrypoint और उसके imports की **static जाँच** करता है और schema-v1 मॉड्यूल जानकारी देता है। सामान्य प्रोग्राम की `print` जैसी पंक्तियाँ नहीं चलाता।
+alpha.5 से उपलब्ध `scarp inspect modules --json PROJECT_DIRECTORY` उपलब्ध है। यह `Scarp.project` फ़ाइल पढ़कर entrypoint और उसके imports की **static जाँच** करता है और schema-v1 मॉड्यूल जानकारी देता है। सामान्य प्रोग्राम की `print` जैसी पंक्तियाँ नहीं चलाता।
 
 [वेबसाइट का उदाहरण](https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/) · [English guide](../project-inspection.md)
 
@@ -40,11 +40,11 @@ print(math.answer);
 pub bind answer = 21 * 2;
 ```
 
-वास्तविक interpreter से परिणाम `42` आता है; यह `expected.stdout` में दर्ज है। यह उदाहरण 50 numbered lessons से अलग है।
+वास्तविक interpreter से परिणाम `42` आता है; यह `expected.stdout` में दर्ज है। यह उदाहरण 51 numbered lessons से अलग है।
 
 ## 2. पहले inspect, फिर launch
 
-**scarp-by-example** रिपॉज़िटरी की root डायरेक्टरी में प्रकाशित alpha.5 कंपाइलर से चलाएँ:
+**scarp-by-example** रिपॉज़िटरी की root डायरेक्टरी में वर्तमान प्रकाशित alpha.6 कंपाइलर से चलाएँ:
 
 ```sh
 scarp verify tutorials/module-inspection
@@ -67,6 +67,8 @@ scarp launch tutorials/module-inspection
 
 ## 4. किन सुविधाओं को उपलब्ध न समझें
 
-प्रकाशित alpha.5 में `scarp compile` कमांड से सामान्य `.srp` प्रोग्राम का native executable नहीं बनता। प्रयोगात्मक **C11 emitter** सिर्फ सीमित Rust embedding API के रूप में मौजूद है; बाहरी C11 compiler host को देना होता है। इसलिए native compilation, package registry, GPU, async/networking या पूर्ण AI training framework को वर्तमान Scarp सुविधा न मानें।
+वर्तमान प्रीरिलीज़ में `scarp compile` कमांड से सामान्य `.srp` प्रोग्राम का native executable नहीं बनता। प्रयोगात्मक **C11 emitter** सिर्फ सीमित Rust embedding API के रूप में मौजूद है; बाहरी C11 compiler host को देना होता है। इसलिए native compilation, package registry, GPU, async/networking या पूर्ण AI training framework को वर्तमान Scarp सुविधा न मानें।
 
 [कंपाइलर संगतता](../compatibility.md) · [CLI सीखें](cli-quickstart.md) · [पहला Scarp प्रोजेक्ट](project-workflow.md)
+
+**अगला अभ्यास:** [दो-मॉड्यूल source-navigation वर्कशॉप](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) में दो अलग `base` घोषणाओं और उनके प्रयोगों को खोजें।

@@ -8,10 +8,14 @@ python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp
 python3 scripts/verify_cli.py --compiler /absolute/path/to/scarp
 ```
 
-The Python 3 verifier uses only the standard library. The project-smoke check also verifies the checked-in `tutorials/first-project` sample and the exact output bytes.\n\nThe Python 3 verifier uses only the standard library. It discovers all numbered `.srp` lessons (excluding `_support` source modules), rejects missing/orphaned `.stdout` files, invokes static `scarp verify` then `scarp exec`, and compares the raw output bytes. The independent CLI smoke test verifies legacy `run` equivalence, static-vs-runtime checks and real alpha.4 project creation, directory verification, launch, existing-directory rejection and path-traversal diagnostics.
+The Python 3 verifier uses only the standard library. The project-smoke check also verifies the checked-in `tutorials/first-project` sample and the exact output bytes.
 
-The `test_lesson_notes.py` tests enforce 50 exact Hindi/source/fixture matches and HTML-safe rendering. The website generator embeds the notes and rejects missing explanations, so no page can silently show an unrelated translation.
+The Python 3 verifier uses only the standard library. It discovers all numbered `.srp` lessons (excluding `_support` source modules), rejects missing/orphaned `.stdout` files, invokes static `scarp verify` then `scarp exec`, and compares the raw output bytes. The independent CLI smoke test verifies legacy `run` equivalence, static-vs-runtime checks and real alpha.4 project creation, directory verification, launch, existing-directory rejection and path-traversal diagnostics.
+
+The `test_lesson_notes.py` tests enforce 51 exact Hindi/source/fixture matches and HTML-safe rendering. The website generator embeds the notes and rejects missing explanations, so no page can silently show an unrelated translation.
 
 CI builds and runs the exact Scarp source commit identified in `.github/workflows/examples.yml`, on Linux, Windows and macOS. A passing upstream compiler test is an **input** to this project, not a substitute for passing this repository's own checks.
 
 To upgrade compiler compatibility, update both workflow refs and `docs/compiler-target.json` in one PR, run the full CI matrix and CLI smoke test, and review every output change. See the [CLI guide](../docs/cli-quickstart.md).
+
+The source-navigation CLI smoke checks the two-module `tutorials/source-navigation` project against the pinned alpha.6 compiler. It validates exact interpreter output, both shadowed `base` definitions and their reference targets, argument labels, imported visibility and UTF-8 byte spans on the supported CI platforms. Static inspection is never presented as program stdout.

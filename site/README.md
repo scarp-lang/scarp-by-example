@@ -11,11 +11,12 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
 | `projects/index.html` | Source-backed English/Hindi guide to `create`, project `verify` and `launch` (available since alpha.4) |
 | `projects/module-inspection/index.html` | Bilingual source-backed project inspection with alpha.6 symbol/reference navigation links, real imports and verified runtime output |
+| `projects/source-navigation/index.html` | Bilingual compiler-tested workshop with shadowed bindings, imported definitions, named argument labels and exact interpreter output |
 | `labs/index.html` | Overview of six standalone verified bilingual coding labs |
 | `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands |
 | `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
 
-A course with 51 runnable examples and six guided labs produces **67 HTML documents** (home, six chapters, fifty-one lessons, two project tutorials, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
+A course with 51 runnable examples and six guided labs produces **68 HTML documents** (home, six chapters, fifty-one lessons, three project tutorials, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
 
 **Connected chapter paths:** Each of the six existing chapter pages includes a read → self-check → code sequence assembled from the verified lesson, checkpoint and lab inventories. Each quiz links to the stable `#checkpoint` anchor in its corresponding lesson, and the lab and lesson pages return to `#chapter-path`. The optional local progress count shown in the path measures only lessons learners explicitly marked complete. Neither quiz correctness nor external code execution is tracked or inferred. The feature works without JavaScript; only the optional lesson count uses browser storage.
 
@@ -27,7 +28,9 @@ The theme toggle stores a preference locally when available; the initial dark de
 
 Displayed source is escaped as text, not evaluated. Control-character output such as a literal carriage return is rendered visibly as `\\r`, without rewriting the original fixture. No code is executed in the browser.
 
-The project page reads an actual checked-in `Scarp.project`, `.srp` file and exact stdout fixture. It is not counted as a numbered lesson, and includes no simulated browser execution.\n\nThe website renders English descriptions and documented expected results directly from the chapter tables. Hindi notes and practice questions are extracted from the six authoritative Hindi Markdown chapter guides. The generator rejects missing, duplicated, misnumbered or wrongly linked notes, rather than publishing partial translations. Original chapter guides remain linked for context. Scarp is prerelease software; all examples are pinned to the exact compiler commit in `docs/compiler-target.json`.
+The project page reads an actual checked-in `Scarp.project`, `.srp` file and exact stdout fixture. It is not counted as a numbered lesson, and includes no simulated browser execution.
+
+The website renders English descriptions and documented expected results directly from the chapter tables. Hindi notes and practice questions are extracted from the six authoritative Hindi Markdown chapter guides. The generator rejects missing, duplicated, misnumbered or wrongly linked notes, rather than publishing partial translations. Original chapter guides remain linked for context. Scarp is prerelease software; all examples are pinned to the exact compiler commit in `docs/compiler-target.json`.
 
 Guided labs are generated from checked-in `labs/NN-topic/` sources and `docs/guided-labs.json` bilingual teaching text. Each starter and solution must pass the actual pinned Scarp compiler; the starter intentionally produces a different result from the exact reference fixture. The pages use native HTML hint/answer disclosures, do not execute Scarp in the browser, and do not save or upload attempts. See [the lab contributor guide](../docs/guided-labs.md).
 

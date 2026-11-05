@@ -1,8 +1,8 @@
 # Inspect a Scarp project without executing it
 
-**Published target:** [Scarp v0.0.5-alpha.5](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.5), source commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8` (**prerelease**, not stable).
+**Current course compiler:** [Scarp v0.0.6-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.1), source commit `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8` (**prerelease**, not stable). Project-directory inspection was introduced in compiler alpha.5 and is retained.
 
-New in the published alpha.5 CLI: `scarp inspect modules --json PROJECT_DIRECTORY`. This resolves an explicit `Scarp.project`, statically checks its entrypoint and relative imports, then emits **schema-version-1 module metadata**. It does **not** run `print` or any ordinary program statement.
+Introduced in the published alpha.5 CLI: `scarp inspect modules --json PROJECT_DIRECTORY`. This resolves an explicit `Scarp.project`, statically checks its entrypoint and relative imports, then emits **schema-version-1 module metadata**. It does **not** run `print` or any ordinary program statement.
 
 [Open the illustrated course page](https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/) · [हिन्दी में पढ़ें](hi/project-inspection.md)
 
@@ -40,11 +40,11 @@ The helper `src/lib/math.srp` exports a public compile-time scalar binding:
 pub bind answer = 21 * 2;
 ```
 
-The checked-in output fixture is one line, `42`. The project is **separate** from the 50 numbered runnable course lessons.
+The checked-in output fixture is one line, `42`. The project is **separate** from the 51 numbered runnable course lessons.
 
 ## 2. Inspect first, then launch
 
-Run from the **scarp-by-example** repository root, using the exact alpha.5 CLI:
+Run from the **scarp-by-example** repository root, using the pinned alpha.6 CLI:
 
 ```sh
 scarp verify tutorials/module-inspection
@@ -67,8 +67,10 @@ Create a **new copy** of the project directory. Change the public binding in `sr
 
 Keep import paths portable, relative to the importing source, and confined to the checked project root. The compiler enforces bounded source reads and manifest checks; do not treat that as a security sandbox for untrusted concurrent filesystem changes.
 
-## 4. What alpha.5 does *not* provide
+## 4. What the current prerelease does *not* provide
 
-The interpreter still cannot build a native Scarp executable from `.srp` using a `scarp compile` command. Alpha.5's **experimental scalar C11 emitter is a Rust embedding API** (`scarp::c_backend::emit_c` / `emit_program`) that supports only a restricted subset; it requires a separate C11 compiler provided by the embedding host. The course does not claim general-purpose native compilation, a stable C ABI, a package manager, a GPU backend, async/networking or autograd.
+The interpreter still cannot build a native Scarp executable from `.srp` using a `scarp compile` command. The **experimental scalar C11 emitter is a Rust embedding API** (`scarp::c_backend::emit_c` / `emit_program`) that supports only a restricted subset; it requires a separate C11 compiler provided by the embedding host. The course does not claim general-purpose native compilation, a stable C ABI, a package manager, a GPU backend, async/networking or autograd.
 
 For compiler compatibility and reproducible source verification, see [the pinned source policy](compatibility.md), [CLI quickstart](cli-quickstart.md) and [project creation tutorial](project-workflow.md).
+
+**Next exercise:** [trace declarations and uses in the source-navigation workshop](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/). It covers shadowed bindings and named argument references with the same pinned compiler.
