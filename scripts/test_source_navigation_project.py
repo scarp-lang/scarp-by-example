@@ -78,7 +78,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         self.assertIn('data-ref-symbol="base-inner"', markup)
         self.assertIn('lang="hi"', markup)
         self.assertIn('href="#ref-card-value"', markup)
-        self.assertIn('No browser', render_source_navigation_page(self.target))
+        self.assertIn("browser does not execute Scarp", render_source_navigation_page(self.target))
 
     def test_project_manifest_corruption_fails_build(self):
         manifest = PROJECT / "Scarp.project"
