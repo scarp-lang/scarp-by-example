@@ -162,6 +162,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     home = escape(rel(page, "index.html"))
     style = escape(rel(page, "styles.css"))
     script = escape(rel(page, "search.js"))
+    search_core = escape(rel(page, "search-core.js"))
     checkpoint_script = (f'<script src="{escape(rel(page, "checkpoint.js"))}" defer></script>'
                          if layout == "lesson-layout" else "")
     reference_script = (f'<script src="{escape(rel(page, "reference-explorer.js"))}" defer></script>'
@@ -184,6 +185,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <title>{escape(title)} · Scarp by Example</title>
 <link rel="stylesheet" href="{style}">
 <link rel="canonical" href="{escape(PUBLIC_SITE + page.removesuffix("index.html"))}">
+<script src="{search_core}" defer></script>
 <script src="{script}" defer></script>
 <script src="{escape(rel(page, "progress.js"))}" defer></script>
 {checkpoint_script}
@@ -229,6 +231,10 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
     questions = read_practice_questions(ROOT) if questions is None else questions
     first = lessons[0]
     tiles = []
+    chapter_options = "".join(
+        f'<option value="{escape(section)}">{escape(chapter[0].chapter)}</option>'
+        for section, chapter in chapters.items()
+    )
     for section, chapter in chapters.items():
         chapter_title = chapter[0].chapter
         checkpoint_count = sum(item.source_path in questions for item in chapter)
@@ -275,10 +281,16 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <p class="progress-feedback" role="status" aria-live="polite" data-progress-message></p></div>
 </section>
 <section class="search-area container-wide" id="search-area" aria-labelledby="search-heading">
-<div class="section-heading"><div><p class="eyebrow">FIND A TOPIC</p><h2 id="search-heading">Find your next example</h2></div><p>Search titles, syntax topics and chapters.</p></div>
-<label class="sr-only" for="lesson-search">Search lessons</label>
+<div class="section-heading"><div><p class="eyebrow">FIND A TOPIC</p><h2 id="search-heading">Find your next example</h2></div><p>Search English/Hindi lessons and real Scarp source. Filter by chapter.</p></div>
+<div class="search-controls"><div>
+<label class="sr-only" for="lesson-search">Search lessons or Scarp source</label>
 <input id="lesson-search" type="search" data-index-url="search-index.json" data-lesson-count="{len(lessons)}" autocomplete="off"
- placeholder="Try functions, Unicode, modules, matrix..." aria-controls="search-results">
+ placeholder="Try funcra, Unicode, modules, matrix..." aria-controls="search-results">
+</div><div class="search-chapter-control">
+<label for="lesson-chapter">Chapter</label>
+<select id="lesson-chapter" aria-controls="search-results">
+<option value="">All chapters</option>{chapter_options}
+</select></div></div>
 <p id="search-status" role="status" aria-live="polite">Browse the chapters below. Instant search is available with JavaScript.</p>
 <ul id="search-results" class="search-results" aria-label="Search results"></ul>
 </section>
@@ -1033,7 +1045,7 @@ def build(destination: Path) -> int:
               "hindi_title": hindi_notes[l.source_path].title,
               "hindi_summary": hindi_notes[l.source_path].summary,
               "has_checkpoint": l.source_path in questions,
-              "url": l.url} for l in lessons]
+              "url": l.url, "source": l.source.read_text(encoding="utf-8")} for l in lessons]
     (destination / "search-index.json").write_text(
         json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -1073,7 +1085,7 @@ def build(destination: Path) -> int:
     )
     sitemap += "</urlset>\n"
     (destination / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-    for asset in ("styles.css", "search.js", "progress.js", "checkpoint.js",
+    for asset in ("styles.css", "search-core.js", "search.js", "progress.js", "checkpoint.js",
                   "reference-explorer.js"):
         shutil.copyfile(ASSETS / asset, destination / asset)
     (destination / ".nojekyll").write_text("", encoding="utf-8")
