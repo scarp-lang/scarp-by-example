@@ -938,7 +938,7 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
 <div class="output-practice" data-output-practice hidden>
 <button class="progress-toggle" type="button" data-output-start>Predict this output · आउटपुट का अनुमान लगाएँ</button>
 <div data-output-workspace hidden>
-<p id="output-practice-instructions">Write what you expect this program to print, then compare with the verified displayed output. This checks text only; it does not run Scarp or save your input.</p>
+<p id="output-practice-instructions">Write what you expect this program to print. Check prediction for a line-level hint without revealing the answer, or reveal the verified output when ready. This checks displayed text only; it does not run Scarp or save your input.</p>
 <label for="output-prediction">Your predicted output · आपका अनुमान</label>
 <textarea id="output-prediction" data-output-prediction rows="4" spellcheck="false"
  aria-describedby="output-practice-instructions" placeholder="What will this program print?"></textarea>

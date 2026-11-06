@@ -141,3 +141,79 @@ test("malformed or missing control keeps the original output visible", () => {
   assert.equal(ui.verified.hidden, false);
   assert.equal(ui.start.listeners.click, undefined);
 });
+
+
+test("multi-line mismatches report first differing line without spoiling stdout", () => {
+  const output = "begin\nsecret answer here\nfinish\n";
+  const ui = boot({output});
+  ui.start.listeners.click();
+  ui.prediction.value = "begin\nwrong guess here\nfinish";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /does not match/);
+  assert.match(ui.feedback.textContent, /First difference at line 2/);
+  assert.match(ui.feedback.textContent, /पहली अलग पंक्ति: 2/);
+  assert.equal(ui.feedback.textContent.includes("secret answer here"), false);
+  assert.equal(ui.verified.hidden, true);
+});
+
+test("missing or extra lines report counts and the correct first difference", () => {
+  const ui = boot({output: "one\ntwo\nthree\n"});
+  ui.start.listeners.click();
+  ui.prediction.value = "one\ntwo";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /First difference at line 3/);
+  assert.match(ui.feedback.textContent, /You entered 2 lines; the verified output has 3/);
+  assert.equal(ui.verified.hidden, true);
+
+  ui.prediction.value = "one\ntwo\nthree\nextra";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /First difference at line 4/);
+  assert.match(ui.feedback.textContent, /You entered 4 lines; the verified output has 3/);
+  assert.equal(ui.verified.hidden, true);
+});
+
+test("spacing-only differences receive a precise whitespace hint", () => {
+  const ui = boot({output: "value: 3\n"});
+  ui.start.listeners.click();
+  ui.prediction.value = " value: 3 ";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /First difference at line 1/);
+  assert.match(ui.feedback.textContent, /Check leading or trailing spaces/);
+  assert.equal(ui.verified.hidden, true);
+});
+
+test("capitalization differences are distinguished from missing characters", () => {
+  const ui = boot({output: "Hello World\n"});
+  ui.start.listeners.click();
+  ui.prediction.value = "hello world";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /Check capitalization/);
+  ui.prediction.value = "Hello, World";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /Check the text, spaces, or punctuation/);
+  assert.equal(ui.feedback.textContent.includes("Hello World"), false);
+});
+
+test("the hint respects line-ending normalization and Unicode text", () => {
+  const ui = boot({output: "नमस्ते\nदूसरी पंक्ति\n"});
+  ui.start.listeners.click();
+  ui.prediction.value = "नमस्ते\r\nदूसरी पंक्ति\r\n";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /prediction matches/);
+  ui.prediction.value = "नमस्ते\r\nअन्य पंक्ति";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /First difference at line 2/);
+  assert.equal(ui.feedback.textContent.includes("दूसरी पंक्ति"), false);
+});
+
+test("reset clears mismatch hints as well as prediction", () => {
+  const ui = boot({output: "first\nsecond\n"});
+  ui.start.listeners.click();
+  ui.prediction.value = "first\nwrong";
+  ui.check.listeners.click();
+  assert.match(ui.feedback.textContent, /First difference at line 2/);
+  ui.reset.listeners.click();
+  assert.equal(ui.feedback.textContent, "");
+  assert.equal(ui.prediction.value, "");
+  assert.equal(ui.verified.hidden, false);
+});
