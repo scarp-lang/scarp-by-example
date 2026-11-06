@@ -14,7 +14,7 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `projects/source-navigation/index.html` | Bilingual clickable reference explorer: annotated source links checked against real alpha.6 compiler metadata, with a static fallback and exact stdout fixture |
 | `labs/index.html` | Overview of six standalone verified bilingual coding labs |
 | `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands |
-| `search-index.json` | Static English/Hindi lesson metadata for local search; never external tracking |
+| `search-index.json` | Static English/Hindi metadata and exact `.srp` lesson source for local search; never external tracking |
 
 A course with 51 runnable examples and six guided labs produces **68 HTML documents** (home, six chapters, fifty-one lessons, three project tutorials, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
 
@@ -46,3 +46,5 @@ node --test site/test_progress.cjs site/test_progress_dom.cjs site/test_checkpoi
 ```
 
 The GitHub Pages workflow first compiles and validates every real Scarp lesson and checks the CLI, then generates the static site. Pull requests build the site but do not deploy; merged `main` changes deploy using GitHub Actions. Git tracks source files under `site/` and `scripts/`, not generated `dist/`.
+
+**Source-aware search:** Homepage search matches verified source as well as English/Hindi titles and descriptions, with an optional chapter filter. Every query word must occur in the lesson; title hits rank ahead of source-only hits and original lesson order breaks ties. The index is loaded from this site only when a learner searches or selects a chapter, and is neither uploaded nor stored. Source-only hits are labeled. All chapter and lesson links remain available without JavaScript. Run `node --test site/test_search_core.cjs` for ranking and filtering tests.
