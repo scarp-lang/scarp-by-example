@@ -8,7 +8,8 @@ import unittest
 from pathlib import Path
 
 from build_site import (build, read_course, render_chapter_path,
-                        render_chapter_journey, render_lesson_chapter_handoff)
+                        render_chapter_journey, render_lesson_chapter_handoff,
+                        rel, chapter_url)
 from guided_labs import read_labs
 from practice_questions import read_practice_questions
 
