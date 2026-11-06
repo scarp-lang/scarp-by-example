@@ -65,6 +65,17 @@ real `.srp` source and comparing actual CLI output.
 | 05 · Modules | Double imported public value | `42` |
 | 06 · AI foundations | One-hot highest score | `[0.0, 1.0, 0.0]` |
 
+## Optional stretch challenge · अतिरिक्त अभ्यास
+
+The [control-flow lab](https://scarp-lang.github.io/scarp-by-example/labs/02-control-flow/#stretch-challenge) includes a second, independent task: scan `[integer: 5, 8, 13, 8, 21]` and stop at the first number **strictly greater than 10**. Print the zero-based index and how many values you inspected. The compiler-verified output is `2 3` followed by a newline. The starter incorrectly checks for values greater than 20, so it inspects too many items before stopping. Practice by copying `labs/02-control-flow/stretch-starter.srp` to `labs/02-control-flow/stretch-attempt.srp` and running:
+
+```text
+scarp verify labs/02-control-flow/stretch-attempt.srp
+scarp exec labs/02-control-flow/stretch-attempt.srp
+```
+
+The stretch variant has its own hint, bilingual explanation and reference solution, but is not counted as a seventh chapter or core lab. As with core tasks, the website does not execute, collect or grade attempts.
+
 The goal is to **learn the published compiler's behavior**, not to claim that
 unreleased AI, general concurrency, networking or framework features exist.
 Never modify output fixtures to hide a compiler mismatch. Contributors should
