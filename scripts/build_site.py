@@ -393,8 +393,10 @@ def render_chapter_journey(section: str, chapters: dict[str, list[Lesson]]) -> s
 
     def card(target: str | None, label: str) -> str:
         if target is None:
+            boundary = ("Course start / पाठ्यक्रम की शुरुआत"
+                        if label.startswith("←") else "Course end / पाठ्यक्रम का अंत")
             return ('<span class="chapter-journey-end" aria-disabled="true">'
-                    + escape(label) + ' · Course boundary / पाठ्यक्रम का अंत</span>')
+                    + escape(label) + ' · ' + boundary + '</span>')
         lesson_list = chapters[target]
         title = lesson_list[0].chapter
         return (f'<a class="chapter-journey-card" href="{escape(rel(page, chapter_url(target)))}">'
