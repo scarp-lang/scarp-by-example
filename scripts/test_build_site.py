@@ -194,7 +194,21 @@ class SiteTests(unittest.TestCase):
             self.assertIn("aa329a22cf2b", html)
             self.assertTrue((output / "progress.js").is_file())
             self.assertTrue((output / "checkpoint.js").is_file())
+            self.assertTrue((output / "output-practice.js").is_file())
             self.assertTrue((output / "reference-explorer.js").is_file())
+            # Output prediction works on all 51 verified lessons, not just quizzes.
+            for source, _ in discover_examples(EXAMPLES):
+                lesson_html = (output / "lessons" / source.parent.name /
+                               source.stem / "index.html").read_text(encoding="utf-8")
+                self.assertIn('data-output-practice hidden', lesson_html)
+                self.assertIn('data-output-workspace hidden', lesson_html)
+                self.assertIn('data-verified-output', lesson_html)
+                self.assertIn('data-output-prediction', lesson_html)
+                self.assertIn('data-output-check', lesson_html)
+                self.assertIn('data-output-toggle', lesson_html)
+                self.assertIn('src="../../../output-practice.js"', lesson_html)
+            self.assertNotIn('data-output-practice',
+                             (output / "index.html").read_text(encoding="utf-8"))
             question_paths = set(read_practice_questions())
             self.assertEqual(len(question_paths), 18)
             for source_path in question_paths:
