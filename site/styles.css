@@ -614,3 +614,16 @@ html.js-ready .language-switch { display: flex; }
 .ref-plain-sources summary { cursor: pointer; font-weight: 700; }
 @media (max-width: 1000px) { .ref-source-grid, .ref-card-list { grid-template-columns: 1fr; } }
 @media (forced-colors: active) { .ref-token.is-active { outline: 2px solid Highlight; } }
+
+
+/* Local source search: labeled native controls and responsive results. */
+.search-controls { display: grid; grid-template-columns: minmax(0, 2fr) minmax(12rem, 1fr); gap: .9rem; }
+.search-chapter-control { display: none; }
+html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
+.search-chapter-control label { color: var(--muted); font-size: .85rem; font-weight: 650; }
+#lesson-chapter { width: 100%; min-height: 3.35rem; padding: .8rem; border: 1px solid var(--line);
+  border-radius: 13px; background: var(--bg); color: var(--text); font: inherit; }
+.search-results a { flex-wrap: wrap; }
+.search-results a strong { flex: 1 1 100%; }
+.search-results a small { display: block; }
+@media (max-width: 680px) { .search-controls { grid-template-columns: 1fr; } }
