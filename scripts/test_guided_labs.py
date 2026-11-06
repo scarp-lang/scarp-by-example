@@ -100,7 +100,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
                 "https://scarp-lang.github.io/scarp-by-example/labs/01-basics/",
                 locations
             )
-            self.assertEqual(len(list(out.rglob("index.html"))), 68)
+            self.assertEqual(len(list(out.rglob("index.html"))), 69)
 
 
 if __name__ == "__main__":
