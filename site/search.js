@@ -155,7 +155,7 @@
       status.textContent = matches.length
         ? String(matches.length) + " matching lesson" + (matches.length === 1 ? "." : "s.")
         : "No matching lessons. Try another keyword or chapter.";
-      for (const { item, sourceOnly } of matches.slice(0, 30)) {
+      for (const { item, sourceOnly, sourcePreview } of matches.slice(0, 30)) {
         // Use only site-generated paths. Never inject fetched text as HTML.
         if (typeof item.url !== "string" ||
             !/^lessons\/[a-z0-9-]+\/[a-z0-9-]+\/index\.html$/.test(item.url)) continue;
@@ -175,6 +175,19 @@
           const quiz = document.createElement("small");
           quiz.textContent = "Quick check available · अभ्यास प्रश्न";
           link.append(quiz);
+        }
+        if (sourcePreview) {
+          // Render real compiler-verified source as plain text, never HTML.
+          const preview = document.createElement("span");
+          preview.className = "search-code-preview";
+          const label = document.createElement("small");
+          label.textContent = (sourcePreview.matched
+            ? "Scarp source match" : "Scarp source preview") +
+            " · line " + sourcePreview.line;
+          const code = document.createElement("code");
+          code.textContent = sourcePreview.text;
+          preview.append(label, code);
+          link.append(preview);
         }
         li.append(link);
         results.append(li);

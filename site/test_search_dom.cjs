@@ -121,8 +121,8 @@ test("search waits for user input, loads once and exposes safe links", async () 
   await ui.type("फ़ंक्शन");
   assert.equal(ui.requests.length, 1, "same-origin index must be cached");
   assert.equal(ui.displayedLinks()[0].href, lessons[1].url);
-  assert.equal(ui.displayedLinks()[0].children.length, 2,
-    "Hindi metadata match is not labeled source-only");
+  assert.equal(ui.displayedLinks()[0].children.length, 3,
+    "Hindi metadata match adds a preview but no source-only hint");
 });
 
 test("chapter-only browsing, combining filters and clearing search", async () => {
@@ -319,4 +319,55 @@ test("history navigation restores and clears shared searches without stale resul
   assert.equal(ui.results.children.length, 0);
   assert.equal(ui.share.hidden, true);
   assert.match(ui.status.textContent, /Browse chapters/);
+});
+
+
+test("source hits show exact code snippets and authentic line numbers", async () => {
+  const extra = {
+    ...lessons[1],
+    source: 'bind first = 1;\n\n   funcra sum(a: integer) { return a; }\n'
+  };
+  const ui = boot({ data: [extra] });
+  await ui.type("funcra");
+  const link = ui.displayedLinks()[0];
+  const preview = link.children.find(child => child.className === "search-code-preview");
+  assert.ok(preview, "a source excerpt appears under the lesson metadata");
+  assert.equal(preview.children[0].textContent, "Scarp source match · line 3");
+  assert.equal(preview.children[1].textContent, "funcra sum(a: integer) { return a; }");
+  assert.equal(preview.children[1].tag, "code");
+});
+
+test("metadata and chapter-only matches show a clearly labeled source preview", async () => {
+  const ui = boot();
+  await ui.type("Typed");
+  const preview = ui.displayedLinks()[0].children.find(
+    child => child.className === "search-code-preview");
+  assert.equal(preview.children[0].textContent, "Scarp source preview · line 1");
+  assert.equal(preview.children[1].textContent, lessons[1].source);
+  await ui.type("");
+  await ui.filter("04-collections");
+  const chapterPreview = ui.displayedLinks()[0].children.find(
+    child => child.className === "search-code-preview");
+  assert.equal(chapterPreview.children[0].textContent, "Scarp source preview · line 1");
+});
+
+test("source preview rejects HTML interpretation and handles missing code", async () => {
+  const attack = '<script>alert("unsafe")</script>';
+  const example = {
+    ...lessons[0], title: "Example", description: "Security code",
+    source: 'print("' + attack + '");'
+  };
+  const ui = boot({ data: [example] });
+  await ui.type("script");
+  const preview = ui.displayedLinks()[0].children.find(
+    child => child.className === "search-code-preview");
+  assert.ok(preview.children[1].textContent.includes(attack));
+  assert.equal(preview.children[1].children.length, 0, "no HTML nodes are parsed");
+  const noSource = boot({ data: [{
+    ...lessons[0], source: null, description: "No code example"
+  }] });
+  await noSource.type("no code");
+  assert.equal(noSource.displayedLinks().length, 1);
+  assert.equal(noSource.displayedLinks()[0].children.some(
+    child => child.className === "search-code-preview"), false);
 });
