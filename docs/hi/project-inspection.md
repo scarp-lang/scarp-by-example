@@ -1,6 +1,6 @@
 # Scarp प्रोजेक्ट के मॉड्यूल बिना प्रोग्राम चलाए देखें
 
-**इस कोर्स का वर्तमान कंपाइलर:** [Scarp v0.0.6-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.1), स्रोत कमिट `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8`। यह **प्री-रिलीज़** है, stable नहीं। मॉड्यूल निरीक्षण पहली बार alpha.5 में आया था।
+**इस कोर्स का वर्तमान कंपाइलर:** [Scarp v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), स्रोत कमिट `398b8ff705154a02423fe458ce3a427401e81e31`। यह **प्री-रिलीज़** है, stable नहीं। मॉड्यूल निरीक्षण पहली बार alpha.5 में आया था।
 
 alpha.5 से उपलब्ध `scarp inspect modules --json PROJECT_DIRECTORY` उपलब्ध है। यह `Scarp.project` फ़ाइल पढ़कर entrypoint और उसके imports की **static जाँच** करता है और schema-v1 मॉड्यूल जानकारी देता है। सामान्य प्रोग्राम की `print` जैसी पंक्तियाँ नहीं चलाता।
 
@@ -40,7 +40,7 @@ print(math.answer);
 pub bind answer = 21 * 2;
 ```
 
-वास्तविक interpreter से परिणाम `42` आता है; यह `expected.stdout` में दर्ज है। यह उदाहरण 51 numbered lessons से अलग है।
+वास्तविक interpreter से परिणाम `42` आता है; यह `expected.stdout` में दर्ज है। यह उदाहरण 52 numbered lessons से अलग है।
 
 ## 2. पहले inspect, फिर launch
 

@@ -2,7 +2,7 @@
 
 यह [अंग्रेज़ी नियंत्रण-प्रवाह अध्याय](../../examples/02-control-flow/README.md) का हिन्दी साथी है। स्रोत फ़ाइलें और अपेक्षित आउटपुट अंग्रेज़ी पाठ के समान हैं।
 
-**चलाएँ:** `scarp run examples/02-control-flow/01-decisions.srp`। शर्तों में `true` या `false` जैसे बूलियन मान उपयोग होते हैं।
+**चलाएँ:** `scarp exec examples/02-control-flow/01-decisions.srp`। स्थिर जाँच के लिए `scarp verify` चलाएँ। शर्तों में `true` या `false` जैसे बूलियन मान उपयोग होते हैं।
 
 **मुख्य शब्द:** शर्त = किसी निर्णय का बूलियन प्रश्न; लूप = दोहराव; break = लूप समाप्त करना; continue = वर्तमान चक्कर का शेष भाग छोड़ना।
 
@@ -31,6 +31,14 @@ repeat count as index शुरुआत में गिनती तय कर
 [Scarp स्रोत](../../examples/02-control-flow/03-repeat.srp) · [सटीक अपेक्षित आउटपुट](../../examples/02-control-flow/03-repeat.stdout)
 
 **अभ्यास:** index == 2 पर continue होने पर total क्या बनता है?
+
+### 04 · नेस्टेड repeat और continue
+
+बाहरी `repeat 4 as row` की हर पुनरावृत्ति में अंदर का `repeat 3 as column` चलता है। इस तरह 12 (row, column) जोड़ियाँ बनती हैं। `row == column` होने पर `continue` केवल अंदर वाले लूप के मौजूदा चक्कर को छोड़ता है। ऐसी तीन जोड़ियाँ हैं: (0, 0), (1, 1), (2, 2)। बाकी 9 जोड़ियों के row + column का योग 24 है।
+
+[Scarp स्रोत](../../examples/02-control-flow/04-nested-repeat.srp) · [सटीक अपेक्षित आउटपुट](../../examples/02-control-flow/04-nested-repeat.stdout)
+
+**अभ्यास:** अगर `repeat 3 as column` की संख्या 4 हो जाए, तो कितनी जोड़ियाँ और कितने `continue` होंगे? अनुमान लगाकर कंपाइलर से जाँचें।
 
 ## दोहराएँ
 

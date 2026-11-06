@@ -12,7 +12,7 @@ The Python 3 verifier uses only the standard library. The project-smoke check al
 
 The Python 3 verifier uses only the standard library. It discovers all numbered `.srp` lessons (excluding `_support` source modules), rejects missing/orphaned `.stdout` files, invokes static `scarp verify` then `scarp exec`, and compares the raw output bytes. The independent CLI smoke test verifies legacy `run` equivalence, static-vs-runtime checks and real alpha.4 project creation, directory verification, launch, existing-directory rejection and path-traversal diagnostics.
 
-The `test_lesson_notes.py` tests enforce 51 exact Hindi/source/fixture matches and HTML-safe rendering. The website generator embeds the notes and rejects missing explanations, so no page can silently show an unrelated translation.
+The `test_lesson_notes.py` tests enforce 52 exact Hindi/source/fixture matches and HTML-safe rendering. The website generator embeds the notes and rejects missing explanations, so no page can silently show an unrelated translation.
 
 CI builds and runs the exact Scarp source commit identified in `.github/workflows/examples.yml`, on Linux, Windows and macOS. A passing upstream compiler test is an **input** to this project, not a substitute for passing this repository's own checks.
 

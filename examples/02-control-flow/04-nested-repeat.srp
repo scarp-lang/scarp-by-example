@@ -1,0 +1,15 @@
+// Nested repeats produce a small grid; continue skips only the inner loop.
+var accepted = 0;
+var skipped = 0;
+var total = 0;
+repeat 4 as row {
+    repeat 3 as column {
+        if row == column {
+            skipped += 1;
+            continue;
+        }
+        accepted += 1;
+        total += row + column;
+    }
+}
+print(accepted, skipped, total);

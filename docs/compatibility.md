@@ -6,13 +6,17 @@ Scarp is experimental prerelease software. The learning course pins a published,
 
 | Property | Recorded target |
 | --- | --- |
-| GitHub release | [Scarp v0.0.6-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.1), published 5 November 2026 as a prerelease |
-| Annotated-tag source commit | [`aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8`](https://github.com/scarp-lang/scarp/commit/aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8) |
-| Previous course compiler | [v0.0.5-alpha.5](https://github.com/scarp-lang/scarp/releases/tag/v0.0.5-alpha.5), commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8` |
+| GitHub release | [Scarp v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), published 6 November 2026 as a prerelease |
+| Annotated-tag source commit | [`398b8ff705154a02423fe458ce3a427401e81e31`](https://github.com/scarp-lang/scarp/commit/398b8ff705154a02423fe458ce3a427401e81e31) |
+| Previous course compiler | [v0.0.6-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.1), commit `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8` |
 | Source of truth | [`compiler-target.json`](compiler-target.json) |
 | Required gates | [Examples across three OSes](../.github/workflows/examples.yml) and [Pages build](../.github/workflows/pages.yml) |
 
-The annotated `v0.0.6-alpha.1` Git tag dereferences to the exact commit above. The public GitHub release lists seven archive/checksum assets. Some upstream release prose still says *unpublished candidate*, which describes its original preparation, not its subsequent publication. CI must validate **the course itself** against the pinned commit before merging this upgrade.
+The annotated `v0.0.6-alpha.2` Git tag dereferences to the exact commit above. The public GitHub release has native archives and checksum sidecars for Windows x64, Linux x64 and macOS Apple Silicon, plus a combined checksum manifest. The compiler's `docs/releases/v0.0.6-alpha.2.md` remains explicitly labeled a prepublication candidate; that historical preparation note does not override the actual published GitHub release or the separate public release notes. All course examples, labs, metadata and generated pages are independently validated against the new source pin before merge.
+
+## Changes specifically in alpha.2
+
+This release adds opt-in, caller-owned Rust embedding APIs for dependency-aware invalidation planning and bounded semantic, token and syntax caches. It also adds source-scoped cache eviction and internal backend preflight changes. **No new Scarp source syntax, CLI command, native object writer, language server or general incremental execution facility is introduced.** The course's executable examples continue to teach the source-language features already available in alpha.1. See [published compiler release notes](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2).
 
 ## Available in alpha.6
 
@@ -27,7 +31,7 @@ The existing limited scalar C11 emitter remains experimental and exposed only th
 ```sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8
+git checkout 398b8ff705154a02423fe458ce3a427401e81e31
 cargo build --locked --offline
 ./target/debug/scarp version
 ```
