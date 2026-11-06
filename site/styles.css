@@ -627,3 +627,14 @@ html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
 .search-results a strong { flex: 1 1 100%; }
 .search-results a small { display: block; }
 @media (max-width: 680px) { .search-controls { grid-template-columns: 1fr; } }
+
+
+/* Keyboard discoverability and explicit, user-controlled search sharing. */
+.search-help { margin: .7rem 0 .35rem; color: var(--muted); font-size: .84rem; }
+.search-help kbd { display: inline-block; padding: 0 .35rem; border: 1px solid var(--line);
+  border-radius: 5px; background: var(--bg); font: inherit; font-weight: 750; }
+.search-share { display: inline-flex; align-items: center; min-height: 44px;
+  margin: .25rem 0; padding: .4rem .7rem; border: 1px solid var(--line);
+  border-radius: 9px; font-size: .88rem; font-weight: 700; text-decoration: none; }
+.search-share:hover { border-color: var(--accent); background: var(--surface-alt); }
+#lesson-chapter:focus-visible { outline: 3px solid var(--mint); outline-offset: 4px; }
