@@ -20,7 +20,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         cls.target = read_course()[2]
 
     def test_manifest_source_and_stdout_are_compiler_fixtures(self):
-        self.assertEqual(self.target["version"], "0.0.6-alpha.1")
+        self.assertEqual(self.target["version"], "0.0.6-alpha.2")
         self.assertEqual((PROJECT / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: source-navigation\nentry: src/main.srp\n")
         main = (PROJECT / "src/main.srp").read_text(encoding="utf-8")
@@ -46,7 +46,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment.lower(), markup.lower())
         self.assertIn('href="../module-inspection/index.html"', markup)
-        self.assertIn("aa329a22cf2b", markup)
+        self.assertIn("398b8ff70515", markup)
         self.assertIn('data-reference-explorer', markup)
         self.assertIn('src="../../reference-explorer.js"', markup)
         self.assertIn('href="#ref-card-base-outer"', markup)
@@ -56,8 +56,8 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
     def test_website_build_and_sitemap_include_workshop(self):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
-            self.assertEqual(build(dest), 51)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 68)
+            self.assertEqual(build(dest), 52)
+            self.assertEqual(len(list(dest.rglob("index.html"))), 69)
             self.assertTrue((dest / "projects/source-navigation/index.html").is_file())
             self.assertTrue((dest / "reference-explorer.js").is_file())
             self.assertIn("projects/source-navigation/",
