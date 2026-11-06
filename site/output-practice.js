@@ -23,6 +23,31 @@
     return value.replace(/\r\n?/g, "\n").replace(/\n$/, "");
   }
 
+  // Feedback reports where the mismatch begins without exposing the answer.
+  // Compare only rendered text; the compiler and stdout fixtures are unchanged.
+  function mismatchHint(entered, verified) {
+    const written = entered.split("\n");
+    const actual = verified.split("\n");
+    const overlap = Math.min(written.length, actual.length);
+    let index = 0;
+    while (index < overlap && written[index] === actual[index]) index++;
+    const line = index + 1;
+    const location = "First difference at line " + line +
+      ". / पहली अलग पंक्ति: " + line + "। ";
+    if (written.length !== actual.length) {
+      return location + "You entered " + written.length + " line" +
+        (written.length === 1 ? "" : "s") + "; the verified output has " +
+        actual.length + ". / पंक्तियों की संख्या अलग है।";
+    }
+    if (written[index].trim() === actual[index].trim()) {
+      return location + "Check leading or trailing spaces. / शुरुआत या अंत के स्पेस जाँचें।";
+    }
+    if (written[index].toLocaleLowerCase() === actual[index].toLocaleLowerCase()) {
+      return location + "Check capitalization. / बड़े-छोटे अक्षर जाँचें।";
+    }
+    return location + "Check the text, spaces, or punctuation. / अक्षर, स्पेस या विराम-चिह्न जाँचें।";
+  }
+
   function showOutput(visible) {
     output.hidden = !visible;
     toggle.textContent = visible ? "Hide verified output" : "Reveal verified output";
@@ -42,11 +67,13 @@
       feedback.textContent = "Enter your predicted output first. / पहले अनुमान लिखें।";
       return;
     }
-    const matched = normalizeDisplay(prediction.value) ===
-      normalizeDisplay(expected.textContent);
-    feedback.textContent = matched
+    const entered = normalizeDisplay(prediction.value);
+    const verified = normalizeDisplay(expected.textContent);
+    feedback.textContent = entered === verified
       ? "Your prediction matches the displayed verified output. / आपका अनुमान सही है।"
-      : "The text does not match the displayed output yet. Reveal it to compare. / उत्तर देखकर मिलान करें।";
+      : "Your prediction does not match the displayed output yet. " +
+        mismatchHint(entered, verified) +
+        " Reveal the verified output when ready. / तैयार होने पर उत्तर देखें।";
   });
 
   toggle.addEventListener("click", () => showOutput(output.hidden));
