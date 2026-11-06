@@ -284,13 +284,15 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <div class="section-heading"><div><p class="eyebrow">FIND A TOPIC</p><h2 id="search-heading">Find your next example</h2></div><p>Search English/Hindi lessons and real Scarp source. Filter by chapter.</p></div>
 <div class="search-controls"><div>
 <label class="sr-only" for="lesson-search">Search lessons or Scarp source</label>
-<input id="lesson-search" type="search" data-index-url="search-index.json" data-lesson-count="{len(lessons)}" autocomplete="off"
- placeholder="Try funcra, Unicode, modules, matrix..." aria-controls="search-results">
+<input id="lesson-search" type="search" data-index-url="search-index.json" data-lesson-count="{len(lessons)}" autocomplete="off" maxlength="160"
+ placeholder="Try funcra, Unicode, modules, matrix..." aria-controls="search-results" aria-describedby="search-help" aria-keyshortcuts="/">
 </div><div class="search-chapter-control">
 <label for="lesson-chapter">Chapter</label>
 <select id="lesson-chapter" aria-controls="search-results">
 <option value="">All chapters</option>{chapter_options}
 </select></div></div>
+<p id="search-help" class="search-help">Press <kbd>/</kbd> to focus search. Press <kbd>Esc</kbd> in the search box to clear both filters.</p>
+<a id="share-search-link" class="search-share" href="index.html#search-area" hidden>Share this search ↗</a>
 <p id="search-status" role="status" aria-live="polite">Browse the chapters below. Instant search is available with JavaScript.</p>
 <ul id="search-results" class="search-results" aria-label="Search results"></ul>
 </section>
