@@ -88,12 +88,29 @@
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
   const chapterFilter = document.querySelector("#lesson-chapter");
+  const shareLink = document.querySelector("#share-search-link");
   if (!search || !status || !results || !chapterFilter || !window.ScarpLessonSearch) return;
   const searchHint = "Browse chapters below or search all " + search.dataset.lessonCount + " lessons.";
   status.textContent = searchHint;
   let cached = null;
   let pending = null;
   let revision = 0;
+
+  // Share links are explicit rather than silently adding each keystroke to the
+  // browser URL. Anyone opening the link sees the chosen text and chapter.
+  function updateShareLink() {
+    if (!shareLink) return;
+    const query = search.value.trim(), section = chapterFilter.value;
+    shareLink.hidden = !query && !section;
+    if (shareLink.hidden) {
+      shareLink.removeAttribute("href");
+      return;
+    }
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (section) params.set("chapter", section);
+    shareLink.href = "index.html?" + params.toString() + "#search-area";
+  }
 
   async function loadIndex() {
     if (cached) return cached;
@@ -119,6 +136,7 @@
   async function update() {
     const request = ++revision;
     const query = search.value.trim(), section = chapterFilter.value;
+    updateShareLink();
     results.replaceChildren();
     if (!query && !section) {
       status.textContent = searchHint;
@@ -170,4 +188,47 @@
 
   search.addEventListener("input", update);
   chapterFilter.addEventListener("change", update);
+
+  // Escape clears the entire search while keeping focus in the input.
+  search.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || event.isComposing ||
+        (!search.value && !chapterFilter.value)) return;
+    event.preventDefault();
+    search.value = "";
+    chapterFilter.value = "";
+    void update();
+  });
+
+  // "/" focuses the search only when not typing in another field.
+  document.addEventListener?.("keydown", event => {
+    if (event.key !== "/" || event.altKey || event.ctrlKey ||
+        event.metaKey || event.defaultPrevented || event.isComposing) return;
+    const focused = document.activeElement;
+    if (focused && (focused.isContentEditable ||
+        ["INPUT", "TEXTAREA", "SELECT"].includes(focused.tagName))) return;
+    event.preventDefault();
+    search.focus();
+  });
+
+  // Only recognized chapter options are accepted from externally shared URLs.
+  // A malformed query never changes source files, local progress, or the URL.
+  function restoreSharedSearch() {
+    const params = new URLSearchParams(window.location?.search || "");
+    search.value = (params.get("q") || "").slice(0, 160);
+    const section = params.get("chapter") || "";
+    const valid = Array.from(chapterFilter.options || [])
+      .some(option => option.value === section);
+    chapterFilter.value = valid ? section : "";
+    if (search.value || chapterFilter.value) {
+      void update();
+    } else {
+      ++revision;
+      results.replaceChildren();
+      status.textContent = searchHint;
+      updateShareLink();
+    }
+  }
+
+  restoreSharedSearch();
+  window.addEventListener?.("popstate", restoreSharedSearch);
 })();
