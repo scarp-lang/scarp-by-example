@@ -45,6 +45,7 @@ jobs:
           node --check site/search-core.js
           node --check site/search.js
           node --check site/checkpoint.js
+          node --check site/output-practice.js
           node --check site/reference-explorer.js
 
       - name: Test source-aware search and chapter filtering
