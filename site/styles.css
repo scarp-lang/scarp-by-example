@@ -657,3 +657,23 @@ html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
 @media (forced-colors: active) {
   .search-code-preview { border: 1px solid CanvasText; }
 }
+
+
+/* Optional prediction activity: normal verified output remains visible without JS. */
+.output-practice { padding: .8rem 1rem 1rem; border-top: 1px solid var(--line); }
+.output-practice > button { width: 100%; }
+.output-practice p { margin: .65rem 0; font-size: .88rem; color: var(--muted); }
+.output-practice label { display: block; font-size: .9rem; font-weight: 650; margin: .65rem 0 .35rem; }
+.output-practice textarea {
+  display: block; width: 100%; min-height: 7rem; padding: .8rem;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--text); resize: vertical;
+  font: .9rem/1.6 ui-monospace, Consolas, monospace; tab-size: 4;
+}
+.output-practice textarea:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+.output-practice-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .85rem; }
+.output-practice-actions button { flex: 1 1 155px; }
+.output-practice [data-output-feedback] {
+  color: var(--text); font-weight: 650; min-height: 1.4rem;
+}
+@media print { .output-practice { display: none !important; } }
