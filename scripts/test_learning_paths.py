@@ -104,8 +104,9 @@ class LearningPathTests(unittest.TestCase):
                 self.assertEqual(chapter_page.count('class="chapter-journey"'), 1)
                 self.assertIn('aria-label="Previous and next chapters"', chapter_page)
                 if index + 1 < len(sections):
-                    self.assertIn('href="../../chapters/' + sections[index + 1] +
-                                  '/index.html"', chapter_page)
+                    self.assertIn(
+                        'href="' + rel(chapter_url(section), chapter_url(sections[index + 1])) + '"',
+                        chapter_page)
                 last = self.chapters[section][-1]
                 last_page = (output / last.url).read_text(encoding="utf-8")
                 self.assertEqual(last_page.count('class="chapter-handoff"'), 1)
