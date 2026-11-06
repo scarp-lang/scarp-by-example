@@ -4,7 +4,7 @@ These six exercises are **separate from the 52 runnable reference lessons**. Eac
 has a compiler-verified starter program, a compiler-verified reference solution,
 and a byte-exact `solution.stdout` fixture. Every starter must compile successfully
 but produce **different** output from its solution. No browser Scarp interpreter
-or automated judging service is provided.
+or automated judging service is provided. The control-flow lab additionally offers an optional stretch challenge with a separate source-backed starter, exact fixture and tested solution; the number of core labs remains six.
 
 For a guided order of study, start from the [Basics chapter learning path](https://scarp-lang.github.io/scarp-by-example/chapters/01-basics/#chapter-path): first read source-backed lessons, then practice three English/Hindi self-checks, and finally open the chapter's coding lab. All six chapter pages offer this sequence. Your optional saved lesson completion count is separate from quiz results and any attempts you run in the compiler.
 
