@@ -33,7 +33,10 @@ const lessons = [
 function node(tag = "div") {
   const item = {
     tag, children: [], listeners: {}, dataset: {}, value: "", textContent: "",
-    href: "", attributes: {}, classes: new Set(),
+    href: "", attributes: {}, classes: new Set(), hidden: false,
+    tagName: tag.toUpperCase(), focused: false, isContentEditable: false,
+    focus() { this.focused = true; },
+    removeAttribute(name) { delete this.attributes[name]; if (name === "href") this.href = ""; },
     append(...elements) { this.children.push(...elements); },
     replaceChildren(...elements) { this.children = [...elements]; },
     addEventListener(event, callback) { this.listeners[event] = callback; },
@@ -46,27 +49,36 @@ function node(tag = "div") {
   return item;
 }
 
-function boot({ data = lessons, fetchImpl = null } = {}) {
+function boot({ data = lessons, fetchImpl = null, initialSearch = "" } = {}) {
   const root = node("html");
   root.dataset.theme = "dark";
   const search = node("input");
   search.dataset = { indexUrl: "search-index.json", lessonCount: "51" };
   const chapter = node("select");
+  chapter.options = ["", "01-basics", "03-functions", "04-collections"].map(value => ({ value }));
   const status = node("p");
   const results = node("ul");
+  const share = node("a");
+  share.hidden = true;
   const lookup = {
     "#lesson-search": search, "#lesson-chapter": chapter,
-    "#search-status": status, "#search-results": results
+    "#search-status": status, "#search-results": results,
+    "#share-search-link": share
   };
+  const documentEvents = {}, windowEvents = {};
   const document = {
-    documentElement: root,
+    documentElement: root, activeElement: node("body"),
+    addEventListener(name, handler) { documentEvents[name] = handler; },
     querySelector(selector) { return lookup[selector] || null; },
     querySelectorAll() { return []; },
     getElementById() { return null; },
     createElement(tag) { return node(tag); }
   };
+  search.focus = () => { search.focused = true; document.activeElement = search; };
   const window = {
     ScarpLessonSearch: { searchLessons },
+    location: { search: initialSearch },
+    addEventListener(name, handler) { windowEvents[name] = handler; },
     localStorage: { getItem() { return null; } }
   };
   const requests = [];
@@ -77,9 +89,10 @@ function boot({ data = lessons, fetchImpl = null } = {}) {
       : Promise.resolve({ ok: true, json: async () => data });
   };
   const script = fs.readFileSync(path.join(__dirname, "search.js"), "utf8");
-  vm.runInNewContext(script, { document, window, fetch }, { timeout: 2000 });
+  vm.runInNewContext(script, { document, window, fetch, URLSearchParams }, { timeout: 2000 });
   const displayedLinks = () => results.children.map(li => li.children[0]);
-  return { search, chapter, status, results, requests, displayedLinks, root,
+  return { search, chapter, status, results, share, document, documentEvents,
+    window, windowEvents, requests, displayedLinks, root,
     type(value) {
       search.value = value;
       return search.listeners.input();
@@ -211,4 +224,99 @@ test("invalid index data does not crash the page", async () => {
   await ui.type("hello");
   assert.match(ui.status.textContent, /Search is unavailable/);
   assert.deepEqual(ui.results.children, []);
+});
+
+
+test("a shared deep link restores the query and accepted chapter", async () => {
+  const ui = boot({ initialSearch: "?q=funcra&chapter=03-functions" });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(ui.search.value, "funcra");
+  assert.equal(ui.chapter.value, "03-functions");
+  assert.equal(ui.displayedLinks()[0].href, lessons[1].url);
+  assert.equal(ui.share.hidden, false);
+  assert.equal(ui.share.href, "index.html?q=funcra&chapter=03-functions#search-area");
+  assert.deepEqual(ui.requests, ["search-index.json"]);
+});
+
+test("URL parameters are escaped, truncated and validated against actual chapters", async () => {
+  const ui = boot({ initialSearch: "?q=%E0%A4%AB%E0%A4%BC%E0%A4%82%E0%A4%95%E0%A5%8D%E0%A4%B6%E0%A4%A8&chapter=not-a-chapter" });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(ui.chapter.value, "");
+  assert.equal(ui.search.value, "फ़ंक्शन");
+  assert.equal(ui.displayedLinks()[0].href, lessons[1].url);
+  assert.match(ui.share.href, /q=/);
+  assert.ok(!ui.share.href.includes("not-a-chapter"));
+  const overlyLong = boot({ initialSearch: "?q=" + "x".repeat(300) });
+  assert.equal(overlyLong.search.value.length, 160);
+  const invalid = boot({ initialSearch: "?chapter=%2F%2Fbad" });
+  assert.equal(invalid.share.hidden, true);
+  assert.equal(invalid.requests.length, 0);
+});
+
+test("sharing is explicit: searches never alter browser history", async () => {
+  const ui = boot();
+  assert.equal(ui.share.hidden, true);
+  await ui.type("hello");
+  assert.equal(ui.share.hidden, false);
+  assert.equal(ui.share.href, "index.html?q=hello#search-area");
+  assert.equal(ui.window.location.search, "");
+  await ui.filter("01-basics");
+  assert.equal(ui.share.href, "index.html?q=hello&chapter=01-basics#search-area");
+  await ui.type("");
+  assert.equal(ui.share.href, "index.html?chapter=01-basics#search-area");
+  await ui.filter("");
+  assert.equal(ui.share.hidden, true);
+  assert.equal(ui.share.href, "");
+});
+
+test("slash focuses search outside editable fields and ignores modified shortcuts", () => {
+  const ui = boot();
+  let blocked = false;
+  ui.documentEvents.keydown({ key: "/", preventDefault() { blocked = true; } });
+  assert.equal(blocked, true);
+  assert.equal(ui.search.focused, true);
+  ui.search.focused = false;
+  ui.document.activeElement = node("textarea");
+  ui.documentEvents.keydown({ key: "/", preventDefault() { throw Error("should not intercept typing"); } });
+  assert.equal(ui.search.focused, false);
+  ui.document.activeElement = node("body");
+  ui.documentEvents.keydown({ key: "/", ctrlKey: true,
+    preventDefault() { throw Error("should not intercept Ctrl+/"); } });
+  assert.equal(ui.search.focused, false);
+  ui.document.activeElement = node("div");
+  ui.document.activeElement.isContentEditable = true;
+  ui.documentEvents.keydown({ key: "/",
+    preventDefault() { throw Error("should not intercept editable text"); } });
+  assert.equal(ui.search.focused, false);
+});
+
+test("Escape in search clears query and chapter without leaving the field", async () => {
+  const ui = boot();
+  await ui.filter("03-functions");
+  await ui.type("funcra");
+  let prevented = false;
+  ui.search.listeners.keydown({ key: "Escape",
+    preventDefault() { prevented = true; } });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(prevented, true);
+  assert.equal(ui.search.value, "");
+  assert.equal(ui.chapter.value, "");
+  assert.equal(ui.share.hidden, true);
+  assert.equal(ui.results.children.length, 0);
+  assert.match(ui.status.textContent, /Browse chapters/);
+});
+
+test("history navigation restores and clears shared searches without stale results", async () => {
+  const ui = boot({ initialSearch: "?q=hello" });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(ui.displayedLinks()[0].href, lessons[0].url);
+  ui.window.location.search = "?q=funcra&chapter=03-functions";
+  ui.windowEvents.popstate();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(ui.displayedLinks()[0].href, lessons[1].url);
+  ui.window.location.search = "";
+  ui.windowEvents.popstate();
+  assert.equal(ui.results.children.length, 0);
+  assert.equal(ui.share.hidden, true);
+  assert.match(ui.status.textContent, /Browse chapters/);
 });
