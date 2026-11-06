@@ -638,3 +638,22 @@ html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
   border-radius: 9px; font-size: .88rem; font-weight: 700; text-decoration: none; }
 .search-share:hover { border-color: var(--accent); background: var(--surface-alt); }
 #lesson-chapter:focus-visible { outline: 3px solid var(--mint); outline-offset: 4px; }
+
+
+/* Compact excerpts come from the verified .srp source indexed by the course. */
+.search-code-preview {
+  flex: 1 1 100%; min-width: 0; display: block;
+  padding: .55rem .75rem; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--code);
+}
+.search-results .search-code-preview small {
+  display: block; color: var(--mint); font-size: .72rem;
+  font-weight: 650; margin-bottom: .2rem;
+}
+.search-code-preview code {
+  display: block; font: .82rem/1.5 ui-monospace, Consolas, monospace;
+  color: #e2eaff; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+@media (forced-colors: active) {
+  .search-code-preview { border: 1px solid CanvasText; }
+}
