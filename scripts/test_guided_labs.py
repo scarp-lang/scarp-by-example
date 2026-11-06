@@ -34,6 +34,68 @@ class GuidedLabCatalogTests(unittest.TestCase):
             self.assertEqual(set(lab.hint), {"en", "hi"})
             self.assertEqual(set(lab.explanation), {"en", "hi"})
 
+    def test_only_control_flow_has_independent_optional_stretch(self):
+        stretch_labs = [lab for lab in self.labs if lab.stretch]
+        self.assertEqual([lab.identifier for lab in stretch_labs], ["02-control-flow"])
+        stretch = stretch_labs[0].stretch
+        self.assertIsNotNone(stretch)
+        self.assertEqual(read_expected_stdout(stretch.expected), b"2 3\n")
+        self.assertNotEqual(stretch.starter.read_bytes(), stretch.solution.read_bytes())
+        for entry in (stretch.title, stretch.task, stretch.hint, stretch.explanation):
+            self.assertEqual(set(entry), {"en", "hi"})
+            self.assertTrue(all(entry[lang].strip() for lang in ("en", "hi")))
+        starter = stretch.starter.read_text(encoding="utf-8")
+        solution = stretch.solution.read_text(encoding="utf-8")
+        for fragment in ("ints_len(readings)", "inspected += 1", "break;", "print(first, inspected);"):
+            self.assertIn(fragment, starter)
+            self.assertIn(fragment, solution)
+        self.assertIn("readings[index] > 20", starter)
+        self.assertIn("readings[index] > 10", solution)
+
+        # Independently check the early-exit logic, including first-match
+        # semantics when later values also pass the threshold.
+        readings = [5, 8, 13, 8, 21]
+        def scan(threshold):
+            first = -1
+            inspected = 0
+            for index, reading in enumerate(readings):
+                inspected += 1
+                if reading > threshold:
+                    first = index
+                    break
+            return first, inspected
+        self.assertEqual(scan(10), (2, 3))
+        self.assertEqual(scan(20), (4, 5))
+
+    def test_stretch_variant_requires_separate_real_verification(self):
+        lab = next(lab for lab in self.labs if lab.stretch)
+        quiet = subprocess.CompletedProcess(["scarp"], 0, b"", b"")
+        unsolved = subprocess.CompletedProcess(["scarp"], 0, b"not solved\n", b"")
+        with patch("verify_guided_labs.run_checked",
+                   side_effect=[quiet, unsolved, quiet, unsolved]) as runner, \
+             patch("verify_guided_labs.verify_one") as solution_verifier:
+            verify_lab(Path("scarp"), lab)
+        self.assertEqual(
+            [call.args[1] for call in runner.call_args_list],
+            ["verify", "exec", "verify", "exec"],
+        )
+        self.assertEqual(solution_verifier.call_count, 2)
+        self.assertEqual(solution_verifier.call_args_list[0].args[1], lab.solution)
+        self.assertEqual(solution_verifier.call_args_list[1].args[1], lab.stretch.solution)
+        self.assertEqual(solution_verifier.call_args_list[1].args[2], lab.stretch.expected)
+
+    def test_stretch_starter_cannot_accidentally_be_solved(self):
+        lab = next(lab for lab in self.labs if lab.stretch)
+        quiet = subprocess.CompletedProcess(["scarp"], 0, b"", b"")
+        wrong = subprocess.CompletedProcess(["scarp"], 0, b"5\n", b"")
+        solved = subprocess.CompletedProcess(["scarp"], 0, b"2 3\n", b"")
+        with patch("verify_guided_labs.run_checked",
+                   side_effect=[quiet, wrong, quiet, solved]), \
+             patch("verify_guided_labs.verify_one") as solution_verifier:
+            with self.assertRaisesRegex(VerificationError, "starter already matches"):
+                verify_lab(Path("scarp"), lab)
+        solution_verifier.assert_called_once()
+
     def test_bad_translation_rejected(self):
         with self.assertRaisesRegex(ValueError, "English and Hindi"):
             validate_bilingual({"en": "hello"}, "test")
@@ -75,6 +137,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
             self.assertIn('href="labs/index.html"', homepage)
             overview = (out / "labs/index.html").read_text(encoding="utf-8")
             self.assertEqual(overview.count('class="lab-card"'), 6)
+            self.assertEqual(overview.count('class="lab-stretch-indicator"'), 1)
             for lab in self.labs:
                 page = out / lab.url
                 self.assertTrue(page.is_file())
@@ -91,6 +154,19 @@ class GuidedLabCatalogTests(unittest.TestCase):
                 self.assertIn("github.com/scarp-lang/scarp-by-example/blob/main/", markup)
                 expected = read_expected_stdout(lab.expected).decode("utf-8").strip()
                 self.assertIn(expected, markup)
+                if lab.stretch:
+                    self.assertIn('id="stretch-challenge"', markup)
+                    self.assertIn('id="stretch-source"', markup)
+                    self.assertIn('data-copy="stretch-source"', markup)
+                    self.assertIn('stretch-solution.stdout', markup)
+                    self.assertIn('stretch-attempt.srp', markup)
+                    self.assertIn("scarp verify labs/" + lab.identifier + "/stretch-attempt.srp", markup)
+                    self.assertIn("scarp exec labs/" + lab.identifier + "/stretch-attempt.srp", markup)
+                    self.assertIn('lang="hi"', markup)
+                    self.assertIn("2 3", markup)
+                    self.assertIn("does not run Scarp", markup)
+                else:
+                    self.assertNotIn('id="stretch-challenge"', markup)
             sitemap = ET.parse(out / "sitemap.xml")
             locations = [node.text for node in sitemap.findall(
                 ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
