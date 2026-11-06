@@ -47,6 +47,7 @@ requires all of the following before a lab can be published:
 - The real compiler **executes the starter successfully**, but its stdout does
   **not** already equal the target output.
 - The real compiler executes each solution with stdout exactly matching `solution.stdout`.
+- Every advertised optional stretch has separate UTF-8 `stretch-starter.srp`, `stretch-solution.srp` and byte-exact `stretch-solution.stdout` files; it must independently pass the same verify/exec checks and never arrive already solved.
 - Linux, macOS and Windows workflows pass against the same pinned published compiler.
 
 Checkpoints and labs serve different purposes: multiple-choice checkpoints
