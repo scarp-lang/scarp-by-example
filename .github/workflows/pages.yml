@@ -54,6 +54,9 @@ jobs:
       - name: Test source-backed bilingual checkpoints
         run: node --test site/test_checkpoint.cjs
 
+      - name: Test lesson output prediction interactions
+        run: node --test site/test_output_practice.cjs
+
       - name: Test interactive source reference explorer
         run: node --test site/test_reference_explorer.cjs
 
