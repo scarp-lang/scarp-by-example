@@ -19,9 +19,9 @@ class ProjectInspectionTests(unittest.TestCase):
         cls.target = read_course()[2]
 
     def test_published_alpha6_target_preserves_alpha5_project_fixture(self):
-        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.1")
+        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.2")
         self.assertEqual(self.target["source_commit"],
-                         "aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8")
+                         "398b8ff705154a02423fe458ce3a427401e81e31")
         self.assertEqual((self.root / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n")
         self.assertEqual((self.root / "src/main.srp").read_bytes(),
@@ -66,9 +66,9 @@ class ProjectInspectionTests(unittest.TestCase):
     def test_course_build_publishes_one_independent_inspection_page(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            self.assertEqual(build(target), 51)
+            self.assertEqual(build(target), 52)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 68)
+            self.assertEqual(len(pages), 69)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")
