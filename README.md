@@ -31,7 +31,7 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 ## Start here
 
 1. Install [Rust and Cargo](https://www.rust-lang.org/tools/install) to run the current compiler source, or select a supported binary from [Scarp prereleases](https://github.com/scarp-lang/scarp/releases).
-2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact tested commit `398b8ff705254a02423fe458ce3a427401e81e31`, then build it with `cargo build --locked --offline`. Confirm the current executable version with `target/debug/scarp version` (Windows: `target\\debug\\scarp.exe version`).
+2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact tested commit `398b8ff705154a02423fe458ce3a427401e81e31`, then build it with `cargo build --locked --offline`. Confirm the current executable version with `target/debug/scarp version` (Windows: `target\\debug\\scarp.exe version`).
 3. Clone this repository. From your Scarp checkout, run the binary on a lesson, using the **absolute path** to its `.srp` file: `./target/debug/scarp exec /path/to/scarp-by-example/examples/01-basics/01-hello.srp`.
 4. Compare output with the lesson's adjacent `.stdout` file. On Windows, use `target\\debug\\scarp.exe`.
 
