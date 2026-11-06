@@ -59,8 +59,8 @@ class LearningPathTests(unittest.TestCase):
                              int(index == 0) + int(index + 1 == len(sections)))
             self.assertIn("verified lessons", markup)
             if index > 0:
-                self.assertIn("../../chapters/" + sections[index - 1] +
-                              "/index.html", markup)
+                self.assertIn(rel(chapter_url(section), chapter_url(sections[index - 1])),
+                              markup)
             if index + 1 < len(sections):
                 self.assertIn("../../chapters/" + sections[index + 1] +
                               "/index.html", markup)
