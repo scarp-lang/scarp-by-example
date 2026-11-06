@@ -90,6 +90,8 @@ class SiteTests(unittest.TestCase):
         self.assertIn("One real program at a time", page)
         self.assertIn('href="chapters/01-basics/index.html"', page)
         self.assertIn("search-index.json", page)
+        self.assertIn('id="lesson-chapter"', page)
+        self.assertEqual(page.count('<option value="'), 7)
         self.assertIn("हिन्दी", page)
         self.assertNotIn('class="lesson-card"', page)
         self.assertNotIn('src="https://', page)
@@ -173,6 +175,7 @@ class SiteTests(unittest.TestCase):
             )
             self.assertTrue((output / "styles.css").is_file())
             self.assertTrue((output / "search.js").is_file())
+            self.assertTrue((output / "search-core.js").is_file())
             project = output / "projects/index.html"
             self.assertTrue(project.is_file())
             html = project.read_text(encoding="utf-8")
@@ -221,6 +224,9 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(len(list(output.rglob("index.html"))), 68)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 51)
+            for item in search:
+                expected_source = (ROOT / "examples" / (item["id"] + ".srp")).read_text(encoding="utf-8")
+                self.assertEqual(item["source"], expected_source)
             self.assertEqual(sum(item["has_checkpoint"] for item in search), 18)
             self.assertEqual(
                 {"examples/" + item["id"] + ".srp" for item in search if item["has_checkpoint"]},
