@@ -1,0 +1,15 @@
+// Stretch challenge: find the first reading above the required threshold.
+// The starter searches for a too-high value and stops too late.
+bind readings: integers = [integer: 5, 8, 13, 8, 21];
+var first = -1;
+var inspected = 0;
+var index = 0;
+while index < ints_len(readings) {
+    inspected += 1;
+    if readings[index] > 20 {
+        first = index;
+        break;
+    }
+    index += 1;
+}
+print(first, inspected);

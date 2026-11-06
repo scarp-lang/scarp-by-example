@@ -1,0 +1,14 @@
+// Find the first reading strictly above 10, then exit the loop early.
+bind readings: integers = [integer: 5, 8, 13, 8, 21];
+var first = -1;
+var inspected = 0;
+var index = 0;
+while index < ints_len(readings) {
+    inspected += 1;
+    if readings[index] > 10 {
+        first = index;
+        break;
+    }
+    index += 1;
+}
+print(first, inspected);

@@ -499,6 +499,7 @@ def render_labs_index(labs: list[GuidedLab], target: dict) -> str:
         + f'<span class="eyebrow">LAB {escape(lab.identifier[:2])}</span>'
         + f'<h2>{escape(lab.title["en"])}</h2>'
         + f'<p lang="hi">{escape(lab.title["hi"])}</p>'
+        + (f'<span class="lab-stretch-indicator">+ Optional stretch challenge</span>' if lab.stretch else '')
         + f'<span class="lab-open">Open guided exercise ↗</span></a>'
         for lab in labs
     )
@@ -510,7 +511,8 @@ def render_labs_index(labs: list[GuidedLab], target: dict) -> str:
 <h1>Guided coding labs</h1>
 <p class="lead">Six practical challenges, one per chapter. Start with working Scarp,
 change it to match an exact expected output, and check your code using the published compiler.
-Tasks and hints are available in English and हिन्दी.</p></header>
+Tasks and hints are available in English and हिन्दी. Some labs include a second,
+independently verified stretch challenge for extra practice.</p></header>
 <section class="lab-grid" aria-label="Coding labs">{cards}</section>
 <section class="run-panel"><h2>No simulated results</h2>
 <p>Every starter and reference solution is verified with the pinned Scarp compiler,
@@ -521,6 +523,59 @@ You edit and run Scarp on your own computer. There is no browser compiler or sco
 </section></main>"""
     return page_shell(page, "Guided coding labs",
                       "Six bilingual compiler-verified Scarp exercises", main, "lab-layout")
+
+
+def render_lab_stretch(lab: GuidedLab) -> str:
+    """Optional second practical challenge, with checked compiler output and no JS gate."""
+    if lab.stretch is None:
+        return ""
+    task = lab.stretch
+    folder = "labs/" + lab.identifier
+    source = highlight_scarp(task.starter.read_text(encoding="utf-8"))
+    solution = highlight_scarp(task.solution.read_text(encoding="utf-8"))
+    expected = read_expected_stdout(task.expected).decode("utf-8").replace("\r", r"\r")
+    starter_url = REPOSITORY + "/blob/main/" + folder + "/stretch-starter.srp"
+    solution_url = REPOSITORY + "/blob/main/" + folder + "/stretch-solution.srp"
+    output_url = REPOSITORY + "/blob/main/" + folder + "/stretch-solution.stdout"
+    return f"""<section class="lab-stretch" id="stretch-challenge" aria-labelledby="stretch-title">
+<header><p class="eyebrow">OPTIONAL · COMPILER-VERIFIED STRETCH</p>
+<h2 id="stretch-title">{escape(task.title["en"])}</h2>
+<p lang="hi">{escape(task.title["hi"])}</p></header>
+<div class="lab-translations">
+<p lang="en">{escape(task.task["en"])}</p>
+<p lang="hi">{escape(task.task["hi"])}</p></div>
+<div class="code-grid">
+<section class="code-panel" aria-labelledby="stretch-source-title">
+<div class="panel-heading"><div><span class="eyebrow">EDIT A SECOND STARTER</span>
+<h3 id="stretch-source-title">stretch-starter.srp</h3></div>
+<button type="button" class="copy-button" data-copy="stretch-source">Copy code</button></div>
+<pre><code id="stretch-source">{source}</code></pre>
+<div class="panel-footer"><a href="{escape(starter_url)}">View stretch starter ↗</a></div>
+</section>
+<section class="code-panel output-panel" aria-labelledby="stretch-output-title">
+<div class="panel-heading"><div><span class="eyebrow">MATCH EXACT COMPILER OUTPUT</span>
+<h3 id="stretch-output-title">stretch-solution.stdout</h3></div>
+<span class="verified-tag">Compiler fixture</span></div>
+<pre><code>{escape(expected)}</code></pre>
+<div class="panel-footer"><a href="{escape(output_url)}">View stretch fixture ↗</a></div>
+</section></div>
+<div class="run-panel"><h3>Try it locally · स्वयं चलाएँ</h3>
+<p>Copy <code>stretch-starter.srp</code> to <code>stretch-attempt.srp</code> in the same lab folder.
+Edit only your copy; the original starter and fixture remain unchanged.</p>
+<div class="commands"><code>scarp verify {escape(folder)}/stretch-attempt.srp</code>
+<code>scarp exec {escape(folder)}/stretch-attempt.srp</code></div>
+<p>Compare the exact stdout above. The website does not run Scarp, save attempts or award a score.</p>
+</div>
+<div class="lab-reveals" aria-label="Stretch hints and tested solution">
+<details><summary>Show stretch hint · संकेत देखें</summary>
+<p lang="en">{escape(task.hint["en"])}</p>
+<p lang="hi">{escape(task.hint["hi"])}</p></details>
+<details><summary>Reveal tested stretch solution · सत्यापित हल देखें</summary>
+<pre><code>{solution}</code></pre>
+<p lang="en">{escape(task.explanation["en"])}</p>
+<p lang="hi">{escape(task.explanation["hi"])}</p>
+<a href="{escape(solution_url)}">View tested stretch solution ↗</a>
+</details></div></section>"""
 
 
 def render_lab_page(lab: GuidedLab, target: dict) -> str:
@@ -535,6 +590,7 @@ def render_lab_page(lab: GuidedLab, target: dict) -> str:
     solution_url = REPOSITORY + "/blob/main/" + folder + "/solution.srp"
     fixture_url = REPOSITORY + "/blob/main/" + folder + "/solution.stdout"
     previous = escape(rel(page, "labs/index.html"))
+    stretch_markup = render_lab_stretch(lab)
     main = f"""<main id="main-content" class="container-wide lab-detail">
 <nav class="breadcrumbs" aria-label="Breadcrumb">
 <a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
@@ -588,6 +644,7 @@ uploads or stored answers are involved.</p></section>
 <p lang="hi">{escape(lab.explanation["hi"])}</p>
 <a href="{escape(solution_url)}">Reference .srp on GitHub ↗</a>
 </details></section>
+{stretch_markup}
 <p class="fine-print">The starter compiles but intentionally does not produce the goal.
 The reference solution and its output are verified on Linux, macOS and Windows
 against <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a>.

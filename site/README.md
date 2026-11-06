@@ -13,7 +13,7 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | `projects/module-inspection/index.html` | Bilingual source-backed project inspection with alpha.6 symbol/reference navigation links, real imports and verified runtime output |
 | `projects/source-navigation/index.html` | Bilingual clickable reference explorer: annotated source links checked against real alpha.6 compiler metadata, with a static fallback and exact stdout fixture |
 | `labs/index.html` | Overview of six standalone verified bilingual coding labs |
-| `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands |
+| `labs/NN-topic/index.html` | Chapter lab with starter, exact goal output, hints, runnable solution and local run commands; the control-flow lab includes an optional independently checked stretch task on the same page |
 | `search-index.json` | Static English/Hindi metadata and exact `.srp` lesson source for local search; never external tracking |
 
 A course with 52 runnable examples and six guided labs produces **69 HTML documents** (home, six chapters, fifty-two lessons, three project tutorials, the lab index and six lab detail pages). The URL paths are designed to work under the GitHub Pages project prefix `/scarp-by-example/` and from nested subdirectories. All local links are checked by the Python unit tests.
@@ -32,7 +32,7 @@ The project page reads an actual checked-in `Scarp.project`, `.srp` file and exa
 
 The website renders English descriptions and documented expected results directly from the chapter tables. Hindi notes and practice questions are extracted from the six authoritative Hindi Markdown chapter guides. The generator rejects missing, duplicated, misnumbered or wrongly linked notes, rather than publishing partial translations. Original chapter guides remain linked for context. Scarp is prerelease software; all examples are pinned to the exact compiler commit in `docs/compiler-target.json`.
 
-Guided labs are generated from checked-in `labs/NN-topic/` sources and `docs/guided-labs.json` bilingual teaching text. Each starter and solution must pass the actual pinned Scarp compiler; the starter intentionally produces a different result from the exact reference fixture. The pages use native HTML hint/answer disclosures, do not execute Scarp in the browser, and do not save or upload attempts. See [the lab contributor guide](../docs/guided-labs.md).
+Guided labs are generated from checked-in `labs/NN-topic/` sources and `docs/guided-labs.json` bilingual teaching text. Each core or optional stretch starter and solution must pass the actual pinned Scarp compiler; each starter intentionally produces a different result from its own exact reference fixture. An optional stretch uses separate `stretch-starter.srp`, `stretch-solution.srp` and `stretch-solution.stdout` files, plus four bilingual teaching fields in the lab metadata. The first optional stretch is available in the control-flow lab; it does not add to the 52-lesson count or change the 69-page sitemap. The pages use native HTML hint/answer disclosures, do not execute Scarp in the browser, and do not save or upload attempts. See [the lab contributor guide](../docs/guided-labs.md).
 
 ## Build and test
 

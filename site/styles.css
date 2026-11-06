@@ -757,3 +757,19 @@ html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
   .chapter-review-content { padding: 0 .7rem 1rem; }
   .chapter-review-entry .checkpoint-card { padding: 1rem; }
 }
+
+
+/* Optional second lab exercise. The same semantic HTML works without JavaScript. */
+.lab-stretch { margin: 2rem 0; padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--line); border-radius: 16px; background: var(--surface-alt); }
+.lab-stretch > header { margin-bottom: 1rem; }
+.lab-stretch > header h2 { font-size: 1.4rem; margin: .35rem 0; color: var(--text); }
+.lab-stretch > header p:not(.eyebrow) { color: var(--muted); }
+.lab-stretch .lab-translations { margin-block: 1rem; line-height: 1.75; }
+.lab-stretch .code-grid { margin-block: 1.3rem; }
+.lab-stretch .code-panel h3 { font-size: 1.05rem; margin: .25rem 0 0; }
+.lab-stretch .run-panel { margin-block: 1.2rem; }
+.lab-stretch .lab-reveals { margin-bottom: 0; }
+.lab-stretch-indicator { display: block; color: var(--muted); font-size: .85rem; margin-top: .75rem; }
+.lab-stretch { scroll-margin-top: 96px; }
+@media print { .lab-stretch .copy-button { display: none; } }
