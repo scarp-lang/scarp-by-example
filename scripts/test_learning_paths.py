@@ -9,7 +9,7 @@ from pathlib import Path
 
 from build_site import (build, read_course, render_chapter_path,
                         render_chapter_journey, render_lesson_chapter_handoff,
-                        rel, chapter_url)
+                        rel, chapter_url, render_chapter_review)
 from guided_labs import read_labs
 from practice_questions import read_practice_questions
 
@@ -116,6 +116,64 @@ class LearningPathTests(unittest.TestCase):
                     markup = (output / lesson.url).read_text(encoding="utf-8")
                     self.assertNotIn('class="chapter-handoff"', markup)
             self.assertEqual(len(list(output.rglob("index.html"))), 68)
+
+
+    def test_chapter_review_reuses_exact_three_validated_questions(self):
+        for section, lessons in self.chapters.items():
+            markup = render_chapter_review(section, lessons, self.questions)
+            checks = [lesson for lesson in lessons
+                      if lesson.source_path in self.questions]
+            self.assertEqual(len(checks), 3)
+            self.assertIn('id="chapter-review"', markup)
+            self.assertIn('<summary>', markup)
+            self.assertIn("no stored score", markup)
+            self.assertEqual(markup.count(' data-checkpoint\n'), 3)
+            self.assertEqual(markup.count('data-checkpoint-form'), 3)
+            self.assertEqual(markup.count('data-checkpoint-fallback'), 3)
+            self.assertEqual(markup.count('data-checkpoint-explanation'), 3)
+            for index, lesson in enumerate(checks, 1):
+                identity = f"chapter-check-{index:02}"
+                self.assertEqual(markup.count('id="' + identity + '"'), 1)
+                self.assertEqual(markup.count('id="' + identity + '-title"'), 1)
+                self.assertIn('aria-labelledby="' + identity + '-title"', markup)
+                source = self.questions[lesson.source_path]
+                self.assertIn('data-checkpoint-answer="' +
+                              str(source["correct"]) + '"', markup)
+                self.assertIn(rel(chapter_url(section), lesson.url) +
+                              '#verified-output', markup)
+                self.assertIn("Question " + str(index) + " of 3", markup)
+        first = next(iter(self.chapters))
+        with self.assertRaisesRegex(ValueError, "three distinct verified"):
+            render_chapter_review(first, self.chapters[first], {})
+        with self.assertRaisesRegex(ValueError, "outside"):
+            other = list(self.chapters)[1]
+            render_chapter_review(first,
+                                  [*self.chapters[first], self.chapters[other][0]],
+                                  self.questions)
+
+    def test_generated_chapter_review_works_without_javascript(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder)
+            build(output)
+            self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
+            for section, lessons in self.chapters.items():
+                markup = (output / chapter_url(section)).read_text(encoding="utf-8")
+                self.assertIn('src="../../checkpoint.js"', markup)
+                self.assertIn('id="chapter-review"', markup)
+                self.assertIn('href="#chapter-review"', markup)
+                self.assertEqual(markup.count('data-checkpoint-answer='), 3)
+                self.assertEqual(markup.count('data-checkpoint-interactive hidden'), 3)
+                self.assertEqual(markup.count('data-checkpoint-fallback'), 3)
+                self.assertEqual(markup.count('class="chapter-review-context"'), 3)
+                for index in range(1, 4):
+                    self.assertIn(f'id="chapter-check-{index:02}"', markup)
+                self.assertIn("does not run Scarp in the browser", markup)
+            for lesson in self.lessons:
+                markup = (output / lesson.url).read_text(encoding="utf-8")
+                self.assertNotIn('id="chapter-review"', markup)
+                if lesson.source_path in self.questions:
+                    self.assertIn('id="checkpoint"', markup)
+                    self.assertIn('aria-labelledby="checkpoint-title"', markup)
 
     def test_generated_pages_form_real_navigation_to_lessons_quizzes_and_lab(self):
         with tempfile.TemporaryDirectory() as folder:
