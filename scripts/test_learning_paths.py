@@ -7,7 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from build_site import build, read_course, render_chapter_path
+from build_site import (build, read_course, render_chapter_path,
+                        render_chapter_journey, render_lesson_chapter_handoff)
 from guided_labs import read_labs
 from practice_questions import read_practice_questions
 
@@ -42,6 +43,77 @@ class LearningPathTests(unittest.TestCase):
                                 set(self.questions), self.labs[chapters[1]])
         with self.assertRaisesRegex(ValueError, "no source-backed checkpoints"):
             render_chapter_path(source, self.chapters[source], set(), self.labs[source])
+
+
+    def test_chapter_sequence_uses_real_course_order_and_boundaries(self):
+        sections = list(self.chapters)
+        self.assertEqual(len(sections), 6)
+        for index, section in enumerate(sections):
+            markup = render_chapter_journey(section, self.chapters)
+            self.assertIn('aria-label="Previous and next chapters"', markup)
+            self.assertIn(f"Chapter {index + 1} of {len(sections)}", markup)
+            self.assertEqual(markup.count('class="chapter-journey-card"'),
+                             int(index > 0) + int(index + 1 < len(sections)))
+            self.assertEqual(markup.count('class="chapter-journey-end"'),
+                             int(index == 0) + int(index + 1 == len(sections)))
+            self.assertIn("verified lessons", markup)
+            if index > 0:
+                self.assertIn("../../chapters/" + sections[index - 1] +
+                              "/index.html", markup)
+            if index + 1 < len(sections):
+                self.assertIn("../../chapters/" + sections[index + 1] +
+                              "/index.html", markup)
+        with self.assertRaisesRegex(ValueError, "unknown or empty chapter"):
+            render_chapter_journey("99-unknown", self.chapters)
+        with self.assertRaisesRegex(ValueError, "unknown or empty chapter"):
+            render_chapter_journey(sections[0], {sections[0]: []})
+
+    def test_lesson_handoff_only_at_real_chapter_boundaries(self):
+        sections = list(self.chapters)
+        handoffs = 0
+        for index, section in enumerate(sections):
+            chapter = self.chapters[section]
+            for lesson in chapter[:-1]:
+                self.assertEqual(
+                    render_lesson_chapter_handoff(lesson, chapter, self.lessons), "")
+            last = chapter[-1]
+            markup = render_lesson_chapter_handoff(last, chapter, self.lessons)
+            handoffs += 1
+            self.assertIn('id="chapter-handoff-title"', markup)
+            self.assertIn("labs/" + section + "/index.html", markup)
+            self.assertIn("Your lesson progress changes only when", markup)
+            if index + 1 < len(sections):
+                self.assertIn("chapters/" + sections[index + 1] + "/index.html",
+                              markup)
+                self.assertIn(self.chapters[sections[index + 1]][0].chapter,
+                              markup)
+            else:
+                self.assertIn("Review all chapters", markup)
+                self.assertIn("index.html#chapters", markup)
+        self.assertEqual(handoffs, len(sections))
+
+    def test_generated_pages_connect_all_chapters_and_last_lessons(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder)
+            build(output)
+            sections = list(self.chapters)
+            for index, section in enumerate(sections):
+                chapter_page = (output / "chapters" / section /
+                                "index.html").read_text(encoding="utf-8")
+                self.assertEqual(chapter_page.count('class="chapter-journey"'), 1)
+                self.assertIn('aria-label="Previous and next chapters"', chapter_page)
+                if index + 1 < len(sections):
+                    self.assertIn('href="../../chapters/' + sections[index + 1] +
+                                  '/index.html"', chapter_page)
+                last = self.chapters[section][-1]
+                last_page = (output / last.url).read_text(encoding="utf-8")
+                self.assertEqual(last_page.count('class="chapter-handoff"'), 1)
+                self.assertIn('aria-label="Lesson navigation"', last_page)
+                self.assertIn("labs/" + section + "/index.html", last_page)
+                for lesson in self.chapters[section][:-1]:
+                    markup = (output / lesson.url).read_text(encoding="utf-8")
+                    self.assertNotIn('class="chapter-handoff"', markup)
+            self.assertEqual(len(list(output.rglob("index.html"))), 68)
 
     def test_generated_pages_form_real_navigation_to_lessons_quizzes_and_lab(self):
         with tempfile.TemporaryDirectory() as folder:
