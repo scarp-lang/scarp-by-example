@@ -677,3 +677,46 @@ html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
   color: var(--text); font-weight: 650; min-height: 1.4rem;
 }
 @media print { .output-practice { display: none !important; } }
+
+
+/* Course-order navigation is built from actual verified chapters, with no JS. */
+.chapter-journey, .chapter-handoff {
+  margin-top: 2rem; padding: clamp(1rem, 3vw, 1.7rem);
+  border: 1px solid var(--line); border-radius: 15px;
+  background: var(--surface-alt);
+}
+.chapter-journey h2, .chapter-handoff h2 { font-size: 1.35rem; margin: .3rem 0 .6rem; }
+.chapter-journey > p, .chapter-handoff > p:not(.eyebrow) {
+  color: var(--muted); margin: 0 0 1rem; font-size: .9rem;
+}
+.chapter-journey-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.chapter-journey-card, .chapter-journey-end {
+  display: grid; align-content: center; gap: .3rem; min-width: 0;
+  padding: 1rem; border: 1px solid var(--line); border-radius: 11px;
+  background: var(--surface); text-decoration: none;
+}
+.chapter-journey-card:hover, .chapter-journey-card:focus-visible {
+  border-color: var(--mint); background: var(--surface-alt);
+}
+.chapter-journey-card span { color: var(--mint); font-size: .82rem; font-weight: 700; }
+.chapter-journey-card strong { color: var(--text); overflow-wrap: anywhere; }
+.chapter-journey-card small { color: var(--muted); }
+.chapter-journey-end { color: var(--muted); font-size: .88rem; }
+.chapter-handoff-links { display: flex; flex-wrap: wrap; gap: .8rem; }
+.chapter-handoff-links a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: .65rem .9rem; border: 1px solid var(--line);
+  border-radius: 10px; font-size: .88rem; font-weight: 700; text-decoration: none;
+  background: var(--surface); color: var(--accent);
+}
+.chapter-handoff-links a:hover, .chapter-handoff-links a:focus-visible {
+  border-color: var(--mint); background: var(--surface-alt);
+}
+@media (max-width: 680px) {
+  .chapter-journey-links { grid-template-columns: 1fr; }
+  .chapter-handoff-links { flex-direction: column; }
+  .chapter-handoff-links a { width: 100%; }
+}
+@media (forced-colors: active) {
+  .chapter-journey-card, .chapter-handoff-links a { border: 1px solid LinkText; }
+}
