@@ -7,7 +7,7 @@ This project is built by `python scripts/build_site.py` using the real numbered 
 | Route | Content |
 | --- | --- |
 | `index.html` | Homepage, six chapter cards and a client-side lesson finder |
-| `chapters/NN-topic/index.html` | Chapter overview with links to its runnable lessons |
+| `chapters/NN-topic/index.html` | Chapter overview with runnable lesson links and an expandable three-question bilingual review using fixture-validated answers |
 | `lessons/NN-topic/NN-example/index.html` | Dedicated lesson: source, output, local run commands, in-page English/Hindi teaching notes and exercises, previous/next navigation |
 | `projects/index.html` | Source-backed English/Hindi guide to `create`, project `verify` and `launch` (available since alpha.4) |
 | `projects/module-inspection/index.html` | Bilingual source-backed project inspection with alpha.6 symbol/reference navigation links, real imports and verified runtime output |
