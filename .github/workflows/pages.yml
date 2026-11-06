@@ -48,7 +48,7 @@ jobs:
           node --check site/reference-explorer.js
 
       - name: Test source-aware search and chapter filtering
-        run: node --test site/test_search_core.cjs
+        run: node --test site/test_search_core.cjs site/test_search_dom.cjs
 
       - name: Test source-backed bilingual checkpoints
         run: node --test site/test_checkpoint.cjs
