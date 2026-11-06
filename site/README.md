@@ -42,6 +42,8 @@ python scripts/build_site.py --output dist
 python scripts/verify_guided_labs.py --compiler /absolute/path/to/scarp
 node --check site/progress.js
 node --check site/checkpoint.js
+node --check site/output-practice.js
+node --test site/test_output_practice.cjs
 node --test site/test_progress.cjs site/test_progress_dom.cjs site/test_checkpoint.cjs
 ```
 
