@@ -88,7 +88,7 @@ def check_alpha5(root: Path = ROOT) -> str:
         raise ValueError("English/Hindi catalog counts do not match the release")
     if not all(item in notes for item in (
         TAG, "course prerelease", "not a Scarp compiler release", COMPILER_SHA,
-        "52 lessons", "18 checkpoints", "six coding labs", "69 HTML pages")):
+        "52 lessons", "18 checkpoints", "Six coding labs", "69 HTML pages")):
         raise ValueError("release notes omit the verified milestone and limitations")
 
     # The release archive must produce a complete, self-contained site from
