@@ -87,7 +87,8 @@
   const search = document.querySelector("#lesson-search");
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
-  if (!search || !status || !results) return;
+  const chapterFilter = document.querySelector("#lesson-chapter");
+  if (!search || !status || !results || !chapterFilter || !window.ScarpLessonSearch) return;
   const searchHint = "Browse chapters below or search all " + search.dataset.lessonCount + " lessons.";
   status.textContent = searchHint;
   let cached = null;
@@ -115,36 +116,37 @@
   }
 
   async function update() {
-    const query = search.value.trim().toLocaleLowerCase();
+    const query = search.value.trim(), section = chapterFilter.value;
     results.replaceChildren();
-    if (!query) {
+    if (!query && !section) {
       status.textContent = searchHint;
       return;
     }
     status.textContent = "Searching lessons…";
     try {
       const lessons = await loadIndex();
-      if (search.value.trim().toLocaleLowerCase() !== query) return;
-      const matches = lessons.filter(item =>
-        [item.title, item.description, item.chapter, item.hindi_title, item.hindi_summary].some(value =>
-          typeof value === "string" && value.toLocaleLowerCase().includes(query)
-        )
-      );
+      // Discard responses from searches that have already changed.
+      if (search.value.trim() !== query || chapterFilter.value !== section) return;
+      const matches = window.ScarpLessonSearch.searchLessons(lessons, query, section);
       status.textContent = matches.length
         ? String(matches.length) + " matching lesson" + (matches.length === 1 ? "." : "s.")
-        : "No matching lessons. Try another keyword.";
-      for (const item of matches.slice(0, 30)) {
-        // Site-generated paths only; never use innerHTML with fetched text.
+        : "No matching lessons. Try another keyword or chapter.";
+      for (const { item, sourceOnly } of matches.slice(0, 30)) {
+        // Use only site-generated paths. Never inject fetched text as HTML.
         if (typeof item.url !== "string" ||
             !/^lessons\/[a-z0-9-]+\/[a-z0-9-]+\/index\.html$/.test(item.url)) continue;
-        const li = document.createElement("li");
-        const link = document.createElement("a");
+        const li = document.createElement("li"), link = document.createElement("a");
         link.href = item.url;
         const name = document.createElement("strong");
         name.textContent = item.title;
         const chapter = document.createElement("small");
         chapter.textContent = item.chapter + " · " + item.hindi_title;
         link.append(name, chapter);
+        if (sourceOnly) {
+          const hint = document.createElement("small");
+          hint.textContent = "Matched Scarp source · स्रोत कोड में मिला";
+          link.append(hint);
+        }
         if (item.has_checkpoint === true) {
           const quiz = document.createElement("small");
           quiz.textContent = "Quick check available · अभ्यास प्रश्न";
@@ -160,4 +162,5 @@
   }
 
   search.addEventListener("input", update);
+  chapterFilter.addEventListener("change", update);
 })();
