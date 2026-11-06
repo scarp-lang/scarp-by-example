@@ -70,7 +70,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
     def test_generated_labs_are_linked_and_have_exact_github_sources(self):
         with tempfile.TemporaryDirectory() as directory:
             out = Path(directory)
-            self.assertEqual(build(out), 51)
+            self.assertEqual(build(out), 52)
             homepage = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="labs/index.html"', homepage)
             overview = (out / "labs/index.html").read_text(encoding="utf-8")
