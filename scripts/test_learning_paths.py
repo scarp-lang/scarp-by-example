@@ -62,8 +62,8 @@ class LearningPathTests(unittest.TestCase):
                 self.assertIn(rel(chapter_url(section), chapter_url(sections[index - 1])),
                               markup)
             if index + 1 < len(sections):
-                self.assertIn("../../chapters/" + sections[index + 1] +
-                              "/index.html", markup)
+                self.assertIn(rel(chapter_url(section), chapter_url(sections[index + 1])),
+                              markup)
         with self.assertRaisesRegex(ValueError, "unknown or empty chapter"):
             render_chapter_journey("99-unknown", self.chapters)
         with self.assertRaisesRegex(ValueError, "unknown or empty chapter"):
