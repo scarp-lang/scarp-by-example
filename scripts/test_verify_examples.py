@@ -83,6 +83,34 @@ class DiscoveryTests(unittest.TestCase):
 
 
 
+
+class NestedRepeatLessonTests(unittest.TestCase):
+    """Regress the new exercise's expected arithmetic independently of Scarp.
+
+    The cross-platform workflows additionally execute the actual source using
+    the exact released compiler and require the stdout fixture byte-for-byte.
+    """
+
+    def test_nested_continue_keeps_only_nonmatching_grid_pairs(self):
+        from verify_examples import ROOT, EXAMPLES
+        source = EXAMPLES / "02-control-flow" / "04-nested-repeat.srp"
+        fixture = source.with_suffix(".stdout")
+        text = source.read_text(encoding="utf-8")
+        self.assertIn("repeat 4 as row", text)
+        self.assertIn("repeat 3 as column", text)
+        self.assertIn("if row == column", text)
+        self.assertIn("continue;", text)
+        self.assertIn("print(accepted, skipped, total);", text)
+        pairs = [(row, column) for row in range(4) for column in range(3)]
+        allowed = [(row, column) for row, column in pairs if row != column]
+        result = f"{len(allowed)} {len(pairs) - len(allowed)} " + (
+            str(sum(row + column for row, column in allowed)) + "\n"
+        )
+        self.assertEqual(result, "9 3 24\n")
+        self.assertEqual(read_expected_stdout(fixture), result.encode("utf-8"))
+        self.assertIn((source, fixture), discover_examples(EXAMPLES))
+
+
 class FixtureByteTests(unittest.TestCase):
     def test_literal_carriage_return_is_valid_output(self):
         with tempfile.TemporaryDirectory() as directory:
