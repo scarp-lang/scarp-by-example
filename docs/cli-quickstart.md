@@ -1,6 +1,6 @@
-# Scarp CLI quickstart (v0.0.6-alpha.1)
+# Scarp CLI quickstart (v0.0.6-alpha.2)
 
-Use this guide with the **published Scarp v0.0.6-alpha.1 source at commit `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8`**. Scarp is a prerelease language. The commands below were checked against that source, not guessed from future roadmap proposals.
+Use this guide with the **published Scarp v0.0.6-alpha.2 source at commit `398b8ff705154a02423fe458ce3a427401e81e31`**. Scarp is a prerelease language. The commands below are validated against that source by the course CI, not guessed from future roadmap proposals.
 
 This is a **tooling guide**, not a new runnable `.srp` lesson. Command outputs such as tokens or an AST are development-oriented and deliberately do not have `.stdout` fixtures.
 
