@@ -37,6 +37,24 @@
       "explanation": {
         "en": "The indices 0, 1, 2, 3 and 4 add up to 10.",
         "hi": "इंडेक्स 0, 1, 2, 3 और 4 का योग 10 होता है।"
+      },
+      "stretch": {
+        "title": {
+          "en": "Find the first qualifying reading",
+          "hi": "पहली उपयुक्त रीडिंग खोजें"
+        },
+        "task": {
+          "en": "The readings are 5, 8, 13, 8 and 21. The starter looks for the first reading above 20, inspecting all five values. Change the condition to find the first reading strictly above 10 and stop at once. Print its zero-based index and the number of values inspected: 2 3.",
+          "hi": "रीडिंग 5, 8, 13, 8 और 21 हैं। स्टार्टर 20 से बड़ी पहली रीडिंग खोजकर पाँचों मान जाँचता है। शर्त बदलें ताकि 10 से बड़ी पहली रीडिंग मिलते ही लूप रुक जाए। शून्य-आधारित इंडेक्स और जाँचे गए मानों की संख्या प्रिंट करें: 2 3।"
+        },
+        "hint": {
+          "en": "The loop, inspection counter, and break are already correct. Check only the strict comparison against the threshold.",
+          "hi": "लूप, जाँच काउंटर और break पहले से सही हैं। केवल सीमा से की गई सख्त तुलना की शर्त देखें।"
+        },
+        "explanation": {
+          "en": "13 is the first reading greater than 10, at index 2. The loop visits indices 0, 1 and 2, so the inspected count is 3. The break skips the later 8 and 21.",
+          "hi": "10 से बड़ी पहली रीडिंग 13 है, जिसका इंडेक्स 2 है। लूप इंडेक्स 0, 1 और 2 जाँचता है, इसलिए काउंटर 3 बनता है। break बाद के 8 और 21 को जाँचे बिना लूप समाप्त करता है।"
+        }
       }
     },
     {
