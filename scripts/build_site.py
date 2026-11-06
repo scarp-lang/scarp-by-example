@@ -164,7 +164,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     script = escape(rel(page, "search.js"))
     search_core = escape(rel(page, "search-core.js"))
     checkpoint_script = (f'<script src="{escape(rel(page, "checkpoint.js"))}" defer></script>'
-                         if layout == "lesson-layout" else "")
+                         if layout in ("lesson-layout", "chapter-layout") else "")
     practice_script = (f'<script src="{escape(rel(page, "output-practice.js"))}" defer></script>'
                        if layout == "lesson-layout" else "")
     reference_script = (f'<script src="{escape(rel(page, "reference-explorer.js"))}" defer></script>'
@@ -367,6 +367,7 @@ Lesson tracking is optional and only available when browser storage works.</p>
 <p>Try {len(checks)} bilingual questions linked directly to their original
 source and expected output. No quiz score is stored.</p>
 <ul class="path-check-links">{checkpoint_links}</ul>
+<a class="path-step-link" href="#chapter-review">Review all three questions here · यहाँ अभ्यास करें ↓</a>
 </li>
 <li class="path-step">
 <span class="path-step-number" aria-hidden="true">03</span>
@@ -446,7 +447,8 @@ Your lesson progress changes only when you mark a lesson complete.</p>
 
 def render_chapter(section: str, lessons: list[Lesson], target: dict,
                    question_paths: set[str] | None = None, lab: GuidedLab | None = None,
-                   chapters: dict[str, list[Lesson]] | None = None) -> str:
+                   chapters: dict[str, list[Lesson]] | None = None,
+                   questions: dict[str, dict] | None = None) -> str:
     page = chapter_url(section)
     title = lessons[0].chapter
     summary = section_intro(EXAMPLES / section / "README.md")
@@ -457,6 +459,8 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
             raise ValueError(f"missing guided lab for chapter {section}")
         lab = matching[0]
     path_steps = render_chapter_path(section, lessons, question_paths or set(), lab)
+    chapter_review = render_chapter_review(section, lessons,
+                                          read_practice_questions(ROOT) if questions is None else questions)
     chapter_journey = render_chapter_journey(section, chapters if chapters is not None else read_course()[1])
     main = f"""<main id="main-content" class="container-wide chapter-page">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(page, "index.html"))}">All chapters</a><span>/</span><span aria-current="page">{escape(title)}</span></nav>
@@ -477,6 +481,7 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
 {path_steps}
 <section class="chapter-list" aria-labelledby="chapter-list-title"><h2 id="chapter-list-title">Lessons in this chapter</h2>
 <div class="lesson-list">{cards}</div></section>
+{chapter_review}
 {chapter_journey}
 <p class="fine-print">All examples are validated with Scarp v{escape(target["version"])}. Each lesson has its own code and expected-output page.</p>
 </main>"""
@@ -997,7 +1002,8 @@ def checkpoint_translation(values: dict[str, str]) -> str:
     )
 
 
-def render_checkpoint(lesson: Lesson, questions: dict[str, dict]) -> str:
+def render_checkpoint(lesson: Lesson, questions: dict[str, dict],
+                      identifier: str = "checkpoint") -> str:
     """Progressively enhanced multiple-choice checkpoint, never fake code execution."""
     question = questions.get(lesson.source_path)
     if question is None:
@@ -1013,10 +1019,10 @@ def render_checkpoint(lesson: Lesson, questions: dict[str, dict]) -> str:
         language: correct[language] + " — " + explanation[language]
         for language in ("en", "hi")
     }
-    return f"""<section class="checkpoint-card" id="checkpoint" data-checkpoint
- data-checkpoint-answer="{question["correct"]}" aria-labelledby="checkpoint-title">
+    return f"""<section class="checkpoint-card" id="{escape(identifier)}" data-checkpoint
+ data-checkpoint-answer="{question["correct"]}" aria-labelledby="{escape(identifier)}-title">
 <p class="eyebrow">SOURCE-BACKED SELF-CHECK · स्रोत-आधारित अभ्यास</p>
-<h2 id="checkpoint-title">Quick checkpoint / त्वरित अभ्यास</h2>
+<h2 id="{escape(identifier)}-title">Quick checkpoint / त्वरित अभ्यास</h2>
 <p class="checkpoint-question">{checkpoint_translation(question["question"])}</p>
 <div data-checkpoint-interactive hidden>
 <form data-checkpoint-form>
@@ -1036,6 +1042,42 @@ def render_checkpoint(lesson: Lesson, questions: dict[str, dict]) -> str:
  compiler output. It does not run Scarp in the browser.
  यह प्रश्न सत्यापित आउटपुट पर आधारित है; ब्राउज़र में Scarp नहीं चलता।</p>
 </section>"""
+
+
+
+
+def render_chapter_review(section: str, lessons: list[Lesson],
+                          questions: dict[str, dict]) -> str:
+    """Reuse fixture-validated checkpoints for a bilingual chapter review.
+
+    Each card owns its own form and unique ids. The existing checkpoint script
+    enhances each card independently; without JS the answer disclosure works.
+    """
+    if any(lesson.section != section for lesson in lessons):
+        raise ValueError(f"chapter review includes lessons outside {section}")
+    checks = [lesson for lesson in lessons if lesson.source_path in questions]
+    if len(checks) != 3 or len({lesson.source_path for lesson in checks}) != 3:
+        raise ValueError(f"chapter review requires three distinct verified questions: {section}")
+    page = chapter_url(section)
+    cards = "".join(
+        f'<div class="chapter-review-entry">'
+        f'<p class="chapter-review-context">'
+        f'<strong>Question {index} of {len(checks)}</strong> · '
+        f'<a href="{escape(rel(page, lesson.url))}#verified-output">'
+        f'{escape(lesson.title)} · View source and recorded output ↗</a></p>'
+        + render_checkpoint(lesson, questions, f"chapter-check-{index:02}")
+        + '</div>'
+        for index, lesson in enumerate(checks, 1)
+    )
+    return f"""<details class="chapter-review" id="chapter-review">
+<summary><span>Practice this chapter · इस अध्याय का अभ्यास करें</span>
+<small>{len(checks)} bilingual, compiler-evidenced questions</small></summary>
+<div class="chapter-review-content">
+<p>Answer all three questions using the checked-in lessons.
+Feedback runs only in your browser; there is no stored score, automatic
+lesson completion or Scarp execution. Answers remain readable without JavaScript.</p>
+{cards}
+</div></details>"""
 
 
 def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[Lesson], target: dict, hindi: HindiNote, questions: dict[str, dict] | None = None) -> str:
@@ -1147,7 +1189,7 @@ def build(destination: Path) -> int:
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_chapter(section, chapter, target, set(questions),
-                                      next(lab for lab in labs if lab.identifier == section), chapters),
+                                      next(lab for lab in labs if lab.identifier == section), chapters, questions),
                         encoding="utf-8", newline="\n")
     for lesson in lessons:
         path = destination / lesson.url

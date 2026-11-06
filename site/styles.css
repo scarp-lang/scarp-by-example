@@ -720,3 +720,40 @@ html.js-ready .search-chapter-control { display: grid; gap: .4rem; }
 @media (forced-colors: active) {
   .chapter-journey-card, .chapter-handoff-links a { border: 1px solid LinkText; }
 }
+
+
+/* One-page chapter review sourced from the exact same three lesson checkpoints.
+   Native details keep every answer reachable with JavaScript disabled. */
+.chapter-review {
+  margin: 2.3rem 0; border: 1px solid var(--line);
+  border-radius: 16px; background: var(--surface); overflow: hidden;
+  scroll-margin-top: 110px;
+}
+.chapter-review > summary {
+  display: grid; gap: .35rem; min-height: 64px;
+  padding: 1.2rem 1.4rem; cursor: pointer;
+  color: var(--text); font-weight: 750; font-size: 1.08rem;
+}
+.chapter-review > summary::marker { color: var(--accent); }
+.chapter-review > summary:hover,
+.chapter-review > summary:focus-visible {
+  background: var(--surface-alt);
+}
+.chapter-review > summary small { color: var(--muted); font-size: .82rem; font-weight: 500; }
+.chapter-review-content { padding: 0 clamp(.8rem, 3vw, 1.5rem) 1.4rem; }
+.chapter-review-content > p { color: var(--muted); line-height: 1.65; font-size: .91rem; }
+.chapter-review-entry + .chapter-review-entry {
+  border-top: 1px solid var(--line); padding-top: .65rem;
+}
+.chapter-review-context { display: flex; align-items: baseline; flex-wrap: wrap;
+  gap: .3rem .7rem; font-size: .88rem; margin: 1.2rem 0 .1rem; }
+.chapter-review-context strong { color: var(--mint); }
+.chapter-review-context a { overflow-wrap: anywhere; }
+.chapter-review-entry .checkpoint-card { margin: .8rem 0 1.25rem; box-shadow: none; }
+.chapter-review-entry .checkpoint-card h2 { font-size: 1.18rem; }
+.chapter-review .checkpoint-option { min-height: 44px; }
+@media (max-width: 680px) {
+  .chapter-review > summary { padding: 1rem; }
+  .chapter-review-content { padding: 0 .7rem 1rem; }
+  .chapter-review-entry .checkpoint-card { padding: 1rem; }
+}
