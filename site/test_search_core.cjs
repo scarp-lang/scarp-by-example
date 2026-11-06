@@ -68,7 +68,7 @@ test("every result previews a real source line with line numbering", () => {
 test("preview selects the earliest real line containing most query terms", () => {
   const item = {
     id: "01-basics/03-preview", title: "Preview", chapter: "Basics",
-    source: "\\n  bind first = vector([1]);\n\nprint(first);\n  bind second = vector([2]);\n"
+    source: "\n  bind first = vector([1]);\n\nprint(first);\n  bind second = vector([2]);\n"
   };
   const matches = searchLessons([item], "vector second");
   assert.equal(matches.length, 1);
