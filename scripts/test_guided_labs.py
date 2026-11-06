@@ -95,7 +95,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
             locations = [node.text for node in sitemap.findall(
                 ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
             )]
-            self.assertEqual(len(locations), 68)
+            self.assertEqual(len(locations), 69)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/labs/01-basics/",
                 locations
