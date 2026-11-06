@@ -382,8 +382,71 @@ The Scarp compiler runs locally, not in your browser.</p>
 </section>"""
 
 
+
+def render_chapter_journey(section: str, chapters: dict[str, list[Lesson]]) -> str:
+    """Link adjacent chapters from the real, ordered verified course inventory."""
+    sections = list(chapters)
+    if section not in chapters or not chapters[section]:
+        raise ValueError(f"unknown or empty chapter {section}")
+    i = sections.index(section)
+    page = chapter_url(section)
+
+    def card(target: str | None, label: str) -> str:
+        if target is None:
+            boundary = ("Course start / पाठ्यक्रम की शुरुआत"
+                        if label.startswith("←") else "Course end / पाठ्यक्रम का अंत")
+            return ('<span class="chapter-journey-end" aria-disabled="true">'
+                    + escape(label) + ' · ' + boundary + '</span>')
+        lesson_list = chapters[target]
+        title = lesson_list[0].chapter
+        return (f'<a class="chapter-journey-card" href="{escape(rel(page, chapter_url(target)))}">'
+                f'<span>{escape(label)} · अध्याय</span>'
+                f'<strong>{escape(title)}</strong>'
+                f'<small>{len(lesson_list)} verified lessons</small></a>')
+
+    previous = sections[i - 1] if i > 0 else None
+    following = sections[i + 1] if i + 1 < len(sections) else None
+    return f"""<nav class="chapter-journey" aria-label="Previous and next chapters">
+<h2>Keep exploring · आगे सीखें</h2>
+<p>Chapter {i + 1} of {len(sections)}. Move through the verified Scarp course in order.</p>
+<div class="chapter-journey-links">
+{card(previous, "← Previous chapter")}{card(following, "Next chapter →")}
+</div></nav>"""
+
+
+def render_lesson_chapter_handoff(
+    lesson: Lesson, chapter: list[Lesson], all_lessons: list[Lesson]
+) -> str:
+    """Offer the real chapter lab and onward route at chapter boundaries only."""
+    if not chapter or lesson != chapter[-1]:
+        return ""
+    page = lesson.url
+    i = all_lessons.index(lesson)
+    following = all_lessons[i + 1] if i + 1 < len(all_lessons) else None
+    if following and following.section == lesson.section:
+        raise ValueError("chapter boundary is inconsistent with lesson order")
+    next_step = (
+        f'<a class="chapter-handoff-next" href="{escape(rel(page, chapter_url(following.section)))}">'
+        f'Explore next chapter: {escape(following.chapter)} →</a>'
+        if following else
+        f'<a class="chapter-handoff-next" href="{escape(rel(page, "index.html"))}#chapters">'
+        'Review all chapters · सभी अध्याय देखें →</a>'
+    )
+    return f"""<section class="chapter-handoff" aria-labelledby="chapter-handoff-title">
+<p class="eyebrow">CHAPTER {escape(lesson.section[:2])} · LAST LESSON</p>
+<h2 id="chapter-handoff-title">Ready for your next step? · आगे क्या सीखें?</h2>
+<p>This is the final example in this chapter. Try its verified coding lab before moving on.
+Your lesson progress changes only when you mark a lesson complete.</p>
+<div class="chapter-handoff-links">
+<a href="{escape(rel(page, "labs/" + lesson.section + "/index.html"))}">Try this chapter's lab ↗</a>
+<a href="{escape(rel(page, chapter_url(lesson.section)))}#chapter-path">Review chapter path ↗</a>
+{next_step}
+</div></section>"""
+
+
 def render_chapter(section: str, lessons: list[Lesson], target: dict,
-                   question_paths: set[str] | None = None, lab: GuidedLab | None = None) -> str:
+                   question_paths: set[str] | None = None, lab: GuidedLab | None = None,
+                   chapters: dict[str, list[Lesson]] | None = None) -> str:
     page = chapter_url(section)
     title = lessons[0].chapter
     summary = section_intro(EXAMPLES / section / "README.md")
@@ -394,6 +457,7 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
             raise ValueError(f"missing guided lab for chapter {section}")
         lab = matching[0]
     path_steps = render_chapter_path(section, lessons, question_paths or set(), lab)
+    chapter_journey = render_chapter_journey(section, chapters if chapters is not None else read_course()[1])
     main = f"""<main id="main-content" class="container-wide chapter-page">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(page, "index.html"))}">All chapters</a><span>/</span><span aria-current="page">{escape(title)}</span></nav>
 <header class="page-heading"><p class="eyebrow">CHAPTER {escape(section[:2])} · {len(lessons)} LESSONS</p>
@@ -413,6 +477,7 @@ def render_chapter(section: str, lessons: list[Lesson], target: dict,
 {path_steps}
 <section class="chapter-list" aria-labelledby="chapter-list-title"><h2 id="chapter-list-title">Lessons in this chapter</h2>
 <div class="lesson-list">{cards}</div></section>
+{chapter_journey}
 <p class="fine-print">All examples are validated with Scarp v{escape(target["version"])}. Each lesson has its own code and expected-output page.</p>
 </main>"""
     return page_shell(page, title, summary, main, "chapter-layout")
@@ -994,6 +1059,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     code = render_lesson(lesson.source, lesson.stdout, lesson.description)
     notes = render_notes(lesson, hindi)
     checkpoint = render_checkpoint(lesson, questions or {})
+    handoff = render_lesson_chapter_handoff(lesson, chapter, all_lessons)
     main = f"""<main id="main-content" class="container-wide detail-layout">
 <aside class="sidebar" aria-label="This chapter's lessons">
 <div class="sidebar-heading"><span class="eyebrow">CHAPTER {escape(lesson.section[:2])}</span><strong>{escape(lesson.chapter)}</strong></div>
@@ -1037,6 +1103,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 </section>
 <nav class="step-nav" aria-label="Lesson navigation">
 {step(before, "← Previous lesson")}{step(after, "Next lesson →")}</nav>
+{handoff}
 <p class="fine-print">Pinned compiler: <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a>
 · <code>{escape(target["source_commit"][:12])}</code>. No simulated output.</p>
 </div></main>"""
@@ -1080,7 +1147,7 @@ def build(destination: Path) -> int:
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_chapter(section, chapter, target, set(questions),
-                                      next(lab for lab in labs if lab.identifier == section)),
+                                      next(lab for lab in labs if lab.identifier == section), chapters),
                         encoding="utf-8", newline="\n")
     for lesson in lessons:
         path = destination / lesson.url
