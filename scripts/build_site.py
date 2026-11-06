@@ -165,6 +165,8 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     search_core = escape(rel(page, "search-core.js"))
     checkpoint_script = (f'<script src="{escape(rel(page, "checkpoint.js"))}" defer></script>'
                          if layout == "lesson-layout" else "")
+    practice_script = (f'<script src="{escape(rel(page, "output-practice.js"))}" defer></script>'
+                       if layout == "lesson-layout" else "")
     reference_script = (f'<script src="{escape(rel(page, "reference-explorer.js"))}" defer></script>'
                         if "reference-explorer-layout" in layout else "")
     # Keep both navigation views in sync, with native disclosure on small screens.
@@ -189,6 +191,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
 <script src="{script}" defer></script>
 <script src="{escape(rel(page, "progress.js"))}" defer></script>
 {checkpoint_script}
+{practice_script}
 {reference_script}
 </head>
 <body class="{escape(layout)}">
@@ -866,7 +869,20 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
 <section class="code-panel output-panel" aria-labelledby="output-title"><div class="panel-heading">
 <div><span class="eyebrow">EXPECTED OUTPUT</span><h2 id="output-title">stdout</h2></div>
 <span class="verified-tag">Verified</span></div>
-<pre><code>{escape(visible)}</code></pre>{note}
+<div id="verified-output" data-verified-output><pre><code>{escape(visible)}</code></pre>{note}</div>
+<div class="output-practice" data-output-practice hidden>
+<button class="progress-toggle" type="button" data-output-start>Predict this output · आउटपुट का अनुमान लगाएँ</button>
+<div data-output-workspace hidden>
+<p id="output-practice-instructions">Write what you expect this program to print, then compare with the verified displayed output. This checks text only; it does not run Scarp or save your input.</p>
+<label for="output-prediction">Your predicted output · आपका अनुमान</label>
+<textarea id="output-prediction" data-output-prediction rows="4" spellcheck="false"
+ aria-describedby="output-practice-instructions" placeholder="What will this program print?"></textarea>
+<div class="output-practice-actions">
+<button class="progress-toggle" type="button" data-output-check>Check prediction · जाँचें</button>
+<button class="progress-reset" type="button" data-output-toggle aria-controls="verified-output" aria-expanded="false">Reveal verified output</button>
+<button class="progress-reset" type="button" data-output-reset>Start over</button></div>
+<p data-output-feedback role="status" aria-live="polite"></p>
+</div></div>
 <div class="panel-footer"><a href="{escape(out_url)}">View exact fixture ↗</a></div></section>
 </div>"""
 
@@ -1088,7 +1104,7 @@ def build(destination: Path) -> int:
     sitemap += "</urlset>\n"
     (destination / "sitemap.xml").write_text(sitemap, encoding="utf-8")
     for asset in ("styles.css", "search-core.js", "search.js", "progress.js", "checkpoint.js",
-                  "reference-explorer.js"):
+                  "output-practice.js", "reference-explorer.js"):
         shutil.copyfile(ASSETS / asset, destination / asset)
     (destination / ".nojekyll").write_text("", encoding="utf-8")
     return count
