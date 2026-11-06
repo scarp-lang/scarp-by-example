@@ -93,6 +93,7 @@
   status.textContent = searchHint;
   let cached = null;
   let pending = null;
+  let revision = 0;
 
   async function loadIndex() {
     if (cached) return cached;
@@ -116,6 +117,7 @@
   }
 
   async function update() {
+    const request = ++revision;
     const query = search.value.trim(), section = chapterFilter.value;
     results.replaceChildren();
     if (!query && !section) {
@@ -126,8 +128,12 @@
     try {
       const lessons = await loadIndex();
       // Discard responses from searches that have already changed.
-      if (search.value.trim() !== query || chapterFilter.value !== section) return;
-      const matches = window.ScarpLessonSearch.searchLessons(lessons, query, section);
+      if (request !== revision || search.value.trim() !== query ||
+          chapterFilter.value !== section) return;
+      // Only count links that can actually be rendered as site-local lessons.
+      const matches = window.ScarpLessonSearch.searchLessons(lessons, query, section)
+        .filter(({ item }) => typeof item.url === "string" &&
+          /^lessons\/[a-z0-9-]+\/[a-z0-9-]+\/index\.html$/.test(item.url));
       status.textContent = matches.length
         ? String(matches.length) + " matching lesson" + (matches.length === 1 ? "." : "s.")
         : "No matching lessons. Try another keyword or chapter.";
@@ -157,6 +163,7 @@
       }
       if (matches.length > 30) status.textContent += " Showing the first 30.";
     } catch (error) {
+      if (request !== revision) return;
       status.textContent = error.message || "Search is unavailable.";
     }
   }
