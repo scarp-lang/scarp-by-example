@@ -131,6 +131,24 @@
       "explanation": {
         "en": "The largest score is at index 1, so onehot(3, 1) returns [0.0, 1.0, 0.0].",
         "hi": "सबसे बड़ा स्कोर index 1 पर है, इसलिए onehot(3, 1) का परिणाम [0.0, 1.0, 0.0] है।"
+      },
+      "stretch": {
+        "title": {
+          "en": "Rank candidates with temperature",
+          "hi": "टेम्परेचर से स्कोर रैंक करें"
+        },
+        "task": {
+          "en": "The starter prints only a two-way probability vector. Extend it to print a single-score log probability, then the top three original class indices after temperature-controlled softmax on [1.0, 4.0, 4.0, 2.0]. Keep equal-score indices in their original order.",
+          "hi": "स्टार्टर केवल दो बराबर स्कोर की संभावनाएँ दिखाता है। इसमें एक स्कोर की log probability और [1.0, 4.0, 4.0, 2.0] पर temperature-controlled softmax के बाद सर्वोच्च तीन मूल इंडेक्स प्रिंट करें। बराबर स्कोर का क्रम बनाए रखें।"
+        },
+        "hint": {
+          "en": "Use logsoftmax_temp([5.0], 2.0), then topk(softmax_temp(logits, 0.5), 3). The answer uses zero-based original indices.",
+          "hi": "logsoftmax_temp([5.0], 2.0) और फिर topk(softmax_temp(logits, 0.5), 3) इस्तेमाल करें। उत्तर में मूल शून्य-आधारित इंडेक्स दें।"
+        },
+        "explanation": {
+          "en": "Equal scores yield [0.5, 0.5] even at temperature 0.5; one logit gives [0.0] log probability. After scaling, the top indices are [integer: 1, 2, 3], with earlier index 1 before the tied index 2. This is deterministic ranking, not sampling.",
+          "hi": "बराबर स्कोर पर 0.5 तापमान में भी [0.5, 0.5] मिलता है; एक स्कोर की log probability [0.0] है। तापमान बदलने पर सर्वोच्च इंडेक्स [integer: 1, 2, 3] हैं, जिसमें समान स्कोर पर index 1 पहले आता है। यह निश्चित रैंकिंग है, random sampling नहीं।"
+        }
       }
     }
   ]
