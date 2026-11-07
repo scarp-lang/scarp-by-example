@@ -173,7 +173,7 @@ class SiteTests(unittest.TestCase):
             self.assertIn("<details>", navigation)
             self.assertIn('src/lib/math.srp', inspect)
             self.assertIn('lang="hi"', inspect)
-            self.assertIn("398b8ff70515", inspect)
+            self.assertIn(json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["source_commit"][:12], inspect)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/",
                 locations,
@@ -191,7 +191,7 @@ class SiteTests(unittest.TestCase):
             self.assertIn("Hello from Scarp!", html)
             self.assertIn('id="hi-notes"', html)
             self.assertIn('id="en-notes"', html)
-            self.assertIn("398b8ff70515", html)
+            self.assertIn(json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["source_commit"][:12], html)
             self.assertTrue((output / "progress.js").is_file())
             self.assertTrue((output / "checkpoint.js").is_file())
             self.assertTrue((output / "output-practice.js").is_file())

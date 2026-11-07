@@ -1,4 +1,4 @@
-# Navigate Scarp names and references (v0.0.6-alpha.2)
+# Navigate Scarp names and references (v0.0.6-alpha.3)
 
 Scarp alpha.6 introduces **static**, opt-in source intelligence. You can ask which identifiers are declared or used in an imported module without running the program. This is a compiler feature, **not** an LSP server, editor integration, automatic rename or an incremental cache.
 
@@ -36,7 +36,7 @@ Try a disposable file with `print(1 / 0);`. `inspect symbols --json FILE` and `i
 
 **Exercise:** inspect the two-module project, locate the `answer` declaration and the reference in the entrypoint, then compare the file and directory views while ignoring platform-specific display paths.
 
-See the [compiler's versioned index contract](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.2/docs/symbol-index.md) and [Hindi companion guide](hi/source-navigation.md). No general editor integration or browser-side Scarp execution is implied.
+See the [compiler's versioned index contract](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.3/docs/symbol-index.md) and [Hindi companion guide](hi/source-navigation.md). No general editor integration or browser-side Scarp execution is implied.
 
 ## Advanced workshop: shadowing and named arguments
 

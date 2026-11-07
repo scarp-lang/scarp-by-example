@@ -1,6 +1,6 @@
 # Scarp में नाम और संदर्भ खोजें (alpha.6)
 
-प्रकाशित Scarp `v0.0.6-alpha.2` में कोड को **बिना चलाए** किसी नाम की घोषणा (definition) और उसके प्रयोग (reference) देख सकते हैं। इसे *स्थिर स्रोत निरीक्षण* कहते हैं। यह अभी पूरा Language Server (LSP), स्वचालित rename या संपादन के बीच पहचान बनाए रखने वाला सिस्टम **नहीं** है।
+प्रकाशित Scarp `v0.0.6-alpha.3` में कोड को **बिना चलाए** किसी नाम की घोषणा (definition) और उसके प्रयोग (reference) देख सकते हैं। इसे *स्थिर स्रोत निरीक्षण* कहते हैं। यह अभी पूरा Language Server (LSP), स्वचालित rename या संपादन के बीच पहचान बनाए रखने वाला सिस्टम **नहीं** है।
 
 यह गाइड पहले से मौजूद [दो-मॉड्यूल प्रोजेक्ट](../../tutorials/module-inspection/Scarp.project) पर आधारित है। `src/lib/math.srp` में `answer` नाम की public बाइंडिंग है और `src/main.srp` उसे `math` नाम से import करके उपयोग करता है।
 
@@ -32,7 +32,7 @@ scarp launch tutorials/module-inspection
 
 **अभ्यास:** प्रोजेक्ट में `answer` की घोषणा किस फ़ाइल में है? उसका उपयोग किस फ़ाइल में हुआ? `symbols` और `references` से तुलना करें।
 
-[English tutorial](../source-navigation.md) · [आधिकारिक कम्पाइलर अनुबंध](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.2/docs/symbol-index.md)
+[English tutorial](../source-navigation.md) · [आधिकारिक कम्पाइलर अनुबंध](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.3/docs/symbol-index.md)
 
 ## अगला अभ्यास: एक ही नाम के दो अलग बाइंडिंग
 

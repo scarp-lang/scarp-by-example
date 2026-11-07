@@ -34,10 +34,10 @@ class GuidedLabCatalogTests(unittest.TestCase):
             self.assertEqual(set(lab.hint), {"en", "hi"})
             self.assertEqual(set(lab.explanation), {"en", "hi"})
 
-    def test_only_control_flow_has_independent_optional_stretch(self):
+    def test_control_flow_and_ai_have_independent_optional_stretch(self):
         stretch_labs = [lab for lab in self.labs if lab.stretch]
-        self.assertEqual([lab.identifier for lab in stretch_labs], ["02-control-flow"])
-        stretch = stretch_labs[0].stretch
+        self.assertEqual([lab.identifier for lab in stretch_labs], ["02-control-flow", "06-ai-foundations"])
+        stretch = next(lab.stretch for lab in stretch_labs if lab.identifier == "02-control-flow")
         self.assertIsNotNone(stretch)
         self.assertEqual(read_expected_stdout(stretch.expected), b"2 3\n")
         self.assertNotEqual(stretch.starter.read_bytes(), stretch.solution.read_bytes())
@@ -66,6 +66,20 @@ class GuidedLabCatalogTests(unittest.TestCase):
             return first, inspected
         self.assertEqual(scan(10), (2, 3))
         self.assertEqual(scan(20), (4, 5))
+
+    def test_ai_stretch_has_published_compiler_source_and_exact_fixture(self):
+        lab = next(lab for lab in self.labs if lab.identifier == "06-ai-foundations")
+        stretch = lab.stretch
+        self.assertIsNotNone(stretch)
+        self.assertEqual(
+            read_expected_stdout(stretch.expected),
+            b"[0.5, 0.5]\n[0.0]\n[integer: 1, 2, 3]\n",
+        )
+        self.assertIn("softmax_temp", stretch.starter.read_text(encoding="utf-8"))
+        source = stretch.solution.read_text(encoding="utf-8")
+        self.assertIn("logsoftmax_temp", source)
+        self.assertIn("topk(softmax_temp(logits, 0.5), 3)", source)
+        self.assertNotEqual(stretch.starter.read_bytes(), stretch.solution.read_bytes())
 
     def test_stretch_variant_requires_separate_real_verification(self):
         lab = next(lab for lab in self.labs if lab.stretch)
@@ -137,7 +151,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
             self.assertIn('href="labs/index.html"', homepage)
             overview = (out / "labs/index.html").read_text(encoding="utf-8")
             self.assertEqual(overview.count('class="lab-card"'), 6)
-            self.assertEqual(overview.count('class="lab-stretch-indicator"'), 1)
+            self.assertEqual(overview.count('class="lab-stretch-indicator"'), 2)
             for lab in self.labs:
                 page = out / lab.url
                 self.assertTrue(page.is_file())
@@ -163,7 +177,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
                     self.assertIn("scarp verify labs/" + lab.identifier + "/stretch-attempt.srp", markup)
                     self.assertIn("scarp exec labs/" + lab.identifier + "/stretch-attempt.srp", markup)
                     self.assertIn('lang="hi"', markup)
-                    self.assertIn("2 3", markup)
+                    self.assertIn(read_expected_stdout(lab.stretch.expected).decode("utf-8").strip(), markup)
                     self.assertIn("does not run Scarp", markup)
                 else:
                     self.assertNotIn('id="stretch-challenge"', markup)

@@ -19,11 +19,13 @@
 
 **प्रकाशित alpha.5:** [दो मॉड्यूल वाले प्रोजेक्ट को बिना चलाए inspect करें](project-inspection.md) — `scarp inspect modules --json DIRECTORY` की वास्तविक static जानकारी।
 
+**नया alpha.3 अभ्यास:** [AI coding lab में अतिरिक्त चुनौती](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) — temperature-controlled softmax और Top-K से स्कोर रैंक करें। यह random sampling या model training नहीं है।
+
 ## Scarp चलाने का तरीका
 
 नए CLI कमांड जानने के लिए [हिन्दी CLI गाइड](cli-quickstart.md) पढ़ें। इसमें `verify` और पुराने `check` का वास्तविक अंतर भी है।
 
-पहले [आधिकारिक कम्पाइलर](https://github.com/scarp-lang/scarp) का संस्करण जाँचें। यह प्रोजेक्ट **प्रकाशित Scarp v0.0.6-alpha.2 के सटीक स्रोत कमिट `398b8ff`** पर उदाहरणों को जाँचता है; पुराने प्री-रिलीज़ का सिंटैक्स अलग हो सकता है। [संगतता नीति](../compatibility.md) देखें।
+पहले [आधिकारिक कम्पाइलर](https://github.com/scarp-lang/scarp) का संस्करण जाँचें। यह प्रोजेक्ट **प्रकाशित Scarp v0.0.6-alpha.3 के सटीक स्रोत कमिट `398b8ff`** पर उदाहरणों को जाँचता है; पुराने प्री-रिलीज़ का सिंटैक्स अलग हो सकता है। [संगतता नीति](../compatibility.md) देखें।
 
 ```sh
 scarp verify examples/01-basics/01-hello.srp

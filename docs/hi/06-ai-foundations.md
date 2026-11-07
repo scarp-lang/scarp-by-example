@@ -120,6 +120,10 @@
 
 **अभ्यास:** दो बराबर स्कोर से दो बराबर संभावनाएँ क्यों बनती हैं, और लॉस को सटीक बराबरी के बजाय दायरे में क्यों जाँचा गया?
 
+## अतिरिक्त alpha.3 अभ्यास: Top-K और तापमान
+
+[AI coding lab की वैकल्पिक चुनौती](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) में `softmax_temp` से स्कोर का वितरण बदलें और `topk` से तीन सर्वोच्च **मूल इंडेक्स** चुनें। बराबर स्कोर होने पर पहला इंडेक्स पहले आता है। `logsoftmax_temp` से एक स्कोर की log probability भी निकालें। `stretch-starter.srp` से शुरुआत करें और [सटीक आउटपुट](../../labs/06-ai-foundations/stretch-solution.stdout) से तुलना करें। ये फ़ंक्शन प्रकाशित Scarp v0.0.6-alpha.3 में उपलब्ध हैं, alpha.2 में नहीं।
+
 ## सीमाएँ और अगला कदम
 
 कोड की सटीक संगतता [कम्पाइलर नीति](../compatibility.md) और GitHub Actions से जाँची जाती है। भविष्य के async, networking, general collections या autonomous agents को मौजूदा रन करने योग्य API न मानें।

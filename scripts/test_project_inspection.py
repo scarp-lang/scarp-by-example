@@ -18,10 +18,10 @@ class ProjectInspectionTests(unittest.TestCase):
         cls.root = ROOT / "tutorials/module-inspection"
         cls.target = read_course()[2]
 
-    def test_published_alpha6_target_preserves_alpha5_project_fixture(self):
-        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.2")
+    def test_published_alpha3_target_preserves_alpha5_project_fixture(self):
+        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.3")
         self.assertEqual(self.target["source_commit"],
-                         "398b8ff705154a02423fe458ce3a427401e81e31")
+                         "ceff07d9014f466974e0c9e02fc5d23573f55777")
         self.assertEqual((self.root / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n")
         self.assertEqual((self.root / "src/main.srp").read_bytes(),

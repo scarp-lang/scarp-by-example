@@ -6,7 +6,7 @@
 
 Scarp by Example is the hands-on companion to the Scarp programming language. Lessons are arranged from first program to numeric and AI-oriented programming. Every runnable lesson includes a Scarp `.srp` source file, an exact `.stdout` fixture, and bilingual teaching notes shown directly on the lesson page from the existing source-linked chapter guides.
 
-> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.6-alpha.2 at exact source commit `398b8ff`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
+> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.6-alpha.3 at exact source commit `398b8ff`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
 
 ## Online lessons
 
@@ -22,7 +22,7 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 **Connected learning path:** Each chapter now offers a three-step sequence: **read** its source-verified lessons, **check** understanding with three exact-output-backed English/Hindi questions, then **build** a real Scarp program in that chapter's local coding lab. Chapter, lesson, checkpoint and lab pages link back to each other. Previously saved lesson completions display in the path, but the site deliberately does not claim to grade quizzes or locally executed programs. [Start with the Basics learning path](https://scarp-lang.github.io/scarp-by-example/chapters/01-basics/#chapter-path).
 
-**Guided coding labs:** Six **English/Hindi compiler-verified core challenges** (one per chapter) have runnable starter programs, exact target output, hints, and reference solutions. Control flow also offers an **optional, independently verified stretch challenge** for scanning integer readings and stopping at the first match. Every starter runs but differs from its solution; each solution matches an exact output fixture under the pinned compiler. Practice locally; the website neither runs Scarp nor collects your attempts. [Open the coding lab index](https://scarp-lang.github.io/scarp-by-example/labs/) or [read the workflow](docs/guided-labs.md).
+**Guided coding labs:** Six **English/Hindi compiler-verified core challenges** (one per chapter) have runnable starter programs, exact target output, hints, and reference solutions. Control flow also offers an **optional, independently verified stretch challenge** for scanning integer readings and stopping at the first match. Every starter runs but differs from its solution; each solution matches an exact output fixture under the pinned compiler. **A second optional stretch challenge** in the AI foundations lab teaches alpha.3 `topk`, `softmax_temp` and `logsoftmax_temp`, with bilingual guidance and an upstream exact-output fixture. Practice locally; the website neither runs Scarp nor collects your attempts. [Open the coding lab index](https://scarp-lang.github.io/scarp-by-example/labs/) or [read the workflow](docs/guided-labs.md).
 
 **Mobile and keyboard navigation:** On narrow screens, the site uses an accessible **Menu** disclosure rather than a horizontally scrolling header. It works without JavaScript, and keyboard users can close it with Escape and return focus to the menu trigger. Chapter, search, project, lab, compiler and GitHub destinations stay consistent across desktop and mobile. The skip-to-content link remains available on every page.
 
@@ -31,7 +31,7 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 ## Start here
 
 1. Install [Rust and Cargo](https://www.rust-lang.org/tools/install) to run the current compiler source, or select a supported binary from [Scarp prereleases](https://github.com/scarp-lang/scarp/releases).
-2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact tested commit `398b8ff705154a02423fe458ce3a427401e81e31`, then build it with `cargo build --locked --offline`. Confirm the current executable version with `target/debug/scarp version` (Windows: `target\\debug\\scarp.exe version`).
+2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact tested commit `ceff07d9014f466974e0c9e02fc5d23573f55777`, then build it with `cargo build --locked --offline`. Confirm the current executable version with `target/debug/scarp version` (Windows: `target\\debug\\scarp.exe version`).
 3. Clone this repository. From your Scarp checkout, run the binary on a lesson, using the **absolute path** to its `.srp` file: `./target/debug/scarp exec /path/to/scarp-by-example/examples/01-basics/01-hello.srp`.
 4. Compare output with the lesson's adjacent `.stdout` file. On Windows, use `target\\debug\\scarp.exe`.
 
@@ -44,6 +44,8 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 **Source-navigation workshop (now with an interactive source explorer):** Trace two separately scoped bindings and named arguments through a real imported module. [Open the bilingual workshop](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) or [inspect the original Scarp project](tutorials/source-navigation/README.md). Click a declaration or use to highlight all its compiler-verified links across both `.srp` files, with English/Hindi explanations and working no-JavaScript anchor links. The teaching map is checked against the pinned compiler on Linux, macOS and Windows; no browser execution or live LSP is implied.
 
 **New in compiler alpha.6:** A [root mean square lesson](examples/04-collections/12-root-mean-square.srp) demonstrates numerically stable signal magnitude. The [English source navigation guide](docs/source-navigation.md) and [हिन्दी मार्गदर्शिका](docs/hi/source-navigation.md) explain read-only `inspect symbols` and `inspect references`; neither command executes the program.
+
+**New in published compiler alpha.3:** [Practice deterministic Top-K and temperature-controlled probabilities](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) in the optional AI lab. This is score ranking, not random sampling, model training or a GPU runtime.
 
 ## Course
 
@@ -61,7 +63,7 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 
 ## Verification
 
-The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2) from its immutable source commit of the official compiler and performs static `scarp verify` then byte-exact `scarp exec` on every lesson on GitHub-hosted runners. An independent CLI smoke test checks legacy commands, real project creation/launch and **alpha.5 project-directory module inspection**, including file/project inventory equivalence, static-only behavior and invalid-manifest handling. Run the same checks locally:
+The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3) from its immutable source commit of the official compiler and performs static `scarp verify` then byte-exact `scarp exec` on every lesson on GitHub-hosted runners. An independent CLI smoke test checks legacy commands, real project creation/launch and **alpha.5 project-directory module inspection**, including file/project inventory equivalence, static-only behavior and invalid-manifest handling. Run the same checks locally:
 
 ```sh
 python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp/target/debug/scarp

@@ -1,0 +1,2 @@
+// Extend this simple probability display with log-probability and top-three rankings.
+print(softmax_temp([2.0, 2.0], 0.5));
