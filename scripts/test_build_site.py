@@ -173,7 +173,7 @@ class SiteTests(unittest.TestCase):
             self.assertIn("<details>", navigation)
             self.assertIn('src/lib/math.srp', inspect)
             self.assertIn('lang="hi"', inspect)
-            self.assertIn("398b8ff70515", inspect)
+            self.assertIn(json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["source_commit"][:12], inspect)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/",
                 locations,
