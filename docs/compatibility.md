@@ -6,17 +6,21 @@ Scarp is experimental prerelease software. The learning course pins a published,
 
 | Property | Recorded target |
 | --- | --- |
-| GitHub release | [Scarp v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), published 6 November 2026 as a prerelease |
-| Annotated-tag source commit | [`398b8ff705154a02423fe458ce3a427401e81e31`](https://github.com/scarp-lang/scarp/commit/398b8ff705154a02423fe458ce3a427401e81e31) |
-| Previous course compiler | [v0.0.6-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.1), commit `aa329a22cf2bf92d2c9814a26ff9c8b67a72e6e8` |
+| GitHub release | [Scarp v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), published 7 November 2026 as a prerelease |
+| Annotated-tag source commit | [`ceff07d9014f466974e0c9e02fc5d23573f55777`](https://github.com/scarp-lang/scarp/commit/ceff07d9014f466974e0c9e02fc5d23573f55777) |
+| Previous course compiler | [v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), commit `398b8ff705154a02423fe458ce3a427401e81e31` |
 | Source of truth | [`compiler-target.json`](compiler-target.json) |
 | Required gates | [Examples across three OSes](../.github/workflows/examples.yml) and [Pages build](../.github/workflows/pages.yml) |
 
-The annotated `v0.0.6-alpha.2` Git tag dereferences to the exact commit above. The public GitHub release has native archives and checksum sidecars for Windows x64, Linux x64 and macOS Apple Silicon, plus a combined checksum manifest. The compiler's `docs/releases/v0.0.6-alpha.2.md` remains explicitly labeled a prepublication candidate; that historical preparation note does not override the actual published GitHub release or the separate public release notes. All course examples, labs, metadata and generated pages are independently validated against the new source pin before merge.
+The annotated `v0.0.6-alpha.3` Git tag dereferences to the exact commit above. The public prerelease provides Windows x64, Linux x64 and macOS Apple Silicon archives, checksum sidecars and a combined checksum manifest. The compiler's `docs/releases/v0.0.6-alpha.3.md` is a **historical prepublication candidate**, not its current release status; use the [published release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3) and its verification record. The course must independently test all lessons, labs and source navigation at this SHA before merging its new pin.
 
-## Changes specifically in alpha.2
+## Changes in published alpha.3
 
-This release adds opt-in, caller-owned Rust embedding APIs for dependency-aware invalidation planning and bounded semantic, token and syntax caches. It also adds source-scoped cache eviction and internal backend preflight changes. **No new Scarp source syntax, CLI command, native object writer, language server or general incremental execution facility is introduced.** The course's executable examples continue to teach the source-language features already available in alpha.1. See [published compiler release notes](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2).
+- `topk(scores, count)` returns **original zero-based indices** sorted by descending score, with earlier indices winning ties. `topk_values(scores, count)` returns their original finite values. Both are deterministic, pure and bounded.
+- `softmax_temp(scores, temperature)` and `logsoftmax_temp(scores, temperature)` produce temperature-controlled (log-)probabilities using a strictly positive finite float temperature. These are not random sampling operations.
+- The compiler adds private typed scalar IR and differential verification for its restricted experimental native pipeline. **No native object writer, user-facing `scarp compile` command, GPU engine, or integrated AI runtime is introduced.**
+- The optional [AI coding lab stretch](../labs/06-ai-foundations/stretch-solution.srp) combines Top-K with temperature-aware probabilities. Its solution fixture follows the official compiler's alpha.3 sample and is verified again by the course's cross-platform interpreter checks.
+- Alpha.2's opt-in Rust embedding caches and invalidation APIs remain available without new Scarp source syntax or CLI commands.
 
 ## Available in alpha.6
 
@@ -31,7 +35,7 @@ The existing limited scalar C11 emitter remains experimental and exposed only th
 ```sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout 398b8ff705154a02423fe458ce3a427401e81e31
+git checkout ceff07d9014f466974e0c9e02fc5d23573f55777
 cargo build --locked --offline
 ./target/debug/scarp version
 ```
