@@ -6,13 +6,20 @@ Scarp is experimental prerelease software. The learning course pins a published,
 
 | Property | Recorded target |
 | --- | --- |
-| GitHub release | [Scarp v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3), published 7 November 2026 as a prerelease |
-| Annotated-tag source commit | [`ceff07d9014f466974e0c9e02fc5d23573f55777`](https://github.com/scarp-lang/scarp/commit/ceff07d9014f466974e0c9e02fc5d23573f55777) |
-| Previous course compiler | [v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), commit `398b8ff705154a02423fe458ce3a427401e81e31` |
+| GitHub release | [Scarp v0.0.6-alpha.4](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4), published 8 November 2026 as a prerelease |
+| Annotated-tag source commit | [`f04be0758cbce405ddcdb229699b0ff83c09d207`](https://github.com/scarp-lang/scarp/commit/f04be0758cbce405ddcdb229699b0ff83c09d207) |
+| Previous course compiler | [v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3), commit `ceff07d9014f466974e0c9e02fc5d23573f55777` |
 | Source of truth | [`compiler-target.json`](compiler-target.json) |
 | Required gates | [Examples across three OSes](../.github/workflows/examples.yml) and [Pages build](../.github/workflows/pages.yml) |
 
-The annotated `v0.0.6-alpha.3` Git tag dereferences to the exact commit above. The public prerelease provides Windows x64, Linux x64 and macOS Apple Silicon archives, checksum sidecars and a combined checksum manifest. The compiler's `docs/releases/v0.0.6-alpha.3.md` is a **historical prepublication candidate**, not its current release status; use the [published release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3) and its verification record. The course must independently test all lessons, labs and source navigation at this SHA before merging its new pin.
+The annotated `v0.0.6-alpha.4` Git tag dereferences to the exact commit above. The public prerelease provides Windows x64, Linux x64 and macOS Apple Silicon archives, checksum sidecars and a combined checksum manifest. The compiler's `docs/releases/v0.0.6-alpha.4.md` is a **historical prepublication candidate**, not its current release status; use the [published release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4) and its verification record. The course must independently test all lessons, labs and source navigation at this SHA before merging its new pin.
+
+## Changes in published alpha.4
+
+- Bounded sampled calculus supports `sample_area(x, y)`, `sample_cumulative_area(x, y)`, and `sample_slopes(x, y)` for equal-length finite vectors with strictly increasing sample coordinates.
+- `cosine_similarity(left, right)` handles nonzero finite vectors with scaling and compensated reductions.
+- The experimental Rust embedding API can emit one restricted x86-64 ELF64 relocatable integer-kernel object; there is **no** general native executable compiler or `scarp compile` command.
+- Alpha.4 preserves earlier language syntax and CLI contracts. All existing lessons, labs, and navigation fixtures must independently pass at the new exact compiler pin; historical exercises are not silently rewritten.
 
 ## Changes in published alpha.3
 
