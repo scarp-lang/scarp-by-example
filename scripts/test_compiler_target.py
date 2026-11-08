@@ -26,6 +26,22 @@ class CompilerTargetTests(unittest.TestCase):
             "https://github.com/scarp-lang/scarp/releases/tag/" + target["release_tag"],
         )
 
+    def test_human_release_labels_match_immutable_compiler_pin(self):
+        target = json.loads(TARGET.read_text(encoding="utf-8"))
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        compatibility = (ROOT / "docs" / "compatibility.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            f"Scarp {target['release_tag']} at exact source commit "
+            f"`{target['source_commit']}`",
+            readme,
+        )
+        self.assertIn(
+            f"[Scarp {target['release_tag']}]({target['release_url']})",
+            compatibility,
+        )
+
     def test_both_workflows_pin_same_exact_commit(self):
         target = json.loads(TARGET.read_text(encoding="utf-8"))
         for workflow in WORKFLOWS:
