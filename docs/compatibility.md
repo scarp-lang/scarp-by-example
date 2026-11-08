@@ -8,7 +8,7 @@ Scarp is experimental prerelease software. The learning course pins a published,
 | --- | --- |
 | GitHub release | [Scarp v0.0.6-alpha.4](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4), published 8 November 2026 as a prerelease |
 | Annotated-tag source commit | [`f04be0758cbce405ddcdb229699b0ff83c09d207`](https://github.com/scarp-lang/scarp/commit/f04be0758cbce405ddcdb229699b0ff83c09d207) |
-| Previous course compiler | [v0.0.6-alpha.4](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4), commit `ceff07d9014f466974e0c9e02fc5d23573f55777` |
+| Previous course compiler | [v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3), commit `ceff07d9014f466974e0c9e02fc5d23573f55777` |
 | Source of truth | [`compiler-target.json`](compiler-target.json) |
 | Required gates | [Examples across three OSes](../.github/workflows/examples.yml) and [Pages build](../.github/workflows/pages.yml) |
 
