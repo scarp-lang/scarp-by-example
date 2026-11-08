@@ -6,7 +6,7 @@ Scarp is experimental prerelease software. The learning course pins a published,
 
 | Property | Recorded target |
 | --- | --- |
-| GitHub release | [Scarp v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), published 7 November 2026 as a prerelease |
+| GitHub release | [Scarp v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3), published 7 November 2026 as a prerelease |
 | Annotated-tag source commit | [`ceff07d9014f466974e0c9e02fc5d23573f55777`](https://github.com/scarp-lang/scarp/commit/ceff07d9014f466974e0c9e02fc5d23573f55777) |
 | Previous course compiler | [v0.0.6-alpha.2](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.2), commit `398b8ff705154a02423fe458ce3a427401e81e31` |
 | Source of truth | [`compiler-target.json`](compiler-target.json) |
