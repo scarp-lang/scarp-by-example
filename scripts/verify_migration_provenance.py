@@ -94,9 +94,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compiler", required=True, type=Path, help="tag-pinned compiler checkout")
     parser.add_argument("--manifest", type=Path, default=MANIFEST)
+    parser.add_argument("--target", type=Path, default=PIN, help="exact release pin manifest")
     args = parser.parse_args(argv)
     try:
-        target = json.loads(PIN.read_text(encoding="utf-8"))
+        target = json.loads(args.target.read_text(encoding="utf-8"))
         manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
         commit = subprocess.run(
             ["git", "-C", str(args.compiler), "rev-parse", "HEAD"],
