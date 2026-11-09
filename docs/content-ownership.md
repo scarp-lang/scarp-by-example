@@ -24,4 +24,11 @@ The initial examples [temperature softmax](../examples/06-ai-foundations/12-temp
 - [Sampled calculus](../examples/04-collections/13-sampled-calculus.srp) and its `.stdout`: originally `examples/sampled_calculus.srp` in published tag `v0.0.6-alpha.4`, which prints `9.0` and `[2.0, 2.0]`.
 - [Top-K ranking](../examples/06-ai-foundations/15-topk-ranking.srp) and its `.stdout`: originally `examples/topk_scores.srp` in the same tag, which prints deterministic original indices, corresponding values, probability-ranked indices, and an empty `integers` result.
 
-All five migrated fixtures are independently executed by the existing course `verify` / `exec` CI using the immutable published compiler source. The original compiler-side `.srp` and `.stdout` files are deliberately retained.
+The five original alpha.4 source/stdout pairs also have **identical Git blob SHAs** in published compiler alpha.5. Their historical origin remains recorded above, while the current [machine-checked migration manifest](migration-provenance.json) independently compares all migrated bytes against the exact pinned alpha.5 source.
+
+## Published alpha.5 migration cohort
+
+- [Pearson correlation](../examples/04-collections/14-pearson-correlation.srp), copied byte-for-byte with its stdout from `examples/pearson_correlation.srp` in compiler tag [v0.0.6-alpha.5](https://github.com/scarp-lang/scarp/tree/v0.0.6-alpha.5/examples).
+- [Top-P nucleus selection](../examples/06-ai-foundations/16-nucleus-selection.srp), copied byte-for-byte with its stdout from `examples/nucleus_selection.srp` in the same published tag.
+
+All **seven** migrated source/stdout pairs are checked for exact provenance, and every runnable lesson is required to pass non-executing `verify` followed by byte-exact `exec` across the Linux, Windows and macOS CI matrix. Compiler regression fixtures are preserved in the compiler repository; the course owns numbered educational copies and teaching notes.

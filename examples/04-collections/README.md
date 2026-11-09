@@ -17,6 +17,7 @@
 | [11 · Vector allocation](11-vector-allocation.srp) | `fill`, `len` and `sum` on a three-element numerical vector | `3.0 3` |
 | [12 · Root mean square](12-root-mean-square.srp) | Stable `rms` on signals and visible vector windows | `balanced 2.0`, `window 2.5`, `finite true`, `zero 0.0` |
 | [13 · Sampled calculus](13-sampled-calculus.srp) | Bounded trapezoidal area and interval secant slopes | `9.0`, `[2.0, 2.0]` |
+| [14 · Pearson correlation](14-pearson-correlation.srp) | Centered linear association of paired numerical data | `1.0`, `-1.0`, `0.0` |
 
 Run `scarp run examples/04-collections/01-vectors.srp` from this repository root or pass an absolute lesson path. Compare the exact `.stdout` beside each file.
 
@@ -55,3 +56,9 @@ Run `scarp run examples/04-collections/01-vectors.srp` from this repository root
 **13 · Sampled calculus:** `sample_area(time, velocity)` applies the composite trapezoidal rule to irregular samples, giving `9.0`; `sample_slopes` reports a finite secant slope per interval, `[2.0, 2.0]`. The coordinate vector must be strictly increasing, and these functions do not implement symbolic integration or differentiation. Published in `v0.0.6-alpha.4`; the `.srp` and `.stdout` were copied unchanged from the tagged compiler fixtures.
 
 **Practice:** Compute the area of the intervals `[0, 1]` and `[1, 3]` separately, then add them. Why do both secant slopes equal `2.0` even though their time intervals differ?
+
+## Published alpha.5: Pearson correlation
+
+**14 · Pearson correlation:** `pearson_correlation(left, right)` measures centered linear association. Increasing values correlate at `1.0`, reversing a series produces `-1.0`, and the balanced nonlinear fixture produces `0.0`. Both vectors must have the same length (at least two), finite values and nonzero variance. Correlation neither demonstrates causation nor statistical significance.
+
+**Practice:** Center each sample around its mean. Why does reversing the second series make the correlation negative?

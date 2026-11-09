@@ -4,11 +4,11 @@
 
 **[Browse the learning catalog](https://scarp-lang.github.io/scarp-by-example/)** · [Scarp compiler](https://github.com/scarp-lang/scarp) · [Official documentation](https://github.com/scarp-lang/scarp-docs) · [Project website](https://scarp-lang.github.io/) · [Contribute](CONTRIBUTING.md)
 
-**Content ownership:** [How compiler fixtures, official docs and runnable lessons are separated](docs/content-ownership.md). New published alpha.4 numerical lessons 12–14 are under review in [PR #57](https://github.com/scarp-lang/scarp-by-example/pull/57).
+**Content ownership:** [How compiler fixtures, official docs and runnable lessons are separated](docs/content-ownership.md). The alpha.4 fixture migration is under review in [PR #57](https://github.com/scarp-lang/scarp-by-example/pull/57); the published alpha.5 examples form a separate follow-on change.
 
 Scarp by Example is the hands-on companion to the Scarp programming language. Lessons are arranged from first program to numeric and AI-oriented programming. Every runnable lesson includes a Scarp `.srp` source file, an exact `.stdout` fixture, and bilingual teaching notes shown directly on the lesson page from the existing source-linked chapter guides.
 
-> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.6-alpha.4 at exact source commit `f04be0758cbce405ddcdb229699b0ff83c09d207`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
+> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.6-alpha.5 at exact source commit `205e92f166f186c3905e5880d41c31717b697b8e`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
 
 ## Online lessons
 
@@ -67,7 +67,7 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 
 ## Verification
 
-The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.6-alpha.4](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4) from its immutable source commit of the official compiler and performs static `scarp verify` then byte-exact `scarp exec` on every lesson on GitHub-hosted runners. An independent CLI smoke test checks legacy commands, real project creation/launch and **alpha.5 project-directory module inspection**, including file/project inventory equivalence, static-only behavior and invalid-manifest handling. Run the same checks locally:
+The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.6-alpha.5](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.5) from its immutable source commit of the official compiler and performs static `scarp verify` then byte-exact `scarp exec` on every lesson on GitHub-hosted runners. An independent CLI smoke test checks legacy commands, real project creation/launch and **alpha.5 project-directory module inspection**, including file/project inventory equivalence, static-only behavior and invalid-manifest handling. Run the same checks locally:
 
 ```sh
 python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp/target/debug/scarp
@@ -77,6 +77,6 @@ No network calls or external Python packages are required by the verifier. A les
 
 ## Translations and contributions
 
-English remains the canonical source language. **[Read all 52 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture, and is displayed directly on its corresponding lesson page using a language toggle. Neither Scarp syntax nor verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
+English remains the canonical source language. **[Read all 59 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture, and is displayed directly on its corresponding lesson page using a language toggle. Neither Scarp syntax nor verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
 
 **License:** [MIT](LICENSE) for this learning repository. Some compiler-source examples originated in the separately licensed [Scarp compiler repository](https://github.com/scarp-lang/scarp); preserve upstream attribution and applicable licensing when reusing material. No stable Scarp by Example release is announced.

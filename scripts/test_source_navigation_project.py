@@ -21,7 +21,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         cls.target = read_course()[2]
 
     def test_manifest_source_and_stdout_are_compiler_fixtures(self):
-        self.assertEqual(self.target["version"], "0.0.6-alpha.4")
+        self.assertEqual(self.target["version"], "0.0.6-alpha.5")
         self.assertEqual((PROJECT / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: source-navigation\nentry: src/main.srp\n")
         main = (PROJECT / "src/main.srp").read_text(encoding="utf-8")
@@ -47,7 +47,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment.lower(), markup.lower())
         self.assertIn('href="../module-inspection/index.html"', markup)
-        self.assertIn("f04be0758cb", markup)
+        self.assertIn("205e92f166f", markup)
         self.assertIn('data-reference-explorer', markup)
         self.assertIn('src="../../reference-explorer.js"', markup)
         self.assertIn('href="#ref-card-base-outer"', markup)
