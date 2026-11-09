@@ -36,6 +36,9 @@ jobs:
           path: .compiler
           persist-credentials: false
 
+      - name: Verify migrated fixtures match pinned compiler source
+        run: python scripts/verify_migration_provenance.py --compiler .compiler
+
       - name: Set up Rust toolchain
         uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
