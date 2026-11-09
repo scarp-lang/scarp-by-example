@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "compiler_release": "v0.0.6-alpha.4",
+  "compiler_source_commit": "f04be0758cbce405ddcdb229699b0ff83c09d207",
+  "migrations": [
+    {
+      "compiler_source": "examples/sampled_calculus.srp",
+      "compiler_stdout": "examples/sampled_calculus.stdout",
+      "course_source": "examples/04-collections/13-sampled-calculus.srp",
+      "course_stdout": "examples/04-collections/13-sampled-calculus.stdout"
+    },
+    {
+      "compiler_source": "examples/temperature_softmax.srp",
+      "compiler_stdout": "examples/temperature_softmax.stdout",
+      "course_source": "examples/06-ai-foundations/12-temperature-softmax.srp",
+      "course_stdout": "examples/06-ai-foundations/12-temperature-softmax.stdout"
+    },
+    {
+      "compiler_source": "examples/cosine_similarity.srp",
+      "compiler_stdout": "examples/cosine_similarity.stdout",
+      "course_source": "examples/06-ai-foundations/13-cosine-similarity.srp",
+      "course_stdout": "examples/06-ai-foundations/13-cosine-similarity.stdout"
+    },
+    {
+      "compiler_source": "examples/sample_cumulative_area.srp",
+      "compiler_stdout": "examples/sample_cumulative_area.stdout",
+      "course_source": "examples/06-ai-foundations/14-sample-cumulative-area.srp",
+      "course_stdout": "examples/06-ai-foundations/14-sample-cumulative-area.stdout"
+    },
+    {
+      "compiler_source": "examples/topk_scores.srp",
+      "compiler_stdout": "examples/topk_scores.stdout",
+      "course_source": "examples/06-ai-foundations/15-topk-ranking.srp",
+      "course_stdout": "examples/06-ai-foundations/15-topk-ranking.stdout"
+    }
+  ]
+}
