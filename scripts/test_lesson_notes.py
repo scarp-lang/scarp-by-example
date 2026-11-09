@@ -10,6 +10,7 @@ from lesson_notes import (
     HindiNote, inline_html, parse_hindi_guide, read_hindi_notes, render_hindi_note,
 )
 from verify_examples import EXAMPLES, ROOT, discover_examples
+from site_inventory import expected_lesson_count, expected_page_paths
 
 
 class HindiNoteTests(unittest.TestCase):
@@ -17,7 +18,7 @@ class HindiNoteTests(unittest.TestCase):
         lessons = discover_examples(EXAMPLES)
         notes = read_hindi_notes()
         self.assertEqual(len(notes), len(lessons))
-        self.assertEqual(len(notes), 52)
+        self.assertEqual(len(notes), expected_lesson_count())
         for source, stdout in lessons:
             key = source.relative_to(ROOT).as_posix()
             with self.subTest(lesson=key):
