@@ -16,6 +16,7 @@
 | [10 · Float refinement](10-float-refinement.srp) | Newton-style square-root refinement, bounded steps, typed contracts | `sqrt2 checked true`, then `sqrt9 3.0` |
 | [11 · Vector allocation](11-vector-allocation.srp) | `fill`, `len` and `sum` on a three-element numerical vector | `3.0 3` |
 | [12 · Root mean square](12-root-mean-square.srp) | Stable `rms` on signals and visible vector windows | `balanced 2.0`, `window 2.5`, `finite true`, `zero 0.0` |
+| [13 · Sampled calculus](13-sampled-calculus.srp) | Bounded trapezoidal area and interval secant slopes | `9.0`, `[2.0, 2.0]` |
 
 Run `scarp run examples/04-collections/01-vectors.srp` from this repository root or pass an absolute lesson path. Compare the exact `.stdout` beside each file.
 
@@ -48,3 +49,9 @@ Run `scarp run examples/04-collections/01-vectors.srp` from this repository root
 **12 · Stable RMS:** `rms(samples)` computes the root mean square of a nonempty finite vector. Four samples `[2.0, -2.0, 2.0, -2.0]` give RMS 2.0. Selecting `[3.0, 4.0, 0.0, 0.0]` through `window` gives RMS 2.5. The compiler uses scaling so the tested large finite values remain finite without squaring them directly. An empty vector is a runtime error. This requires Scarp v0.0.6-alpha.1; the operation neither modifies the input nor trains a model.
 
 **Practice:** Square the four window values, add, divide by four, and take the square root. Why is the result different from `norm`?
+
+## Published alpha.4 sampled calculus
+
+**13 · Sampled calculus:** `sample_area(time, velocity)` applies the composite trapezoidal rule to irregular samples, giving `9.0`; `sample_slopes` reports a finite secant slope per interval, `[2.0, 2.0]`. The coordinate vector must be strictly increasing, and these functions do not implement symbolic integration or differentiation. Published in `v0.0.6-alpha.4`; the `.srp` and `.stdout` were copied unchanged from the tagged compiler fixtures.
+
+**Practice:** Compute the area of the intervals `[0, 1]` and `[1, 3]` separately, then add them. Why do both secant slopes equal `2.0` even though their time intervals differ?
