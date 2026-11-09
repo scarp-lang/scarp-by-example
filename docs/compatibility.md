@@ -6,13 +6,20 @@ Scarp is experimental prerelease software. The learning course pins a published,
 
 | Property | Recorded target |
 | --- | --- |
-| GitHub release | [Scarp v0.0.6-alpha.4](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4), published 8 November 2026 as a prerelease |
-| Annotated-tag source commit | [`f04be0758cbce405ddcdb229699b0ff83c09d207`](https://github.com/scarp-lang/scarp/commit/f04be0758cbce405ddcdb229699b0ff83c09d207) |
-| Previous course compiler | [v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3), commit `ceff07d9014f466974e0c9e02fc5d23573f55777` |
+| GitHub release | [Scarp v0.0.6-alpha.5](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.5), published 9 November 2026 as a prerelease |
+| Annotated-tag source commit | [`205e92f166f186c3905e5880d41c31717b697b8e`](https://github.com/scarp-lang/scarp/commit/205e92f166f186c3905e5880d41c31717b697b8e) |
+| Previous course compiler | [v0.0.6-alpha.4](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4), commit `f04be0758cbce405ddcdb229699b0ff83c09d207` |
 | Source of truth | [`compiler-target.json`](compiler-target.json) |
 | Required gates | [Examples across three OSes](../.github/workflows/examples.yml) and [Pages build](../.github/workflows/pages.yml) |
 
-The annotated `v0.0.6-alpha.4` Git tag dereferences to the exact commit above. The public prerelease provides Windows x64, Linux x64 and macOS Apple Silicon archives, checksum sidecars and a combined checksum manifest. The compiler's `docs/releases/v0.0.6-alpha.4.md` is a **historical prepublication candidate**, not its current release status; use the [published release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.4) and its verification record. The course must independently test all lessons, labs and source navigation at this SHA before merging its new pin.
+The annotated `v0.0.6-alpha.5` Git tag resolves to this exact source commit. The [published prerelease](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.5) provides Windows x64, Linux x64 and macOS Apple Silicon archives plus checksum files. Its compiler-side `docs/releases/v0.0.6-alpha.5.md` is a historical prepublication snapshot, not a statement that the release is unpublished. The course must pass all lessons, labs, inspection tools, and the full website build against this pin. **Historical alpha.4 migration fixtures remain pinned to alpha.4 for provenance:** the separate [alpha.4 target](compiler-target-alpha4.json) and [five-pair manifest](migration-provenance.json) are checked independently, while [two new alpha.5 pairs](migration-provenance-alpha5.json) are checked against the current compiler.
+
+## Changes in published alpha.5
+
+- `pearson_correlation(left, right)` measures centered linear co-variation on paired finite nonconstant vectors, with numerical stability contracts; see [runnable lesson](../examples/04-collections/14-pearson-correlation.srp).
+- `top_p(probabilities, mass)` / `top_p_values` provide deterministic rank-based nucleus selection, not stochastic sampling; see [runnable lesson](../examples/06-ai-foundations/16-nucleus-selection.srp).
+- Experimental ELF64 x86-64 relocatable object generation can depend on preceding integer bindings through a narrow **Rust API**, not a general native compiler or user-facing `scarp compile` command.
+- All existing Scarp lessons and their `.stdout` fixtures are retested against the new compiler release; their original historical source provenance is preserved.
 
 ## Changes in published alpha.4
 
@@ -42,7 +49,7 @@ The existing limited scalar C11 emitter remains experimental and exposed only th
 ```sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout ceff07d9014f466974e0c9e02fc5d23573f55777
+git checkout 205e92f166f186c3905e5880d41c31717b697b8e
 cargo build --locked --offline
 ./target/debug/scarp version
 ```
@@ -62,7 +69,7 @@ Each lesson must pass static verification and byte-exact runtime stdout comparis
 ## Upgrade checklist
 
 1. Independently check the public prerelease, annotated tag and dereferenced source SHA.
-2. Change `compiler-target.json` and **both** checkout pins in one pull request.
+2. Change `compiler-target.json` and **both current compiler checkout pins** in one pull request; do not silently rewrite historical compiler source and stdout provenance. Keep the `compiler-target-alpha4.json` checkout explicitly pinned.
 3. Keep runnable sources, stdout fixtures, English/Hindi explanations and test expectations synchronized. Never rewrite a fixture simply to conceal a regression.
 4. Require passing required Actions checks on the pull request before merging. Do not publish an independent course prerelease from an unverified source revision.
 5. After merge, independently verify GitHub Pages and any subsequent release record.
