@@ -21,7 +21,7 @@
 
 **नया alpha.3 अभ्यास:** [AI coding lab में अतिरिक्त चुनौती](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) — temperature-controlled softmax और Top-K से स्कोर रैंक करें। यह random sampling या model training नहीं है।
 
-**नए v0.0.6-alpha.5 पाठ:** [Pearson correlation](04-collections.md) और [Top-P candidate ranking](06-ai-foundations.md) deterministic संख्यात्मक फ़ंक्शन हैं; random sampling या पूरा AI framework नहीं। पहले के पाँच alpha.4 source/stdout जोड़े उनके मूल compiler से भी जाँचे जाते हैं।
+**नए v0.0.6-alpha.5 पाठ:** [Pearson correlation](../../examples/04-collections/14-pearson-correlation.srp) और [Top-P candidate ranking](../../examples/06-ai-foundations/16-nucleus-selection.srp) deterministic संख्यात्मक फ़ंक्शन हैं; random sampling या पूरा AI framework नहीं। पहले के पाँच alpha.4 source/stdout जोड़े उनके मूल compiler से भी जाँचे जाते हैं।
 
 ## Scarp चलाने का तरीका
 
