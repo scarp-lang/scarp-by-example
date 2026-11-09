@@ -9,6 +9,7 @@ import unittest
 from verify_examples import ROOT
 
 TARGET = ROOT / "docs" / "compiler-target.json"
+HISTORICAL_TARGET = ROOT / "docs" / "compiler-target-alpha4.json"
 WORKFLOWS = (
     ROOT / ".github" / "workflows" / "examples.yml",
     ROOT / ".github" / "workflows" / "pages.yml",
@@ -44,11 +45,15 @@ class CompilerTargetTests(unittest.TestCase):
 
     def test_both_workflows_pin_same_exact_commit(self):
         target = json.loads(TARGET.read_text(encoding="utf-8"))
+        historical = json.loads(HISTORICAL_TARGET.read_text(encoding="utf-8"))
         for workflow in WORKFLOWS:
             with self.subTest(workflow=workflow.name):
                 contents = workflow.read_text(encoding="utf-8")
                 refs = re.findall(r"(?m)^\s+ref:\s+([0-9a-f]{40})\s*$", contents)
-                self.assertEqual(refs, [target["source_commit"]])
+                self.assertEqual(refs, [target["source_commit"], historical["source_commit"]])
+                self.assertIn("path: .compiler-alpha4", contents)
+                self.assertIn("docs/compiler-target-alpha4.json", contents)
+                self.assertIn("docs/migration-provenance-alpha5.json", contents)
                 self.assertIn("repository: scarp-lang/scarp", contents)
 
 
