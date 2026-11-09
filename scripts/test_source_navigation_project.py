@@ -47,7 +47,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment.lower(), markup.lower())
         self.assertIn('href="../module-inspection/index.html"', markup)
-        self.assertIn("f04be0758cb", markup)
+        self.assertIn("205e92f166f", markup)  # Rendered with current alpha.5 compiler pin
         self.assertIn('data-reference-explorer', markup)
         self.assertIn('src="../../reference-explorer.js"', markup)
         self.assertIn('href="#ref-card-base-outer"', markup)
