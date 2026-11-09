@@ -161,6 +161,16 @@
 
 **अभ्यास:** दोनों 5.0 स्कोरों के इंडेक्स 1 और 2 क्यों पहले आते हैं? खाली इनपुट और शून्य count पर परिणाम क्या है?
 
+### 16 · Top-P से निश्चित संभाव्यता चयन
+
+`top_p(probabilities, mass)` पहले संभावना के आधार पर क्रम तय करता है, फिर माँगी गई cumulative mass तक पहुँचने वाले **सबसे छोटे शुरुआती समूह** के मूल शून्य-आधारित इंडेक्स लौटाता है। `top_p_values` चुने गए मान लौटाता है। `mass = 1.0` पर सभी मान चुने जाते हैं; बराबर probability पर पहले इंडेक्स को प्राथमिकता मिलती है। यह `v0.0.6-alpha.5` की प्रकाशित **निश्चित रैंकिंग** है, random sampling या AI text generation नहीं।
+
+[Scarp स्रोत](../../examples/06-ai-foundations/16-nucleus-selection.srp) · [सटीक अपेक्षित आउटपुट](../../examples/06-ai-foundations/16-nucleus-selection.stdout)
+
+**आउटपुट:** चार पंक्तियाँ: `[integer: 0, 1]`, `[0.5, 0.25]`, `[integer: 0, 1, 2]` और `[integer: 1, 2]`।
+
+**अभ्यास:** `0.75` पर पहले दो इंडेक्स पर्याप्त क्यों हैं, पर `1.0` पर तीसरा भी चाहिए? `softmax_temp` के बाद बराबर स्कोर का क्रम कैसे तय होगा?
+
 ## अतिरिक्त alpha.3 अभ्यास: Top-K और तापमान
 
 [AI coding lab की वैकल्पिक चुनौती](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) में `softmax_temp` से स्कोर का वितरण बदलें और `topk` से तीन सर्वोच्च **मूल इंडेक्स** चुनें। बराबर स्कोर होने पर पहला इंडेक्स पहले आता है। `logsoftmax_temp` से एक स्कोर की log probability भी निकालें। `stretch-starter.srp` से शुरुआत करें और [सटीक आउटपुट](../../labs/06-ai-foundations/stretch-solution.stdout) से तुलना करें। ये फ़ंक्शन प्रकाशित Scarp v0.0.6-alpha.3 में उपलब्ध हैं, alpha.2 में नहीं।
