@@ -18,6 +18,7 @@ Scarp has early numerical primitives useful for AI-related calculations. **These
 | [12 · Temperature softmax](12-temperature-softmax.srp) | Positive-temperature probability scaling and deterministic `topk` | `[0.5, 0.5]`, `[0.0]`, `[integer: 1, 2, 3]` |
 | [13 · Cosine similarity](13-cosine-similarity.srp) | Compare finite vector directions independently of magnitude | `1.0`, `0.0`, `-1.0` |
 | [14 · Cumulative sampled area](14-sample-cumulative-area.srp) | Calculate trapezoidal prefix areas from sampled velocity | `[0.0, 1.0, 9.0, 16.0]`, `16.0` |
+| [15 · Top-K ranking](15-topk-ranking.srp) | Deterministic sorted original indices and scores, including ties and empty results | `[integer: 1, 2, 4]`, `[5.0, 5.0, 3.0]`, `[integer: 1, 2]`, `[integer:]` |
 
 Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repository root. `scarp check PATH` validates source, and the adjacent `.stdout` defines the exact output.
 
@@ -56,3 +57,5 @@ Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repo
 **14 · Cumulative sampled area:** `sample_cumulative_area` evaluates trapezoidal prefix areas from measurements; the final prefix matches `sample_area` for this fixture. Published in `v0.0.6-alpha.4`. This is not symbolic integration.
 
 All three `.srp` / `.stdout` pairs are copied unchanged from the compiler's immutable [v0.0.6-alpha.4 example fixtures](https://github.com/scarp-lang/scarp/tree/v0.0.6-alpha.4/examples). The compiler retains its regression copies. Read the [official scientific-kernels guide](https://scarp-lang.github.io/scarp-docs/language/scientific-kernels-alpha4.html) for the API contracts.
+
+**15 · Deterministic Top-K:** `topk(scores, 3)` preserves original zero-based indices sorted by descending scores with lower indices winning equal-score ties. `topk_values` supplies their unchanged values. Ranking `softmax` probabilities retains the same tie order; `topk([], 0)` is a valid empty result. These are not stochastic sampling or text generation algorithms. Published in `v0.0.6-alpha.3` and unchanged in alpha.4.
