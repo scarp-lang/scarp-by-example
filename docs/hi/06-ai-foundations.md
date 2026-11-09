@@ -120,6 +120,37 @@
 
 **अभ्यास:** दो बराबर स्कोर से दो बराबर संभावनाएँ क्यों बनती हैं, और लॉस को सटीक बराबरी के बजाय दायरे में क्यों जाँचा गया?
 
+### 12 · तापमान के साथ सॉफ्टमैक्स
+
+`softmax_temp` और `logsoftmax_temp` धनात्मक तापमान के साथ स्कोर को संभावनाओं में बदलते हैं। `topk` मूल इंडेक्स एक निश्चित क्रम में चुनता है; यह random sampling नहीं है। ये फ़ंक्शन प्रकाशित alpha.3 से उपलब्ध हैं।
+
+[Scarp स्रोत](../../examples/06-ai-foundations/12-temperature-softmax.srp) · [सटीक अपेक्षित आउटपुट](../../examples/06-ai-foundations/12-temperature-softmax.stdout)
+
+**आउटपुट:** `[0.5, 0.5]`, `[0.0]`, और `[integer: 1, 2, 3]`।
+
+**अभ्यास:** दो बराबर स्कोर पर temperature बदलने से दोनों संभावनाएँ 0.5 ही क्यों रहती हैं?
+
+### 13 · कोसाइन समानता
+
+`cosine_similarity` दो वेक्टरों की दिशा की तुलना करता है। समान दिशा में `1.0`, समकोण पर `0.0`, और उलटी दिशा में `-1.0` मिलता है। यह alpha.4 में प्रकाशित गणितीय सुविधा है, पूरा AI मॉडल नहीं।
+
+[Scarp स्रोत](../../examples/06-ai-foundations/13-cosine-similarity.srp) · [सटीक अपेक्षित आउटपुट](../../examples/06-ai-foundations/13-cosine-similarity.stdout)
+
+**आउटपुट:** `1.0`, `0.0`, और `-1.0` तीन पंक्तियों में।
+
+**अभ्यास:** `[3.0, 4.0]` और `[6.0, 8.0]` एक दिशा में कैसे हैं?
+
+### 14 · नमूनों का संचयी क्षेत्रफल
+
+`sample_cumulative_area(time, speed)` नमूनों के बीच trapezoid नियम से प्रत्येक बिंदु तक क्षेत्रफल जोड़ता है। `sample_area` कुल मान देता है। यह alpha.4 का संख्यात्मक फ़ंक्शन है, symbolic calculus नहीं।
+
+[Scarp स्रोत](../../examples/06-ai-foundations/14-sample-cumulative-area.srp) · [सटीक अपेक्षित आउटपुट](../../examples/06-ai-foundations/14-sample-cumulative-area.stdout)
+
+**आउटपुट:** `[0.0, 1.0, 9.0, 16.0]` और `16.0`।
+
+**अभ्यास:** समय 1 से 3 के बीच संचयी क्षेत्रफल में `8.0` की वृद्धि कैसे होती है?
+
+
 ## अतिरिक्त alpha.3 अभ्यास: Top-K और तापमान
 
 [AI coding lab की वैकल्पिक चुनौती](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) में `softmax_temp` से स्कोर का वितरण बदलें और `topk` से तीन सर्वोच्च **मूल इंडेक्स** चुनें। बराबर स्कोर होने पर पहला इंडेक्स पहले आता है। `logsoftmax_temp` से एक स्कोर की log probability भी निकालें। `stretch-starter.srp` से शुरुआत करें और [सटीक आउटपुट](../../labs/06-ai-foundations/stretch-solution.stdout) से तुलना करें। ये फ़ंक्शन प्रकाशित Scarp v0.0.6-alpha.3 में उपलब्ध हैं, alpha.2 में नहीं।
