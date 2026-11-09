@@ -4,6 +4,8 @@
 
 **[Browse the learning catalog](https://scarp-lang.github.io/scarp-by-example/)** · [Scarp compiler](https://github.com/scarp-lang/scarp) · [Official documentation](https://github.com/scarp-lang/scarp-docs) · [Project website](https://scarp-lang.github.io/) · [Contribute](CONTRIBUTING.md)
 
+**Content ownership:** [How compiler fixtures, official docs and runnable lessons are separated](docs/content-ownership.md). New published alpha.4 numerical lessons 12–14 are under review in [PR #57](https://github.com/scarp-lang/scarp-by-example/pull/57).
+
 Scarp by Example is the hands-on companion to the Scarp programming language. Lessons are arranged from first program to numeric and AI-oriented programming. Every runnable lesson includes a Scarp `.srp` source file, an exact `.stdout` fixture, and bilingual teaching notes shown directly on the lesson page from the existing source-linked chapter guides.
 
 > **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.6-alpha.4 at exact source commit `f04be0758cbce405ddcdb229699b0ff83c09d207`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
