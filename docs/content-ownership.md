@@ -12,7 +12,7 @@
 2. Copy each complete `.srp` / `.stdout` pair from that tag into a numbered lesson. Keep the compiler's original fixture: it remains necessary for regression testing.
 3. Add an entry to the chapter's `README.md` table and one matching `### NN · ...` entry to `docs/hi/<chapter>.md`, with exactly one source link, one stdout link and an `**अभ्यास:**` exercise.
 4. Link the public official reference in `scarp-docs` to the runnable example and back. Do not silently change historical compiler documentation, tags or release evidence.
-5. Run the repository's real-compiler `verify` and `exec` checks with byte-exact stdout, the static Pages build, Hindi-coverage checks and CI before merging.
+5. Run the repository's real-compiler `verify` and `exec` checks with byte-exact stdout, the static Pages build, Hindi-coverage checks and CI before merging. The [migration manifest](migration-provenance.json) and [source-provenance verifier](../scripts/verify_migration_provenance.py) independently require every copied `.srp` and `.stdout` to match the exact published compiler checkout byte-for-byte.
 6. Preserve old GitHub links and published URLs until all inbound references are audited; do not bulk-delete source fixtures or specs.
 
 ## Published alpha.4 migration cohorts
