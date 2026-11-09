@@ -66,6 +66,8 @@ def verify_provenance(
             stdout = entry[side + "_stdout"]
             if not isinstance(source, str) or not isinstance(stdout, str):
                 raise ProvenanceError(f"migration {index}: paths must be strings")
+            if not PATH_PATTERN.fullmatch(source) or not PATH_PATTERN.fullmatch(stdout):
+                raise ProvenanceError(f"migration {index}: invalid example path")
             if source.removesuffix(".srp") != stdout.removesuffix(".stdout"):
                 raise ProvenanceError(f"migration {index}: source and stdout names do not match")
             seen = seen_source if side == "compiler" else seen_course
