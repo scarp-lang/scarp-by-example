@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "compiler_release": "v0.0.6-alpha.4",
-  "compiler_source_commit": "f04be0758cbce405ddcdb229699b0ff83c09d207",
+  "compiler_release": "v0.0.6-alpha.5",
+  "compiler_source_commit": "205e92f166f186c3905e5880d41c31717b697b8e",
   "migrations": [
     {
       "compiler_source": "examples/sampled_calculus.srp",
@@ -32,6 +32,18 @@
       "compiler_stdout": "examples/topk_scores.stdout",
       "course_source": "examples/06-ai-foundations/15-topk-ranking.srp",
       "course_stdout": "examples/06-ai-foundations/15-topk-ranking.stdout"
+    },
+    {
+      "compiler_source": "examples/pearson_correlation.srp",
+      "compiler_stdout": "examples/pearson_correlation.stdout",
+      "course_source": "examples/04-collections/14-pearson-correlation.srp",
+      "course_stdout": "examples/04-collections/14-pearson-correlation.stdout"
+    },
+    {
+      "compiler_source": "examples/nucleus_selection.srp",
+      "compiler_stdout": "examples/nucleus_selection.stdout",
+      "course_source": "examples/06-ai-foundations/16-nucleus-selection.srp",
+      "course_stdout": "examples/06-ai-foundations/16-nucleus-selection.stdout"
     }
   ]
 }
