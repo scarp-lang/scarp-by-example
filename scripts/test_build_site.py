@@ -319,8 +319,12 @@ class SiteTests(unittest.TestCase):
             self.assertIn('data-progress-scope="01-basics"', chapter)
             self.assertIn('data-progress-count="01-basics"', chapter)
             self.assertIn('data-progress-resume', chapter)
-            last = output / "lessons/06-ai-foundations/11-matrix-probabilities/index.html"
+            # The final page changes as release-pinned lessons are migrated.
+            last_lesson = read_course()[0][-1]
+            last = output / last_lesson.url
             self.assertIn("End of course", last.read_text(encoding="utf-8"))
+            previous_last = output / "lessons/06-ai-foundations/11-matrix-probabilities/index.html"
+            self.assertNotIn("End of course", previous_last.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
