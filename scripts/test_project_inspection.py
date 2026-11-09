@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from site_inventory import expected_lesson_count, expected_page_paths
 from build_site import build, read_course, render_project_inspection_page
 from verify_examples import ROOT
 
@@ -66,9 +67,9 @@ class ProjectInspectionTests(unittest.TestCase):
     def test_course_build_publishes_one_independent_inspection_page(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            self.assertEqual(build(target), 52)
+            self.assertEqual(build(target), expected_lesson_count())
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 69)
+            self.assertEqual(len(pages), len(expected_page_paths()))
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")
