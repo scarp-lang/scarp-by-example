@@ -10,10 +10,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
+MAX_STDIN_BYTES = 64 * 1024
 
 
 class VerificationError(Exception):
     """The lesson catalog is incomplete or malformed."""
+
+
+def read_optional_stdin(input_path: Path) -> bytes:
+    """Return exact fixture bytes, or EOF when a lesson has no stdin fixture.
+
+    Unlike stdout, CRLF is meaningful input and must not be rewritten. Keep
+    fixtures UTF-8 and small enough for a deterministic introductory course.
+    """
+    if not input_path.exists():
+        return b""
+    data = input_path.read_bytes()
+    if len(data) > MAX_STDIN_BYTES:
+        raise VerificationError(f"{input_path}: stdin fixture exceeds {MAX_STDIN_BYTES} bytes")
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise VerificationError(f"{input_path}: stdin fixture is not valid UTF-8") from error
+    return data
 
 
 def discover_examples(examples_root: Path) -> list[tuple[Path, Path]]:
@@ -37,6 +56,16 @@ def discover_examples(examples_root: Path) -> list[tuple[Path, Path]]:
         raise VerificationError(
             "orphaned fixtures: " + ", ".join(str(p.relative_to(examples_root)) for p in sorted(orphaned))
         )
+    stdin_fixtures = set(examples_root.rglob("*.stdin"))
+    expected_stdin = {p.with_suffix(".stdin") for p in lessons}
+    orphaned_stdin = stdin_fixtures - expected_stdin
+    if orphaned_stdin:
+        raise VerificationError(
+            "orphaned stdin fixtures: "
+            + ", ".join(str(p.relative_to(examples_root)) for p in sorted(orphaned_stdin))
+        )
+    for fixture in sorted(stdin_fixtures):
+        read_optional_stdin(fixture)
     chapter_numbers: dict[str, list[int]] = {}
     for lesson in lessons:
         relative = lesson.relative_to(examples_root)
@@ -76,11 +105,13 @@ def read_expected_stdout(expected_path: Path) -> bytes:
 
 def verify_one(compiler: Path, lesson: Path, expected_path: Path, timeout: int) -> None:
     expected = read_expected_stdout(expected_path)
+    provided_stdin = read_optional_stdin(lesson.with_suffix(".stdin"))
     for command in ("verify", "exec"):
         try:
             result = subprocess.run(
                 [str(compiler), command, str(lesson)],
                 cwd=ROOT,
+                input=provided_stdin if command == "exec" else b"",
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 timeout=timeout,

@@ -12,7 +12,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
-from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_stdout
+from verify_examples import EXAMPLES, ROOT, discover_examples, read_expected_stdout, read_optional_stdin
 from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
 from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
@@ -979,6 +979,26 @@ Read-only metadata is not program output. The browser does not execute Scarp.</p
                       main, "project-layout reference-explorer-layout")
 
 
+def visible_stdin(data: bytes) -> str:
+    """Make control bytes legible without treating displayed text as the raw file."""
+    source = data.decode("utf-8")
+    controls = {"\\": r"\\", "\r": r"\r", "\t": r"\t", "\x00": r"\0"}
+    return "".join(
+        controls.get(char, f"\\u{{{ord(char):x}}}" if ord(char) < 32 and char != "\n" else char)
+        for char in source
+    )
+
+
+def lesson_exec_command(source: Path) -> str:
+    """Include deterministic stdin redirection only when a fixture exists."""
+    command = "scarp exec " + source.relative_to(ROOT).as_posix()
+    stdin = source.with_suffix(".stdin")
+    if stdin.is_file():
+        read_optional_stdin(stdin)  # Same UTF-8 and size gate as the lesson verifier.
+        command += " < " + stdin.relative_to(ROOT).as_posix()
+    return command
+
+
 def render_lesson(source: Path, stdout: Path, description: str) -> str:
     """Preserve source characters and exact fixture bytes; display CR visibly."""
     raw = source.read_text(encoding="utf-8")
@@ -987,6 +1007,25 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
     note = '<p class="output-note">A literal CR byte is shown as \\r for readability.</p>' if "\r" in output else ""
     src_url = REPOSITORY + "/blob/main/" + source.relative_to(ROOT).as_posix()
     out_url = REPOSITORY + "/blob/main/" + stdout.relative_to(ROOT).as_posix()
+    input_panel = ""
+    stdin_path = source.with_suffix(".stdin")
+    if stdin_path.is_file():
+        supplied = read_optional_stdin(stdin_path)
+        stdin_url = REPOSITORY + "/blob/main/" + stdin_path.relative_to(ROOT).as_posix()
+        displayed = visible_stdin(supplied)
+        if not supplied:
+            displayed = "(empty input: immediate EOF)"
+        input_panel = f"""<section class="code-panel stdin-fixture-panel" aria-labelledby="stdin-title">
+<div class="panel-heading">
+<div><span class="eyebrow">SUPPLIED PROGRAM INPUT · प्रोग्राम इनपुट</span>
+<h2 id="stdin-title">{escape(stdin_path.name)}</h2></div></div>
+<pre><code id="scarp-stdin">{escape(displayed)}</code></pre>
+<p class="output-note">Displayed UTF-8 input is for reading only. Backslashes and control
+bytes are shown visibly; the linked <code>.stdin</code> fixture is the source of exact
+input bytes. Static <code>scarp verify</code> does not read input. The website
+does not execute Scarp.</p>
+<div class="panel-footer"><a href="{escape(stdin_url)}">View original .stdin fixture ↗</a></div>
+</section>"""
     return f"""<div class="code-grid">
 <section class="code-panel" aria-labelledby="source-title"><div class="panel-heading">
 <div><span class="eyebrow">ORIGINAL SOURCE</span><h2 id="source-title">{escape(source.name)}</h2></div>
@@ -1011,7 +1050,8 @@ def render_lesson(source: Path, stdout: Path, description: str) -> str:
 <p data-output-feedback role="status" aria-live="polite"></p>
 </div></div>
 <div class="panel-footer"><a href="{escape(out_url)}">View exact fixture ↗</a></div></section>
-</div>"""
+</div>
+{input_panel}"""
 
 
 def render_notes(lesson: Lesson, hindi: HindiNote) -> str:
@@ -1156,6 +1196,15 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     before = all_lessons[i - 1] if i > 0 else None
     after = all_lessons[i + 1] if i + 1 < len(all_lessons) else None
     code = render_lesson(lesson.source, lesson.stdout, lesson.description)
+    execution_command = lesson_exec_command(lesson.source)
+    uses_stdin = lesson.source.with_suffix(".stdin").is_file()
+    input_hint = ""
+    if uses_stdin:
+        input_hint = (
+            "<p>In Bash or Windows Command Prompt, redirect the exact supplied input file "
+            "with <code>&lt;</code>. For PowerShell, use a shell that supports "
+            "byte-preserving stdin redirection instead of pasting displayed text.</p>"
+        )
     notes = render_notes(lesson, hindi)
     checkpoint = render_checkpoint(lesson, questions or {})
     handoff = render_lesson_chapter_handoff(lesson, chapter, all_lessons)
@@ -1197,7 +1246,8 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 <div><p class="eyebrow">TRY IT LOCALLY</p><h2 id="run-title">Verify, then execute</h2>
 <p>Use the pinned compiler from the course root. Keep any imported <code>_support</code> files next to the source.</p></div>
 <div class="commands"><code>scarp verify {escape(lesson.source_path)}</code>
-<code>scarp exec {escape(lesson.source_path)}</code></div>
+<code>{escape(execution_command)}</code></div>
+{input_hint}
 <p>The website does not run code. <a href="{REPOSITORY}/blob/main/docs/cli-quickstart.md">Read the CLI guide ↗</a></p>
 </section>
 <nav class="step-nav" aria-label="Lesson navigation">

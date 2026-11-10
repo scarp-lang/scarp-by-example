@@ -178,6 +178,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .code-panel pre code { white-space: pre; }
 .panel-footer { padding: .7rem 1.2rem; border-top: 1px solid var(--line); font-size: .82rem; }
 .output-note { margin: .5rem 1.2rem; font-size: .8rem; color: var(--muted); }
+.stdin-fixture-panel { margin-top: 1.2rem; }
+.stdin-fixture-panel pre { max-height: 300px; }
+.stdin-fixture-panel .output-note { margin: .8rem 1.2rem; line-height: 1.6; }
 .run-panel { margin-top: 1.4rem; padding: 1.6rem; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-alt); }
 .run-panel h2 { margin: .4rem 0 .6rem; font-size: 1.45rem; }
 .run-panel p { margin: .5rem 0; color: var(--muted); }
