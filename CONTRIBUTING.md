@@ -6,7 +6,7 @@ Thank you for helping people learn Scarp.
 
 1. Consult the [Scarp compiler](https://github.com/scarp-lang/scarp), [syntax documentation](https://github.com/scarp-lang/scarp/tree/main/docs), [CLI quickstart](docs/cli-quickstart.md) and [compatibility policy](docs/compatibility.md).
 2. Verify the proposed syntax exists in the compiler source checkout used by CI. Do not infer implementation from roadmaps or discussion alone.
-3. Add an explicitly numbered `.srp` lesson and an adjacent `.stdout` with its **exact UTF-8 stdout**. Avoid unstable time, randomness, network requests, host-specific paths and inputs.
+3. Add an explicitly numbered `.srp` lesson and an adjacent `.stdout` with its **exact UTF-8 stdout**. If a released and course-pinned compiler supports reading program input, add an optional `.stdin` fixture (UTF-8, at most 64 KiB) to supply deterministic bytes through `scarp exec`. Without a `.stdin` fixture the runner provides EOF, never interactive terminal input. Avoid unstable time, randomness, network requests and host-specific paths; see [lesson format](docs/lesson-format.md).
 4. Explain what learners should notice in the section README; keep examples small and focused. Make explanations understandable to newcomers.
 5. Run `python3 scripts/verify_examples.py --compiler /path/to/scarp`, and include the compiler commit tested in the PR.
 6. Open a focused pull request. Avoid version bumps, tags or publishing a stable release.
