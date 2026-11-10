@@ -135,9 +135,9 @@ class SiteTests(unittest.TestCase):
             source = root / "01-input.srp"
             stdout = root / "01-input.stdout"
             stdin = root / "01-input.stdin"
-            source.write_text('print("safe");\\n', encoding="utf-8")
-            stdout.write_bytes(b"safe\\n")
-            stdin.write_bytes('हिन्दी <script> \\\\\\r\\n'.encode("utf-8"))
+            source.write_text('print("safe");' + chr(10), encoding="utf-8")
+            stdout.write_bytes(b"safe" + bytes([10]))
+            stdin.write_bytes(("हिन्दी <script> " + chr(92) + chr(13) + chr(10)).encode("utf-8"))
             markup = render_lesson(source, stdout, "Fixture test")
             self.assertIn('class="code-panel stdin-fixture-panel"', markup)
             self.assertIn('id="scarp-stdin"', markup)
@@ -151,17 +151,19 @@ class SiteTests(unittest.TestCase):
             self.assertTrue(command.endswith("/01-input.stdin"))
 
     def test_fixture_rendering_distinguishes_escapes_and_no_input(self):
-        displayed = visible_stdin("नमस्ते\\\\\\r\\n\\x00\\t".encode("utf-8"))
+        original = ("नमस्ते" + chr(92) + chr(13) + chr(10) + chr(0) + chr(9)).encode("utf-8")
+        displayed = visible_stdin(original)
         self.assertIn("नमस्ते", displayed)
-        self.assertIn(r"\\r", displayed)
-        self.assertIn(r"\\0", displayed)
-        self.assertIn(r"\\t", displayed)
+        self.assertIn(chr(92) + "r", displayed)
+        self.assertIn(chr(92) + "0", displayed)
+        self.assertIn(chr(92) + "t", displayed)
+        self.assertIn(chr(92) * 2, displayed)
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             root = Path(directory)
             source = root / "01-no-input.srp"
             stdout = root / "01-no-input.stdout"
-            source.write_text('print("ok");\\n', encoding="utf-8")
-            stdout.write_bytes(b"ok\\n")
+            source.write_text('print("ok");' + chr(10), encoding="utf-8")
+            stdout.write_bytes(b"ok" + bytes([10]))
             self.assertNotIn("stdin-fixture-panel", render_lesson(source, stdout, "No input"))
             self.assertNotIn(" < ", lesson_exec_command(source))
             source.with_suffix(".stdin").write_bytes(b"")
