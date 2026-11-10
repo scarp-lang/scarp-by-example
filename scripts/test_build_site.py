@@ -11,7 +11,7 @@ from pathlib import Path
 
 from build_site import (
     build, escape, lesson_description, read_course, render_catalog,
-    render_lesson, section_heading, table_cells, plain_markdown,
+    render_lesson, lesson_exec_command, visible_stdin, section_heading, table_cells, plain_markdown,
 )
 from verify_examples import EXAMPLES, discover_examples
 from practice_questions import read_practice_questions
@@ -129,6 +129,46 @@ class SiteTests(unittest.TestCase):
             self.assertIn("syntax-string", markup)
             self.assertIn("syntax-comment", markup)
             self.assertIn("syntax-keyword", markup)
+
+    def test_input_fixture_panel_is_escaped_and_locally_runnable(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            root = Path(directory)
+            source = root / "01-input.srp"
+            stdout = root / "01-input.stdout"
+            stdin = root / "01-input.stdin"
+            source.write_text('print("safe");' + chr(10), encoding="utf-8")
+            stdout.write_bytes(b"safe" + bytes([10]))
+            stdin.write_bytes(("हिन्दी <script> " + chr(92) + chr(13) + chr(10)).encode("utf-8"))
+            markup = render_lesson(source, stdout, "Fixture test")
+            self.assertIn('class="code-panel stdin-fixture-panel"', markup)
+            self.assertIn('id="scarp-stdin"', markup)
+            self.assertIn('हिन्दी &lt;script&gt;', markup)
+            self.assertNotIn('हिन्दी <script>', markup)
+            self.assertIn("View original .stdin fixture", markup)
+            self.assertIn("Static <code>scarp verify</code> does not read input", markup)
+            command = lesson_exec_command(source)
+            self.assertIn("scarp exec ", command)
+            self.assertIn(" < ", command)
+            self.assertTrue(command.endswith("/01-input.stdin"))
+
+    def test_fixture_rendering_distinguishes_escapes_and_no_input(self):
+        original = ("नमस्ते" + chr(92) + chr(13) + chr(10) + chr(0) + chr(9)).encode("utf-8")
+        displayed = visible_stdin(original)
+        self.assertIn("नमस्ते", displayed)
+        self.assertIn(chr(92) + "r", displayed)
+        self.assertIn(chr(92) + "0", displayed)
+        self.assertIn(chr(92) + "t", displayed)
+        self.assertIn(chr(92) * 2, displayed)
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            root = Path(directory)
+            source = root / "01-no-input.srp"
+            stdout = root / "01-no-input.stdout"
+            source.write_text('print("ok");' + chr(10), encoding="utf-8")
+            stdout.write_bytes(b"ok" + bytes([10]))
+            self.assertNotIn("stdin-fixture-panel", render_lesson(source, stdout, "No input"))
+            self.assertNotIn(" < ", lesson_exec_command(source))
+            source.with_suffix(".stdin").write_bytes(b"")
+            self.assertIn("(empty input: immediate EOF)", render_lesson(source, stdout, "Empty input"))
 
     def test_carriage_return_display_does_not_modify_fixture(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
