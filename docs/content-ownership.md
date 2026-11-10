@@ -25,3 +25,9 @@ The initial examples [temperature softmax](../examples/06-ai-foundations/12-temp
 - [Top-K ranking](../examples/06-ai-foundations/15-topk-ranking.srp) and its `.stdout`: originally `examples/topk_scores.srp` in the same tag, which prints deterministic original indices, corresponding values, probability-ranked indices, and an empty `integers` result.
 
 The original five alpha.4 migrated fixtures are checked against the historic alpha.4 checkout and **also executed** under the new pinned alpha.5 compiler. Two additional alpha.5 fixtures—[Pearson correlation](../examples/04-collections/14-pearson-correlation.srp) and [Top-P selection](../examples/06-ai-foundations/16-nucleus-selection.srp)—are checked against alpha.5 using the [new manifest](migration-provenance-alpha5.json). All seven pairs keep their original compiler-side regression sources and exact output fixtures; no older tag is rewritten.
+
+## Newer compiler releases are a separate compatibility gate
+
+The compiler published [v0.0.6-alpha.6](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.6) on 10 November 2026, at source commit `cdf6a3924ec2a36c7beca5a9aec4f01a0bce515e`. It introduces redirected `read_line()` input, checked text conversions and immutable tuples. **Those alpha.6 features are not yet part of this alpha.5-targeted migration.** The release source includes `program_input`, `text_foundations`, `tuples` and `core_input_tuple` fixtures for a later, separately reviewed course upgrade.
+
+Before any alpha.6 lessons are listed as runnable, update the active compiler pin in both workflows and `compiler-target.json`, supply matching input and stdout fixtures, keep historical alpha.4/alpha.5 provenance immutable, and requalify all existing lessons, labs, projects and the generated website on Linux, Windows and macOS. The new stdin verifier and source-backed website panel support the future input lessons, but **do not by themselves prove alpha.6 language compatibility**.
