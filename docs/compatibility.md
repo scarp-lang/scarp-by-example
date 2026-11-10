@@ -42,7 +42,7 @@ The existing limited scalar C11 emitter remains experimental and exposed only th
 ```sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout ceff07d9014f466974e0c9e02fc5d23573f55777
+git checkout f04be0758cbce405ddcdb229699b0ff83c09d207
 cargo build --locked --offline
 ./target/debug/scarp version
 ```
