@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 from unittest.mock import patch
 
-from verify_examples import VerificationError, discover_examples, read_expected_stdout, verify_one
+from verify_examples import (VerificationError, discover_examples, read_expected_stdout, read_optional_stdin, verify_one, MAX_STDIN_BYTES)
 
 
 class DiscoveryTests(unittest.TestCase):
@@ -162,6 +162,58 @@ class RunnerCommandTests(unittest.TestCase):
             with patch("verify_examples.subprocess.run", return_value=noisy):
                 with self.assertRaisesRegex(VerificationError, "static verify must be silent"):
                     verify_one(Path("scarp"), lesson, stdout, 5)
+
+
+
+class StdinFixtureTests(unittest.TestCase):
+    """The verifier must never inherit interactive stdin from the CI runner."""
+
+    def setUp(self):
+        self.workspace = tempfile.TemporaryDirectory()
+        self.addCleanup(self.workspace.cleanup)
+        self.chapter = Path(self.workspace.name) / "examples" / "01-basics"
+        self.chapter.mkdir(parents=True)
+        self.source = self.chapter / "01-input.srp"
+        self.source.write_text('print("hi");\n', encoding="utf-8")
+        self.output = self.source.with_suffix(".stdout")
+        self.output.write_bytes(b"hi\n")
+
+    def test_missing_stdin_yields_explicit_eof(self):
+        self.assertEqual(read_optional_stdin(self.source.with_suffix(".stdin")), b"")
+        results = [
+            subprocess.CompletedProcess(["scarp"], 0, b"", b""),
+            subprocess.CompletedProcess(["scarp"], 0, b"hi\n", b""),
+        ]
+        with patch("verify_examples.subprocess.run", side_effect=results) as runner:
+            verify_one(Path("scarp"), self.source, self.output, 5)
+        self.assertEqual([call.kwargs["input"] for call in runner.call_args_list], [b"", b""])
+
+    def test_unicode_and_crlf_are_passed_byte_exact_only_to_exec(self):
+        data = "नमस्ते\r\nsecond line\n".encode("utf-8")
+        self.source.with_suffix(".stdin").write_bytes(data)
+        self.assertEqual(read_optional_stdin(self.source.with_suffix(".stdin")), data)
+        self.assertEqual(len(discover_examples(self.chapter.parent)), 1)
+        results = [
+            subprocess.CompletedProcess(["scarp"], 0, b"", b""),
+            subprocess.CompletedProcess(["scarp"], 0, b"hi\n", b""),
+        ]
+        with patch("verify_examples.subprocess.run", side_effect=results) as runner:
+            verify_one(Path("scarp"), self.source, self.output, 5)
+        self.assertEqual([call.kwargs["input"] for call in runner.call_args_list], [b"", data])
+
+    def test_orphan_input_is_rejected(self):
+        (self.chapter / "02-orphan.stdin").write_bytes(b"ignored\n")
+        with self.assertRaisesRegex(VerificationError, "orphaned stdin"):
+            discover_examples(self.chapter.parent)
+
+    def test_invalid_utf8_and_oversize_rejected(self):
+        fixture = self.source.with_suffix(".stdin")
+        fixture.write_bytes(b"\xff")
+        with self.assertRaisesRegex(VerificationError, "UTF-8"):
+            discover_examples(self.chapter.parent)
+        fixture.write_bytes(b"a" * (MAX_STDIN_BYTES + 1))
+        with self.assertRaisesRegex(VerificationError, "exceeds"):
+            discover_examples(self.chapter.parent)
 
 
 if __name__ == "__main__":
