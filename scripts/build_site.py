@@ -1198,6 +1198,13 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     code = render_lesson(lesson.source, lesson.stdout, lesson.description)
     execution_command = lesson_exec_command(lesson.source)
     uses_stdin = lesson.source.with_suffix(".stdin").is_file()
+    input_hint = ""
+    if uses_stdin:
+        input_hint = (
+            "<p>In Bash or Windows Command Prompt, redirect the exact supplied input file "
+            "with <code>&lt;</code>. For PowerShell, use a shell that supports "
+            "byte-preserving stdin redirection instead of pasting displayed text.</p>"
+        )
     notes = render_notes(lesson, hindi)
     checkpoint = render_checkpoint(lesson, questions or {})
     handoff = render_lesson_chapter_handoff(lesson, chapter, all_lessons)
@@ -1240,9 +1247,7 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
 <p>Use the pinned compiler from the course root. Keep any imported <code>_support</code> files next to the source.</p></div>
 <div class="commands"><code>scarp verify {escape(lesson.source_path)}</code>
 <code>{escape(execution_command)}</code></div>
-{('<p>For Bash or Windows Command Prompt, redirect the exact supplied input fixture using '
-  '<code>&lt;</code>. In PowerShell, use a shell that supports byte-preserving stdin '
-  'redirection rather than pasting the displayed input panel.</p>' if uses_stdin else '')}
+{input_hint}
 <p>The website does not run code. <a href="{REPOSITORY}/blob/main/docs/cli-quickstart.md">Read the CLI guide ↗</a></p>
 </section>
 <nav class="step-nav" aria-label="Lesson navigation">
