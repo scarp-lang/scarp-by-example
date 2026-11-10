@@ -16,6 +16,6 @@ The `test_lesson_notes.py` tests enforce 52 exact Hindi/source/fixture matches a
 
 CI builds and runs the exact Scarp source commit identified in `.github/workflows/examples.yml`, on Linux, Windows and macOS. A passing upstream compiler test is an **input** to this project, not a substitute for passing this repository's own checks.
 
-To upgrade compiler compatibility, update both workflow refs and `docs/compiler-target.json` in one PR, run the full CI matrix and CLI smoke test, and review every output change. See the [CLI guide](../docs/cli-quickstart.md).
+To upgrade compiler compatibility, update `docs/compiler-target.json`, the primary `path: .compiler` checkout in **both** workflows and the build command in `docs/compatibility.md` together. The `scripts/test_compiler_target.py` guard validates the active checkout by path while allowing independently pinned historical compiler checkouts (for byte-exact lesson provenance). All compiler checkouts must use immutable 40-character commit SHAs. Run the full CI matrix and CLI smoke tests, and review every output change before merging. See the [CLI guide](../docs/cli-quickstart.md).
 
 The source-navigation CLI smoke checks the two-module `tutorials/source-navigation` project against the pinned alpha.6 compiler. It validates exact interpreter output, both shadowed `base` definitions and their reference targets, argument labels, imported visibility and UTF-8 byte spans on the supported CI platforms. Static inspection is never presented as program stdout.
