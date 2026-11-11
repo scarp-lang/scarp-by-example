@@ -1,5 +1,6 @@
 *.srp text eol=lf
 *.stdout text eol=lf
+*.stdin -text
 *.md text eol=lf
 *.py text eol=lf
 Scarp.project text eol=lf
