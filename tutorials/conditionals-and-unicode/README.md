@@ -62,3 +62,7 @@ syntax और types फिर भी जाँचता है।
 अभ्यास: पहले पाठ के `score` को 95 और फिर -2 करें; दूसरे पाठ में `true` और
 `false` की जगह बदलने पर runtime पर क्या असर पड़ेगा, इसे **सोचकर बताएँ**।
 मूल fixtures को PR में बदलने से पहले वापस रखें ताकि CI में सत्यापन बना रहे।
+
+## Dedicated website pages
+
+The site generator also creates a [workshop overview](https://scarp-lang.github.io/scarp-by-example/workshops/conditionals-and-unicode/) and three separate lesson pages. Each page is sourced from these checked-in `.srp`/`.stdout` pairs and a validated bilingual `site-notes.json` manifest. This preserves the independent published alpha.7 compiler pin and does not change the numbered course.
