@@ -70,3 +70,36 @@ jobs:
       - name: Smoke-test Scarp-first CLI (Windows)
         if: runner.os == 'Windows'
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp.exe
+
+  alpha6-workshop:
+    name: Input and tuples / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check out workshop compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: cdf6a3924ec2a36c7beca5a9aec4f01a0bce515e
+          path: .compiler-alpha6
+          persist-credentials: false
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - name: Build source-pinned workshop compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha6/Cargo.toml
+      - name: Verify source pin input output and EOF
+        shell: bash
+        run: |
+          compiler=.compiler-alpha6/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha6_workshop.py --compiler "$compiler" --compiler-source .compiler-alpha6

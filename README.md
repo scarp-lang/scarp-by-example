@@ -51,6 +51,11 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 
 ## Course
 
+The optional [published alpha.6 input and tuple workshop](tutorials/input-and-tuples/README.md)
+has its own immutable compiler pin, UTF-8 stdin fixture and exact output.
+Its English/Hindi guide covers line input, explicit conversion, tuple returns
+and buffered-output failure behavior.
+
 | Section | Topics | Status |
 | --- | --- | --- |
 | [01 · Basics](examples/01-basics/README.md) | Output, bindings, scopes, Unicode construction, conversions, comments and bitwise operations | Runnable lessons |
