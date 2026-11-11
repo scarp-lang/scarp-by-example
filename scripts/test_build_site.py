@@ -195,11 +195,15 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 69)
+            self.assertEqual(len(locations), 74)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/", locations)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/workshops/", locations)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/workshops/conditionals-and-unicode/", locations)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/workshops/conditionals-and-unicode/03-unicode-scalars/", locations)
+            self.assertEqual(len(list((output / "workshops/conditionals-and-unicode").glob("*/index.html"))), 3)
             inspect = (output / "projects/module-inspection/index.html").read_text(encoding="utf-8")
             self.assertIn("scarp inspect modules --json tutorials/module-inspection", inspect)
             self.assertIn("scarp launch tutorials/module-inspection", inspect)
@@ -280,7 +284,7 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(
                 sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
                     for page in pages), 18)
-            self.assertEqual(len(list(output.rglob("index.html"))), 69)
+            self.assertEqual(len(list(output.rglob("index.html"))), 74)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 52)
             for item in search:
