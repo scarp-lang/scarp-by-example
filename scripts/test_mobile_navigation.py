@@ -52,6 +52,7 @@ class MobileNavigationTests(unittest.TestCase):
             "labs/01-basics/index.html",
             "projects/index.html",
             "projects/source-navigation/index.html",
+            "workshops/conditionals-and-unicode/01-grading/index.html",
         )
         for route in routes:
             with self.subTest(route=route):
@@ -66,11 +67,12 @@ class MobileNavigationTests(unittest.TestCase):
                 self.assertEqual(desktop, mobile)
                 labels = [label for _, label in mobile]
                 self.assertEqual(
-                    labels, ["Chapters", "Search", "Projects", "Coding labs", "Compiler", "GitHub"]
+                    labels, ["Chapters", "Search", "Projects", "Workshops", "Coding labs", "Compiler", "GitHub"]
                 )
-                if route.startswith("lessons/"):
+                if route.startswith(("lessons/", "workshops/conditionals-and-unicode/")):
                     self.assertIn(("../../../index.html#chapters", "Chapters"), mobile)
                     self.assertIn(("../../../labs/index.html", "Coding labs"), mobile)
+                    self.assertIn(("../../../workshops/index.html", "Workshops"), mobile)
                 self.assertIn('<summary>Menu</summary>', markup)
                 self.assertIn('aria-label="Mobile navigation"', markup)
                 self.assertIn('href="#main-content">Skip to content', markup)
