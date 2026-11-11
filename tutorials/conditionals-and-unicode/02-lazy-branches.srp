@@ -1,0 +1,3 @@
+// Unselected results are checked statically but not evaluated at runtime.
+print("Input skipped:", if true { "yes" } else { read_line() });
+print("Unused division skipped:", if false { 1 / 0 } elif true { 7 } else { 9 });

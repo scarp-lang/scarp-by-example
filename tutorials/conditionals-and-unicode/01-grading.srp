@@ -1,0 +1,9 @@
+// Conditional expressions return typed values: a final else is required.
+bind score = 76;
+bind verdict = if score >= 90 { "excellent" } elif score >= 60 { "passed" } else { "try again" };
+print("Verdict:", verdict);
+
+pure funcra describe(value: integer) -> string {
+    return if value > 100 { "too high" } elif value < 0 { "negative" } else { "in range" };
+}
+print("Range:", describe(score));

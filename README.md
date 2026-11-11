@@ -51,6 +51,8 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 
 ## Course
 
+**Optional published alpha.7 workshop:** [Conditional expressions and Unicode scalar escapes](tutorials/conditionals-and-unicode/README.md) teaches interpreter-only `if`/`elif`/`else` values, short-circuiting and `\u{HEX}` string literals. Its three exact-output programs use a separate immutable alpha.7 compiler pin; earlier numbered lessons are unchanged.
+
 | Section | Topics | Status |
 | --- | --- | --- |
 | [01 · Basics](examples/01-basics/README.md) | Output, bindings, scopes, Unicode construction, conversions, comments and bitwise operations | Runnable lessons |
