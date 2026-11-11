@@ -62,7 +62,7 @@ class MobileNavigationTests(unittest.TestCase):
                 self.assertEqual(parser.summaries, 1)
                 desktop = parser.links["top-nav"]
                 mobile = parser.links["mobile-menu-links"]
-                self.assertEqual(len(desktop), 6)
+                self.assertEqual(len(desktop), 7)
                 self.assertEqual(desktop, mobile)
                 labels = [label for _, label in mobile]
                 self.assertEqual(
