@@ -72,7 +72,10 @@ class MobileNavigationTests(unittest.TestCase):
                 if route.startswith(("lessons/", "workshops/conditionals-and-unicode/")):
                     self.assertIn(("../../../index.html#chapters", "Chapters"), mobile)
                     self.assertIn(("../../../labs/index.html", "Coding labs"), mobile)
-                    self.assertIn(("../../../workshops/index.html", "Workshops"), mobile)
+                    workshop_path = ("../../index.html"
+                                     if route.startswith("workshops/")
+                                     else "../../../workshops/index.html")
+                    self.assertIn((workshop_path, "Workshops"), mobile)
                 self.assertIn('<summary>Menu</summary>', markup)
                 self.assertIn('aria-label="Mobile navigation"', markup)
                 self.assertIn('href="#main-content">Skip to content', markup)
