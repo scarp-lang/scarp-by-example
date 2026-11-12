@@ -115,7 +115,7 @@ class LearningPathTests(unittest.TestCase):
                 for lesson in self.chapters[section][:-1]:
                     markup = (output / lesson.url).read_text(encoding="utf-8")
                     self.assertNotIn('class="chapter-handoff"', markup)
-            self.assertEqual(len(list(output.rglob("index.html"))), 70)
+            self.assertEqual(len(list(output.rglob("index.html"))), 75)
 
 
     def test_chapter_review_reuses_exact_three_validated_questions(self):
@@ -204,7 +204,7 @@ class LearningPathTests(unittest.TestCase):
                 self.assertIn('href="../../chapters/' + chapter +
                               '/index.html#chapter-path"', lab_markup)
                 self.assertNotIn('data-path-lab-passed', lab_markup)
-            self.assertEqual(len(list(destination.rglob("index.html"))), 70)
+            self.assertEqual(len(list(destination.rglob("index.html"))), 75)
 
 
 if __name__ == "__main__":
