@@ -4,7 +4,7 @@
 
 ## 1. Project structure and declarative manifest
 
-Open [the complete runnable workshop](../tutorials/alpha8-project-testing/README.md). The `scarp.project` file tells the compiler where the application starts:
+Open [the dedicated source-backed website lesson](https://scarp-lang.github.io/scarp-by-example/projects/project-testing/) or [the complete runnable workshop](../tutorials/alpha8-project-testing/README.md). The `scarp.project` file tells the compiler where the application starts:
 
 ```text
 project "alpha8-test-workshop" {
