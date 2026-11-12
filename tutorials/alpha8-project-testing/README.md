@@ -34,6 +34,8 @@ scarp test --json --filter input tutorials/alpha8-project-testing
 
 `scarp.project` is Scarp's declarative v2 manifest format, **not TOML or JSON**. Its `dependencies {}` is deliberately empty; there is no dependency installer, registry, native `scarp compile` command, or stable package system here. Legacy `Scarp.project` projects continue to work with their own compatibility rules.
 
+The [dedicated website lesson](https://scarp-lang.github.io/scarp-by-example/projects/project-testing/) displays the original source, byte-exact fixtures and both languages; browser execution is deliberately unavailable.
+
 See the step-by-step [English guide](../../docs/alpha8-project-testing.md) and [हिन्दी गाइड](../../docs/hi/alpha8-project-testing.md). The [cross-platform workflow](../../.github/workflows/alpha8-project-testing.yml) builds only the exact published compiler source commit, then runs the [independent project verifier](../../scripts/verify_alpha8_project_testing.py), checking positive and negative test cases on Linux, Windows and macOS. It does not change the main course's compiler pin or release any software.
 
 This miniature project is original course teaching material (MIT). The workflow behavior is checked against the official compiler's alpha.8 documentation and bundled calculator project.
