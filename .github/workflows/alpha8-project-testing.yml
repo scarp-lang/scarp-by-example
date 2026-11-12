@@ -6,11 +6,17 @@ on:
     paths:
       - "tutorials/alpha8-project-testing/**"
       - "scripts/verify_alpha8_project_testing.py"
+      - "scripts/build_site.py"
+      - "scripts/alpha8_project_page.py"
+      - "docs/compiler-target-alpha8.json"
       - ".github/workflows/alpha8-project-testing.yml"
   pull_request:
     paths:
       - "tutorials/alpha8-project-testing/**"
       - "scripts/verify_alpha8_project_testing.py"
+      - "scripts/build_site.py"
+      - "scripts/alpha8_project_page.py"
+      - "docs/compiler-target-alpha8.json"
       - ".github/workflows/alpha8-project-testing.yml"
   workflow_dispatch:
 
