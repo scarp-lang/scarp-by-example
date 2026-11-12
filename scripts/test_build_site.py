@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
@@ -15,6 +16,7 @@ from build_site import (
 )
 from verify_examples import EXAMPLES, discover_examples
 from practice_questions import read_practice_questions
+from alpha8_project_page import read_workshop, SOURCE_SHA as ALPHA8_SOURCE_SHA
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -67,6 +69,30 @@ class SiteTests(unittest.TestCase):
     def test_inline_markdown_does_not_leak_into_cards(self):
         self.assertEqual(plain_markdown("A **real** " + chr(96) + "example" +
                                         chr(96)), "A real example")
+
+    def test_alpha8_metadata_and_fixtures_fail_closed_on_drift(self):
+        metadata, files = read_workshop(ROOT)
+        self.assertEqual(metadata["source_commit"], ALPHA8_SOURCE_SHA)
+        self.assertEqual(files["expected.stdout"], b"42\n")
+        self.assertEqual(files["tests/input.stdin"], b"17\n25\n")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "docs").mkdir()
+            shutil.copyfile(ROOT / "docs/compiler-target-alpha8.json",
+                            root / "docs/compiler-target-alpha8.json")
+            shutil.copytree(ROOT / "tutorials/alpha8-project-testing",
+                            root / "tutorials/alpha8-project-testing")
+            path = root / "tutorials/alpha8-project-testing/tests/input.stdin"
+            path.write_bytes(b"17\r\n25\r\n")
+            with self.assertRaisesRegex(ValueError, "input fixture changed"):
+                read_workshop(root)
+            path.write_bytes(b"17\n25\n")
+            pin = root / "docs/compiler-target-alpha8.json"
+            altered = json.loads(pin.read_text(encoding="utf-8"))
+            altered["source_commit"] = "0" * 40
+            pin.write_text(json.dumps(altered), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "release provenance"):
+                read_workshop(root)
 
     def test_course_has_matching_chapters_and_true_fixtures(self):
         lessons, chapters, target = read_course()
@@ -195,11 +221,25 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 69)
+            self.assertEqual(len(locations), 70)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/", locations)
+            self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/project-testing/", locations)
+            project_tests = (output / "projects/project-testing/index.html").read_text(encoding="utf-8")
+            for snippet in ("scarp.project", "tests/addition.srp", "tests/input.srp",
+                            "tests/input.stdin", "17", "25", "42", "assert", "E0065",
+                            "scarp test --require-tests", "scarp test --json --filter input",
+                            "read_line()", "हिन्दी"):
+                self.assertIn(snippet, project_tests)
+            self.assertIn(ALPHA8_SOURCE_SHA, project_tests)
+            self.assertIn('href="../../styles.css"', project_tests)
+            self.assertIn('id="en-notes"', project_tests)
+            self.assertIn('id="hi-notes"', project_tests)
+            self.assertNotIn("scarp test --json=v2", project_tests)
+            self.assertIn("Test a published alpha.8 project",
+                          (output / "projects/index.html").read_text(encoding="utf-8"))
             inspect = (output / "projects/module-inspection/index.html").read_text(encoding="utf-8")
             self.assertIn("scarp inspect modules --json tutorials/module-inspection", inspect)
             self.assertIn("scarp launch tutorials/module-inspection", inspect)
@@ -280,7 +320,7 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(
                 sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
                     for page in pages), 18)
-            self.assertEqual(len(list(output.rglob("index.html"))), 69)
+            self.assertEqual(len(list(output.rglob("index.html"))), 70)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 52)
             for item in search:
