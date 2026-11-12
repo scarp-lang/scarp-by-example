@@ -54,6 +54,7 @@ class MobileNavigationTests(unittest.TestCase):
             "projects/source-navigation/index.html",
             "projects/project-testing/index.html",
             "workshops/conditionals-and-unicode/01-grading/index.html",
+            "workshops/input-and-tuples/index.html",
         )
         for route in routes:
             with self.subTest(route=route):
