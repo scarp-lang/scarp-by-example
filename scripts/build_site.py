@@ -17,6 +17,7 @@ from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
 from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
+from alpha8_project_page import render_page as render_alpha8_project_page
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -51,7 +52,7 @@ SCARP_TOKENS = re.compile(
     r'(?P<comment>//[^\n]*)'
     r'|(?P<string>"(?:\\.|[^"\\])*")'
     r'|(?P<keyword>\b(?:bind|var|pub|import|as|pure|funcra|return|'
-    r'needs|ensures|if|elif|else|while|repeat|true|false|and|or|not)\b)'
+    r'needs|ensures|if|elif|else|while|repeat|assert|true|false|and|or|not)\b)'
     r'|(?P<number>\b\d+(?:\.\d+)?\b)'
 )
 
@@ -732,7 +733,8 @@ scarp launch tutorials/first-project</code></pre>
 <h2>Interpreter projects, not native builds</h2>
 <p>The development manifest is limited to 4,096 bytes and three ordered fields. Project entrypoints cannot escape the project root. These commands do not provide native executable generation, package downloads, lockfiles, a registry or a stable workspace format.</p></section>
 <p><a class="secondary-button" href="{escape(rel(page, "projects/module-inspection/index.html"))}">Inspect a project\u0027s modules →</a>
-<a class="secondary-button" href="{escape(rel(page, "projects/source-navigation/index.html"))}">Trace symbols and references →</a></p>
+<a class="secondary-button" href="{escape(rel(page, "projects/source-navigation/index.html"))}">Trace symbols and references →</a>
+<a class="secondary-button" href="{escape(rel(page, "projects/project-testing/index.html"))}">Test a published alpha.8 project →</a></p>
 <p class="fine-print">Pinned published compiler: <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> · source <code>{escape(target["source_commit"][:12])}</code>. No browser execution or fabricated output.</p>
 </main>"""
     return page_shell(page, title, "Learn the real Scarp project CLI workflow in English and Hindi, with verified source and output.", main, "project-layout")
@@ -1292,6 +1294,12 @@ def build(destination: Path) -> int:
     navigation_path = destination / "projects/source-navigation/index.html"
     navigation_path.parent.mkdir(parents=True, exist_ok=True)
     navigation_path.write_text(render_source_navigation_page(target), encoding="utf-8", newline="\n")
+    alpha8_path = destination / "projects/project-testing/index.html"
+    alpha8_path.parent.mkdir(parents=True, exist_ok=True)
+    alpha8_path.write_text(
+        render_alpha8_project_page(ROOT, page_shell, rel, highlight_scarp, visible_stdin),
+        encoding="utf-8", newline="\n",
+    )
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1307,7 +1315,8 @@ def build(destination: Path) -> int:
     # Discoverable, stable directory URLs for search engines and learners.
     urls = ["index.html", "projects/index.html",
             "projects/module-inspection/index.html",
-            "projects/source-navigation/index.html", "labs/index.html"]
+            "projects/source-navigation/index.html",
+            "projects/project-testing/index.html", "labs/index.html"]
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)
@@ -1331,7 +1340,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons, 6 chapters, and three project tutorials at {args.output.resolve()}")
+    print(f"Built {count} standalone lessons, 6 chapters, and four project tutorials at {args.output.resolve()}")
     return 0
 
 

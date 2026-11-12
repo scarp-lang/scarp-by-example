@@ -1,0 +1,5 @@
+import "../src/offset.srp" as operations;
+
+bind base = text_to_integer(read_line());
+bind change = text_to_integer(read_line());
+assert(operations.offset(base, change) == 42, "fixture sum should equal forty-two");

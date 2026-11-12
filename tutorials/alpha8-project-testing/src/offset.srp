@@ -1,0 +1,3 @@
+pub pure funcra offset(base: integer, change: integer) -> integer {
+    return base + change;
+}
