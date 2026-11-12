@@ -37,6 +37,10 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 For modules, the compiler resolves imports relative to the lesson file. Keep the companion `_support` directory with that lesson.
 
+## Published alpha.7: conditional values and Unicode scalar workshop (separate pin)
+
+The optional [three-lesson alpha.7 workshop](tutorials/conditionals-and-unicode/README.md) explains typed conditional expressions, evaluation of only the selected branch, and Unicode scalar escapes in English and Hindi. Each lesson has an independent source and exact expected-output fixture. Its [website learning hub](https://scarp-lang.github.io/scarp-by-example/workshops/) offers a dedicated page for each real alpha.7 program. These examples are tested against published `v0.0.6-alpha.7` at immutable commit `b1c1fd232b418267d95520c69ee563ac99ecae30`, not the alpha.4 numbered-course compiler or the independent alpha.8 project-testing compiler. No browser execution or native backend support is claimed.
+
 ## Published alpha.8: project testing workshop (independently pinned)
 
 The optional [Scarp alpha.8 project-testing workshop](https://scarp-lang.github.io/scarp-by-example/projects/project-testing/) (with [source files](tutorials/alpha8-project-testing/README.md)) teaches the newly published `scarp.project` v2 format, interpreter-backed `init`/`run`/`verify`, read-only `project info`, native Boolean `assert`, deterministic `scarp test`, filename filtering, `--require-tests`, JSON schema-v1 reports and per-test `.stdin` files. It contains a **real miniature project**, exact output fixture, two executable assertion-based tests, and a cross-platform verification workflow targeting the published compiler source at `37253e7805c0ca594560700dd1deb3928458e60d`.
