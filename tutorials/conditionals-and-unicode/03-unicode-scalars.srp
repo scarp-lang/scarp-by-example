@@ -1,0 +1,8 @@
+// Unicode scalar escapes contain 1-6 ASCII hex digits, not UTF-16 units.
+bind greeting = "\u{0928}\u{092e}\u{0938}\u{094d}\u{0924}\u{0947} \u{1F44B}";
+bind decomposed = "e\u{301}";
+print(greeting);
+print("Scalars:", text_len(decomposed));
+print("Bytes:", text_bytes(decomposed));
+print("Equal composed:", decomposed == "\u{e9}");
+print("Escaped backslash:", "\\u{1F44B}");
