@@ -1,0 +1,65 @@
+name: Verify published alpha.8 project workshop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tutorials/alpha8-project-testing/**"
+      - "scripts/verify_alpha8_project_testing.py"
+      - ".github/workflows/alpha8-project-testing.yml"
+  pull_request:
+    paths:
+      - "tutorials/alpha8-project-testing/**"
+      - "scripts/verify_alpha8_project_testing.py"
+      - ".github/workflows/alpha8-project-testing.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha8-project-workshop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  published-compiler:
+    name: Alpha.8 workshop / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+
+    steps:
+      - name: Check out examples repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out exact published Scarp alpha.8 source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: 37253e7805c0ca594560700dd1deb3928458e60d
+          path: .compiler
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+
+      - name: Check Python script syntax
+        run: python -m py_compile scripts/verify_alpha8_project_testing.py
+
+      - name: Build pinned compiler offline
+        run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
+
+      - name: Verify published source and all project test cases (Linux and macOS)
+        if: runner.os != 'Windows'
+        run: python scripts/verify_alpha8_project_testing.py --compiler .compiler/target/debug/scarp --source-checkout .compiler
+
+      - name: Verify published source and all project test cases (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_alpha8_project_testing.py --compiler .compiler/target/debug/scarp.exe --source-checkout .compiler
