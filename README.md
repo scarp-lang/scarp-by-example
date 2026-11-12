@@ -37,6 +37,12 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 For modules, the compiler resolves imports relative to the lesson file. Keep the companion `_support` directory with that lesson.
 
+## Published alpha.8: project testing workshop (independently pinned)
+
+The optional [Scarp alpha.8 project-testing workshop](tutorials/alpha8-project-testing/README.md) teaches the newly published `scarp.project` v2 format, interpreter-backed `init`/`run`/`verify`, read-only `project info`, native Boolean `assert`, deterministic `scarp test`, filename filtering, `--require-tests`, JSON schema-v1 reports and per-test `.stdin` files. It contains a **real miniature project**, exact output fixture, two executable assertion-based tests, and a cross-platform verification workflow targeting the published compiler source at `37253e7805c0ca594560700dd1deb3928458e60d`.
+
+Read the [English walkthrough](docs/alpha8-project-testing.md) or [हिन्दी मार्गदर्शिका](docs/hi/alpha8-project-testing.md). The existing 52 numbered course lessons and their **alpha.4 compiler pin remain unchanged**. This is a separate learning track rather than a claim that the full course has migrated to alpha.8. The website does not execute Scarp code.
+
 ## Project workflow (available since alpha.4)
 
 Learn to create, statically verify, and launch a real offline Scarp project. Follow the [English project tutorial](docs/project-workflow.md) or the [हिन्दी प्रोजेक्ट गाइड](docs/hi/project-workflow.md); the [checked-in sample project](tutorials/first-project/Scarp.project) runs with the official interpreter. Project commands are **not** native compilation or package publishing, and the sample is kept separate from the 52 numbered lessons.
