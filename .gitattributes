@@ -3,3 +3,6 @@
 *.md text eol=lf
 *.py text eol=lf
 Scarp.project text eol=lf
+# Input fixtures are byte-exact: never rewrite LF or CRLF on Windows.
+*.stdin -text
+scarp.project text eol=lf
