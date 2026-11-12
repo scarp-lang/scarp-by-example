@@ -110,7 +110,7 @@ class WorkshopSiteTests(unittest.TestCase):
             count = build(Path(td))
             self.assertEqual(count, 52)
             self.assertTrue((Path(td) / "workshops/conditionals-and-unicode/03-unicode-scalars/index.html").is_file())
-            self.assertEqual(len(list(Path(td).rglob("index.html"))), 75)
+            self.assertEqual(len(list(Path(td).rglob("index.html"))), 76)
 
 
 if __name__ == "__main__":
