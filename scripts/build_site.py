@@ -52,7 +52,7 @@ SCARP_TOKENS = re.compile(
     r'(?P<comment>//[^\n]*)'
     r'|(?P<string>"(?:\\.|[^"\\])*")'
     r'|(?P<keyword>\b(?:bind|var|pub|import|as|pure|funcra|return|'
-    r'needs|ensures|if|elif|else|while|repeat|true|false|and|or|not)\b)'
+    r'needs|ensures|if|elif|else|while|repeat|assert|true|false|and|or|not)\b)'
     r'|(?P<number>\b\d+(?:\.\d+)?\b)'
 )
 
