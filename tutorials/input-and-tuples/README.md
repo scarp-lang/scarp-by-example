@@ -6,6 +6,8 @@ alongside the lesson. The numbered course has its own
 [compatibility target](../../docs/compatibility.md).
 [Published compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.6)
 
+[Open the bilingual source-backed workshop page](https://scarp-lang.github.io/scarp-by-example/workshops/input-and-tuples/). The browser displays the real fixture; Scarp executes only locally with this separately pinned alpha.6 compiler.
+
 ## Read two lines and return a tuple
 
 `main.srp` reads a name and an integer from two UTF-8 input lines.
