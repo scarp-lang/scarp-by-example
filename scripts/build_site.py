@@ -18,6 +18,7 @@ from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
 from alpha8_project_page import render_page as render_alpha8_project_page
+from workshop_pages import read_workshops, generate_workshop_pages
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -175,6 +176,7 @@ def page_shell(page: str, title: str, description: str, main: str, layout: str =
     nav_links = f"""<a href="{home}#chapters">Chapters</a>
 <a href="{home}#search-area">Search</a>
 <a href="{escape(rel(page, "projects/index.html"))}">Projects</a>
+<a href="{escape(rel(page, "workshops/index.html"))}">Workshops</a>
 <a href="{escape(rel(page, "labs/index.html"))}">Coding labs</a>
 <a href="{COMPILER}">Compiler</a>
 <a href="{REPOSITORY}">GitHub</a>"""
@@ -259,7 +261,8 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <p class="lead">From your first line of code to numerical computing. Every lesson has its own page with real Scarp source, verified output, English and Hindi explanations, and a practice question.</p>
 <div class="hero-buttons"><a class="primary-button" href="{escape(rel("index.html", first.url))}">Start learning <span aria-hidden="true">→</span></a>
 <a class="secondary-button" href="#chapters">Explore chapters</a>
-<a class="secondary-button" href="labs/index.html">Solve guided labs ↗</a></div>
+<a class="secondary-button" href="labs/index.html">Solve guided labs ↗</a>
+<a class="secondary-button" href="workshops/index.html">Optional workshops ↗</a></div>
 <div class="hero-stats"><span><strong>{len(lessons)}</strong> runnable lessons</span>
 <span><strong>{len(chapters)}</strong> chapters</span><span><strong>English + हिन्दी</strong> explanations</span></div>
 </div>
@@ -1266,6 +1269,7 @@ def build(destination: Path) -> int:
     hindi_notes = read_hindi_notes(ROOT)
     questions = read_practice_questions(ROOT)
     labs = read_labs(ROOT)
+    workshops = read_workshops(ROOT, COMPILER, read_expected_stdout)
     home, count = render_catalog(questions)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(home, encoding="utf-8", newline="\n")
@@ -1300,6 +1304,10 @@ def build(destination: Path) -> int:
         render_alpha8_project_page(ROOT, page_shell, rel, highlight_scarp, visible_stdin),
         encoding="utf-8", newline="\n",
     )
+    workshop_urls = generate_workshop_pages(
+        destination, workshops, ROOT, REPOSITORY, page_shell,
+        render_lesson, rel, escape,
+    )
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1318,6 +1326,7 @@ def build(destination: Path) -> int:
             "projects/source-navigation/index.html",
             "projects/project-testing/index.html", "labs/index.html"]
     urls.extend(lab.url for lab in labs)
+    urls.extend(workshop_urls)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)
     sitemap = '<?xml version="1.0" encoding="utf-8"?>\n'
@@ -1340,7 +1349,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons, 6 chapters, and four project tutorials at {args.output.resolve()}")
+    print(f"Built {count} numbered lessons, 6 chapters, four project tutorials and independent workshop pages at {args.output.resolve()}")
     return 0
 
 
