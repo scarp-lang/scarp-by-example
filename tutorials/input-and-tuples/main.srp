@@ -1,0 +1,12 @@
+// Supply both lines through redirected UTF-8 stdin.
+print("Profile");
+bind name = text_trim(read_line());
+bind points = text_to_integer(text_trim(read_line()));
+
+pure funcra profile(label: string, score: integer) -> tuple<string, integer> {
+    return (label, score);
+}
+
+bind result = profile(name, points);
+print(result);
+print(text_concat("अंक: ", integer_to_text(result[1])));
