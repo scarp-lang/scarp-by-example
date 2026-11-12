@@ -9,6 +9,7 @@ import unittest
 from verify_examples import ROOT
 
 TARGET = ROOT / "docs" / "compiler-target.json"
+HISTORICAL_TARGET = ROOT / "docs" / "compiler-target-alpha4.json"
 WORKFLOWS = (
     ROOT / ".github" / "workflows" / "examples.yml",
     ROOT / ".github" / "workflows" / "pages.yml",
@@ -101,6 +102,24 @@ class CompilerTargetTests(unittest.TestCase):
             compatibility,
         )
         self.assertIn(f"git checkout {target['source_commit']}", compatibility)
+
+    def test_historical_provenance_uses_its_own_immutable_release_pin(self):
+        historical = json.loads(HISTORICAL_TARGET.read_text(encoding="utf-8"))
+        self.assertRegex(historical["source_commit"], r"^[0-9a-f]{40}$")
+        self.assertEqual(historical["status"], "prerelease")
+        self.assertEqual(historical["version"], historical["release_tag"].removeprefix("v"))
+        for workflow in WORKFLOWS:
+            with self.subTest(workflow=workflow.name):
+                contents = workflow.read_text(encoding="utf-8")
+                entries = [
+                    entry for entry in checkout_inputs(contents)
+                    if entry.get("path") == ".compiler-alpha4"
+                ]
+                self.assertEqual(len(entries), 1)
+                self.assertEqual(entries[0]["repository"], "scarp-lang/scarp")
+                self.assertEqual(entries[0]["ref"], historical["source_commit"])
+                self.assertIn("docs/compiler-target-alpha4.json", contents)
+                self.assertIn("docs/migration-provenance-alpha5.json", contents)
 
     def test_both_workflows_pin_same_active_compiler(self):
         target = json.loads(TARGET.read_text(encoding="utf-8"))

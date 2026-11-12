@@ -15,6 +15,11 @@ Scarp has early numerical primitives useful for AI-related calculations. **These
 | [09 · Linear transforms](09-linear-transform.srp) | `matmul` composition of a 2×3 and a 3×2 tile | `tile(2x2)[[58.0, 64.0], [139.0, 154.0]]` |
 | [10 · Class score ties](10-class-score-ties.srp) | `matvec`, `argmax` first-match behavior and `maxval` | `[2.0, 2.0, -1.0] 0 2.0` |
 | [11 · Matrix probabilities](11-matrix-probabilities.srp) | Equal-score `softmax` and categorical-loss tolerance check | `[0.5, 0.5]`, then `true` |
+| [12 · Temperature softmax](12-temperature-softmax.srp) | Positive-temperature probability scaling and deterministic `topk` | `[0.5, 0.5]`, `[0.0]`, `[integer: 1, 2, 3]` |
+| [13 · Cosine similarity](13-cosine-similarity.srp) | Compare finite vector directions independently of magnitude | `1.0`, `0.0`, `-1.0` |
+| [14 · Cumulative sampled area](14-sample-cumulative-area.srp) | Calculate trapezoidal prefix areas from sampled velocity | `[0.0, 1.0, 9.0, 16.0]`, `16.0` |
+| [15 · Top-K ranking](15-topk-ranking.srp) | Deterministic sorted original indices and scores, including ties and empty results | `[integer: 1, 2, 4]`, `[5.0, 5.0, 3.0]`, `[integer: 1, 2]`, `[integer:]` |
+| [16 · Deterministic nucleus selection](16-nucleus-selection.srp) | Choose the smallest ranked probability prefix reaching a mass threshold | `[integer: 0, 1]`, `[0.5, 0.25]`, `[integer: 0, 1, 2]`, `[integer: 1, 2]` |
 
 Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repository root. `scarp check PATH` validates source, and the adjacent `.stdout` defines the exact output.
 
@@ -43,3 +48,21 @@ Use `scarp run examples/06-ai-foundations/01-matrix-inference.srp` from the repo
 **11 · Numerical probabilities:** Applying the identity `tile` to `[0.0, 0.0]` produces equal class scores; `softmax` outputs `[0.5, 0.5]`. `crossentropy(scores, 1)` is checked against 0.6931–0.6932, so the printed `true` demonstrates a numerical tolerance comparison rather than exact floating-point equality. No model training or autograd is involved.
 
 **Practice:** Why does the rectangular product have shape 2×2? Which index wins a tie for first place? Why does the two-class loss test use a range?
+
+## Release-pinned numerical lessons
+
+**12 · Temperature softmax:** `softmax_temp` and `logsoftmax_temp` transform finite scores with a positive temperature; `topk` selects deterministic original indices, not random samples. Available since published `v0.0.6-alpha.3`.
+
+**13 · Cosine similarity:** `cosine_similarity` reports `1.0` for parallel vectors, `0.0` for perpendicular vectors, and `-1.0` for opposite directions. Published in `v0.0.6-alpha.4`.
+
+**14 · Cumulative sampled area:** `sample_cumulative_area` evaluates trapezoidal prefix areas from measurements; the final prefix matches `sample_area` for this fixture. Published in `v0.0.6-alpha.4`. This is not symbolic integration.
+
+All three `.srp` / `.stdout` pairs are copied unchanged from the compiler's immutable [v0.0.6-alpha.4 example fixtures](https://github.com/scarp-lang/scarp/tree/v0.0.6-alpha.4/examples). The compiler retains its regression copies. Read the [official scientific-kernels guide](https://scarp-lang.github.io/scarp-docs/language/scientific-kernels-alpha4.html) for the API contracts.
+
+**15 · Deterministic Top-K:** `topk(scores, 3)` preserves original zero-based indices sorted by descending scores with lower indices winning equal-score ties. `topk_values` supplies their unchanged values. Ranking `softmax` probabilities retains the same tie order; `topk([], 0)` is a valid empty result. These are not stochastic sampling or text generation algorithms. Published in `v0.0.6-alpha.3` and unchanged in alpha.4.
+
+## Published alpha.5 candidate ranking
+
+**16 · Deterministic nucleus selection (Top-P):** `top_p(probabilities, 0.75)` returns the earliest descending-probability prefix reaching a specified positive mass, preserving original indices and deterministic tie order; `top_p_values` returns the selected probabilities. A threshold of exactly `1.0` retains all entries. The final example combines `softmax_temp` with `top_p`, but **never samples randomly** or produces text. The input must be normalized and the mass must be in `(0, 1]`. Introduced in published `v0.0.6-alpha.5`; source and stdout are copied byte-for-byte from that release.
+
+**Practice:** Why does mass 0.75 select indices `[0, 1]` but mass 1.0 includes the last 0.25? Which tied index is selected first after temperature-controlled softmax?

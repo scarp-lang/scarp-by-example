@@ -28,9 +28,23 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: f04be0758cbce405ddcdb229699b0ff83c09d207
+          ref: 205e92f166f186c3905e5880d41c31717b697b8e
           path: .compiler
           persist-credentials: false
+
+      - name: Check out historical published Scarp alpha.4 for provenance
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: f04be0758cbce405ddcdb229699b0ff83c09d207
+          path: .compiler-alpha4
+          persist-credentials: false
+
+      - name: Verify alpha.4 lesson provenance against original release
+        run: python scripts/verify_migration_provenance.py --compiler .compiler-alpha4 --target docs/compiler-target-alpha4.json
+
+      - name: Verify alpha.5 lesson provenance against current release
+        run: python scripts/verify_migration_provenance.py --compiler .compiler --manifest docs/migration-provenance-alpha5.json
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable

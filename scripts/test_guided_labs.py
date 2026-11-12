@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 from guided_labs import read_labs, validate_bilingual
 from verify_examples import ROOT, VerificationError, read_expected_stdout
 from verify_guided_labs import verify_lab
+from site_inventory import expected_lesson_count, expected_page_paths
 from build_site import build
 
 
@@ -146,7 +147,7 @@ class GuidedLabCatalogTests(unittest.TestCase):
     def test_generated_labs_are_linked_and_have_exact_github_sources(self):
         with tempfile.TemporaryDirectory() as directory:
             out = Path(directory)
-            self.assertEqual(build(out), 52)
+            self.assertEqual(build(out), expected_lesson_count())
             homepage = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="labs/index.html"', homepage)
             overview = (out / "labs/index.html").read_text(encoding="utf-8")
@@ -185,12 +186,12 @@ class GuidedLabCatalogTests(unittest.TestCase):
             locations = [node.text for node in sitemap.findall(
                 ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
             )]
-            self.assertEqual(len(locations), 69)
+            self.assertEqual(len(locations), len(expected_page_paths()))
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/labs/01-basics/",
                 locations
             )
-            self.assertEqual(len(list(out.rglob("index.html"))), 69)
+            self.assertEqual(len(list(out.rglob("index.html"))), len(expected_page_paths()))
 
 
 if __name__ == "__main__":

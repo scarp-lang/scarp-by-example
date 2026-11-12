@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from site_inventory import expected_lesson_count, expected_page_paths
 from build_site import build, read_course, render_project_inspection_page
 from verify_examples import ROOT
 
@@ -18,10 +19,10 @@ class ProjectInspectionTests(unittest.TestCase):
         cls.root = ROOT / "tutorials/module-inspection"
         cls.target = read_course()[2]
 
-    def test_published_alpha4_target_preserves_alpha5_project_fixture(self):
-        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.4")
+    def test_published_alpha5_target_preserves_existing_project_fixture(self):
+        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.5")
         self.assertEqual(self.target["source_commit"],
-                         "f04be0758cbce405ddcdb229699b0ff83c09d207")
+                         "205e92f166f186c3905e5880d41c31717b697b8e")
         self.assertEqual((self.root / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n")
         self.assertEqual((self.root / "src/main.srp").read_bytes(),
@@ -66,9 +67,9 @@ class ProjectInspectionTests(unittest.TestCase):
     def test_course_build_publishes_one_independent_inspection_page(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            self.assertEqual(build(target), 52)
+            self.assertEqual(build(target), expected_lesson_count())
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 69)
+            self.assertEqual(len(pages), len(expected_page_paths()))
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")

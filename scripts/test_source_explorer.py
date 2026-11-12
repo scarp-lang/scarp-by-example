@@ -47,13 +47,13 @@ class ReferenceExplorerTests(unittest.TestCase):
         self.assertNotIn('onclick=', html)
         self.assertNotIn('fetch(', html)
 
-    def test_map_rejects_stale_pin_and_wrong_token(self):
+    def test_map_rejects_stale_historical_pin_and_wrong_token(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             shutil.copytree(ROOT / PROJECT, root / PROJECT)
             (root / "docs").mkdir()
-            shutil.copyfile(ROOT / "docs/compiler-target.json",
-                            root / "docs/compiler-target.json")
+            shutil.copyfile(ROOT / "docs/compiler-target-alpha4.json",
+                            root / "docs/compiler-target-alpha4.json")
             path = root / INDEX
             data = json.loads(path.read_text(encoding="utf-8"))
             data["compiler_commit"] = "wrong pin"
