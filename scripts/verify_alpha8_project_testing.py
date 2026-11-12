@@ -94,8 +94,8 @@ def verify(binary: Path, project: Path, checkout: Path | None) -> None:
     require(RELEASE in version.stdout, f"Expected {RELEASE}; got {version.stdout!r}")
 
     expected = (project / "expected.stdout").read_bytes()
-    require(expected == b"42\\n", "Expected-output fixture has changed")
-    require((project / "tests" / "input.stdin").read_bytes() == b"17\\n25\\n",
+    require(expected == b"42\n", "Expected-output fixture has changed")
+    require((project / "tests" / "input.stdin").read_bytes() == b"17\n25\n",
             "Input fixture has changed")
     success(invoke(binary, "verify", str(project)), "static project verify")
     run = invoke(binary, "run", str(project))
@@ -132,7 +132,7 @@ def verify(binary: Path, project: Path, checkout: Path | None) -> None:
     with tempfile.TemporaryDirectory(prefix="scarp-alpha8-workshop-") as temp:
         scratch = Path(temp) / "project"
         shutil.copytree(project, scratch)
-        (scratch / "tests" / "input.stdin").write_bytes(b"17\\n24\\n")
+        (scratch / "tests" / "input.stdin").write_bytes(b"17\n24\n")
         negative = invoke(binary, "test", "--json", "--filter", "input", str(scratch))
         require(negative.returncode == 1, "False assertion must fail with exit code 1")
         failed = report(negative, "negative assertion")
@@ -140,7 +140,7 @@ def verify(binary: Path, project: Path, checkout: Path | None) -> None:
         require("E0065" in failed["tests"][0].get("error", ""),
                 "Expected source-located E0065 assertion diagnostic")
 
-        (scratch / "tests" / "input.stdin").write_bytes(b"\\xff")
+        (scratch / "tests" / "input.stdin").write_bytes(b"\xff")
         read_only = invoke(binary, "test", "--json", "--list", str(scratch))
         success(read_only, "list must not inspect stdin fixture contents")
         assert_suite(report(read_only, "read-only listing"), mode="list",
