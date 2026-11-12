@@ -18,6 +18,7 @@ from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
 from alpha8_project_page import render_page as render_alpha8_project_page
+from alpha6_input_page import render_page as render_alpha6_input_page
 from workshop_pages import read_workshops, generate_workshop_pages
 
 ASSETS = ROOT / "site"
@@ -1304,9 +1305,23 @@ def build(destination: Path) -> int:
         render_alpha8_project_page(ROOT, page_shell, rel, highlight_scarp, visible_stdin),
         encoding="utf-8", newline="\n",
     )
+    alpha6_path = destination / "workshops/input-and-tuples/index.html"
+    alpha6_path.parent.mkdir(parents=True, exist_ok=True)
+    alpha6_path.write_text(
+        render_alpha6_input_page(
+            ROOT, page_shell, rel, escape, render_lesson,
+            read_expected_stdout, read_optional_stdin,
+        ),
+        encoding="utf-8", newline="\n",
+    )
     workshop_urls = generate_workshop_pages(
         destination, workshops, ROOT, REPOSITORY, page_shell,
         render_lesson, rel, escape,
+        additional=((
+            "workshops/input-and-tuples/index.html",
+            "Input and tuples · alpha.6",
+            "Read two UTF-8 lines, return an immutable typed tuple, and test EOF.",
+        ),),
     )
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)

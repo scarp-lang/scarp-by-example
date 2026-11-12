@@ -185,12 +185,12 @@ class GuidedLabCatalogTests(unittest.TestCase):
             locations = [node.text for node in sitemap.findall(
                 ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
             )]
-            self.assertEqual(len(locations), 75)
+            self.assertEqual(len(locations), 76)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/labs/01-basics/",
                 locations
             )
-            self.assertEqual(len(list(out.rglob("index.html"))), 75)
+            self.assertEqual(len(list(out.rglob("index.html"))), 76)
 
 
 if __name__ == "__main__":

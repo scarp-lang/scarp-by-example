@@ -37,6 +37,10 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 For modules, the compiler resolves imports relative to the lesson file. Keep the companion `_support` directory with that lesson.
 
+## Published alpha.6: input and immutable tuples (separate pin)
+
+The optional [alpha.6 input-and-tuples workshop](tutorials/input-and-tuples/README.md) reads two real UTF-8 lines with `read_line()`, parses an integer and returns a typed immutable tuple. Its [dedicated bilingual website page](https://scarp-lang.github.io/scarp-by-example/workshops/input-and-tuples/) displays original source, exact stdin and stdout, plus an EOF exercise. The workshop is tested against published `v0.0.6-alpha.6`, source `cdf6a3924ec2a36c7beca5a9aec4f01a0bce515e`; it does **not** change the alpha.4 numbered course or alpha.7/alpha.8 workshop targets. It requires a local interpreter, not browser execution.
+
 ## Published alpha.7: conditional values and Unicode scalar workshop (separate pin)
 
 The optional [three-lesson alpha.7 workshop](tutorials/conditionals-and-unicode/README.md) explains typed conditional expressions, evaluation of only the selected branch, and Unicode scalar escapes in English and Hindi. Each lesson has an independent source and exact expected-output fixture. Its [website learning hub](https://scarp-lang.github.io/scarp-by-example/workshops/) offers a dedicated page for each real alpha.7 program. These examples are tested against published `v0.0.6-alpha.7` at immutable commit `b1c1fd232b418267d95520c69ee563ac99ecae30`, not the alpha.4 numbered-course compiler or the independent alpha.8 project-testing compiler. No browser execution or native backend support is claimed.

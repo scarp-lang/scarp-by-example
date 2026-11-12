@@ -73,6 +73,7 @@ def lesson_url(workshop: dict, entry: dict) -> str:
 def generate_workshop_pages(
     destination: Path, workshops: list[dict], root: Path, repo: str,
     page_shell, show_source, rel, escape,
+    additional: tuple[tuple[str, str, str], ...] = (),
 ) -> list[str]:
     """Write a workshop hub, overview and standalone source/output lesson pages."""
     def save(page: str, markup: str) -> None:
@@ -80,7 +81,7 @@ def generate_workshop_pages(
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(markup, encoding="utf-8", newline="\n")
 
-    routes = ["workshops/index.html"]
+    routes = ["workshops/index.html"] + [url for url, _, _ in additional]
     hub = "workshops/index.html"
     cards = "".join(
         f'<a class="lesson-card" href="{escape(rel(hub, overview_url(w)))}">'
@@ -88,6 +89,13 @@ def generate_workshop_pages(
         f'<span>{escape(w["intro"])} · Scarp v{escape(w["target"]["version"])}</span>'
         f'</span><span class="lesson-arrow" aria-hidden="true">↗</span></a>'
         for w in workshops
+    )
+    cards += "".join(
+        f'<a class="lesson-card" href="{escape(rel(hub, url))}">'
+        f'<span class="lesson-description"><strong>{escape(title)}</strong>'
+        f'<span>{escape(description)}</span></span>'
+        '<span class="lesson-arrow" aria-hidden="true">↗</span></a>'
+        for url, title, description in additional
     )
     main = f"""<main id="main-content" class="container-wide chapter-page">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(hub,"index.html"))}">Home</a><span>/</span><span aria-current="page">Workshops</span></nav>
