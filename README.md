@@ -77,4 +77,8 @@ No network calls or external Python packages are required by the verifier. A les
 
 English remains the canonical source language. **[Read all 52 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture, and is displayed directly on its corresponding lesson page using a language toggle. Neither Scarp syntax nor verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
 
+## Support Scarp learning resources
+
+The lessons and runnable examples are free to use. To help maintain the Scarp ecosystem, [support development through GitHub Sponsors](https://github.com/sponsors/sanskarIN). Contributions are optional and do not affect access to lessons.
+
 **License:** [MIT](LICENSE) for this learning repository. Some compiler-source examples originated in the separately licensed [Scarp compiler repository](https://github.com/scarp-lang/scarp); preserve upstream attribution and applicable licensing when reusing material. No stable Scarp by Example release is announced.
