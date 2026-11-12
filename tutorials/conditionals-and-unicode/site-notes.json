@@ -1,0 +1,38 @@
+{
+  "slug": "conditionals-and-unicode",
+  "title": "Conditional values and Unicode scalar escapes",
+  "intro": "Three separately release-pinned lessons about typed if/elif/else values, selected-branch evaluation, and Unicode scalar escapes.",
+  "intro_hi": "प्रकाशित alpha.7 पर आधारित तीन अभ्यास: if से मान चुनना, केवल चुनी गई branch को चलाना और Unicode escapes समझना।",
+  "lessons": [
+    {
+      "source": "01-grading.srp",
+      "title": "Typed conditional values",
+      "summary": "Select a typed string value with if/elif/else and return it from a pure function.",
+      "summary_hi": "if/elif/else से string मान चुनें और pure function से लौटाएँ।",
+      "explanation": "A conditional expression returns one typed result. All branches in this example produce strings, and the final else is mandatory. The compiler checks every branch, but the interpreter evaluates only the selected result.",
+      "explanation_hi": "if/elif/else यहाँ statement के बजाय मान लौटाने वाली expression है। सभी branches एक ही string प्रकार का परिणाम देती हैं; अंतिम else आवश्यक है।",
+      "practice": "Change score to 95 and then -2; predict both output lines before executing. Restore the original source afterward.",
+      "practice_hi": "score को पहले 95 और फिर -2 करें। चलाने से पहले दोनों output पंक्तियों का अनुमान लगाएँ और फिर स्रोत वापस रखें।"
+    },
+    {
+      "source": "02-lazy-branches.srp",
+      "title": "Only selected branches execute",
+      "summary": "Explore lazy evaluation that skips unused line input and division errors.",
+      "summary_hi": "चुनी न गई branch में input और division की त्रुटि execute नहीं होती।",
+      "explanation": "The interpreter reads no input and skips division by zero because those results are not selected. Unselected branches are still checked for valid syntax and types; lazy evaluation does not disable static verification.",
+      "explanation_hi": "इस उदाहरण में unselected branch का read_line या 1/0 नहीं चलता, लेकिन compiler सभी branches की syntax और types जाँचता है।",
+      "practice": "Explain why changing the first true condition to false would require stdin. Restore it before submitting a change.",
+      "practice_hi": "बताएँ कि पहली true condition को false करने पर stdin की आवश्यकता क्यों होगी। बाद में मूल कोड वापस रखें।"
+    },
+    {
+      "source": "03-unicode-scalars.srp",
+      "title": "Unicode scalar escapes",
+      "summary": "Compose Hindi and emoji text with hexadecimal escapes and inspect scalar and UTF-8 byte counts.",
+      "summary_hi": "Unicode hex escapes से हिन्दी और emoji बनाएँ; scalar और UTF-8 bytes गिनें।",
+      "explanation": "Each Unicode escape represents a Unicode scalar, not a UTF-16 code unit. The decomposed e plus acute accent consists of two scalars and three UTF-8 bytes, and is not equal to the precomposed single-character representation. A doubled backslash remains literal.",
+      "explanation_hi": "Unicode escape एक scalar लिखता है। e और combining accent दो scalars और तीन UTF-8 bytes होते हैं। एक-जैसे दिखने वाले Unicode sequences सीधे बराबर नहीं होते।",
+      "practice": "Experiment with the emoji escape value, then restore source and stdout before committing.",
+      "practice_hi": "emoji के hex escape को बदलकर परिणाम देखें। commit से पहले स्रोत और stdout को मूल रूप में रखें।"
+    }
+  ]
+}
