@@ -1,0 +1,4 @@
+import "../src/offset.srp" as operations;
+
+assert(operations.offset(5, -2) == 3, "positive and negative values");
+assert(operations.offset(-5, 5) == 0);
