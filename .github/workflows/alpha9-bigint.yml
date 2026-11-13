@@ -1,0 +1,60 @@
+name: Verify published alpha.9 BigInt workshop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tutorials/exact-bigint/**"
+      - "scripts/verify_alpha9_bigint.py"
+      - "scripts/test_alpha9_bigint.py"
+      - ".github/workflows/alpha9-bigint.yml"
+  pull_request:
+    paths:
+      - "tutorials/exact-bigint/**"
+      - "scripts/verify_alpha9_bigint.py"
+      - "scripts/test_alpha9_bigint.py"
+      - ".github/workflows/alpha9-bigint.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha9-bigint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  published-bigint:
+    name: BigInt alpha.9 / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check out published alpha.9 compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: 0814997dc43982eb707a9a1aee72aab3a7ac8b41
+          path: .compiler
+          persist-credentials: false
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - name: Unit-test the workshop safeguards
+        run: python -m unittest discover -s scripts -p 'test_alpha9_bigint.py'
+      - name: Build pinned compiler offline
+        run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
+      - name: Verify published BigInt programs and output
+        shell: bash
+        run: |
+          compiler=.compiler/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha9_bigint.py --compiler "$compiler" --compiler-source .compiler
