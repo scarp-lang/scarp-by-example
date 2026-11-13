@@ -1,0 +1,8 @@
+{
+  "version": "0.0.6-alpha.9",
+  "release_tag": "v0.0.6-alpha.9",
+  "source_commit": "0814997dc43982eb707a9a1aee72aab3a7ac8b41",
+  "release_url": "https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.9",
+  "status": "prerelease",
+  "course_compatibility": "independent; the 52 numbered lessons remain pinned to alpha.4"
+}
