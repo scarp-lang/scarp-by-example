@@ -28,6 +28,8 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 **Website navigation:** Open a chapter from the home page, then select an example. For a direct link, use a path like [01 · Hello](https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/). The same source and output fixtures remain in Git; [site development notes](site/README.md) document the generated routes.
 
+**New: published alpha.10 source-backed workshop.** The [interactive input, fixed arrays and exact BigInt workshop](tutorials/alpha10-foundations/README.md) includes six upstream-identical runnable examples with matching input/output fixtures, English/Hindi explanations and independent Linux/Windows/macOS compiler verification. It requires [Scarp v0.0.6-alpha.10](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.10); the 52 main course lessons remain pinned to alpha.4. No Scarp is executed in the browser.
+
 ## Start here
 
 1. Install [Rust and Cargo](https://www.rust-lang.org/tools/install) to run the current compiler source, or select a supported binary from [Scarp prereleases](https://github.com/scarp-lang/scarp/releases).

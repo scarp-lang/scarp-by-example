@@ -3,3 +3,5 @@
 *.md text eol=lf
 *.py text eol=lf
 Scarp.project text eol=lf
+# Preserve raw stdin bytes: CRLF and unterminated lines are part of the published fixtures.
+*.stdin -text
