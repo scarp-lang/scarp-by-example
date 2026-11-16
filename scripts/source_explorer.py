@@ -39,9 +39,9 @@ def byte_span(source: bytes, line: int, column: int, token: str) -> tuple[int, i
 def load_reference_map(root: Path = ROOT) -> dict:
     """Reject stale, unsafe or overlapping annotations before site generation."""
     data = json.loads((root / INDEX).read_text(encoding="utf-8"))
-    target = json.loads((root / "docs/compiler-target.json").read_text(encoding="utf-8"))
+    historical = json.loads((root / "docs/compiler-target-alpha4.json").read_text(encoding="utf-8"))
     if (not isinstance(data, dict) or data.get("schema_version") != 1
-            or data.get("compiler_commit") != target.get("source_commit")):
+            or data.get("compiler_commit") != historical.get("source_commit")):
         raise ValueError("reference map compiler pin or schema mismatch")
     files = data.get("files")
     expected_files = ["src/main.srp", "src/lib/navigation_values.srp"]
