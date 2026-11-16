@@ -314,6 +314,13 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 scarp verify hello-world
 scarp launch hello-world</code></pre></div>
 </section>
+<section class="project-feature container-wide" aria-labelledby="decimal-workshop-heading">
+<div><p class="eyebrow">OPTIONAL · SCARP ALPHA.11</p>
+<h2 id="decimal-workshop-heading">Learn exact Decimal arithmetic.</h2>
+<p>Explore three published-compiler-backed examples with source code, exact output and bilingual explanations. The 52 numbered lessons stay pinned to alpha.4.</p>
+<a class="primary-button" href="workshops/exact-decimal/index.html">Explore Decimal workshop →</a></div>
+<div class="project-feature-command"><span>Terminal · Scarp v0.0.6-alpha.11</span>
+<pre><code>scarp exec tutorials/exact-decimal/decimal_exact.srp</code></pre></div></section>
 <section class="compat-panel container-wide" aria-label="Compiler compatibility">
 <div><p class="eyebrow">REPRODUCIBLE BY DESIGN</p><h2>Real code. Exact output.</h2>
 <p>Every example is checked with the official compiler. This site displays examples but <strong>does not execute code inside your browser</strong>.</p>
@@ -1259,6 +1266,130 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     return page_shell(page, lesson.title, lesson.description, main, "lesson-layout")
 
 
+
+# The core 52-lesson catalog intentionally stays pinned to alpha.4.
+DECIMAL_DIR = ROOT / "tutorials/exact-decimal"
+DECIMAL_PIN = "79b57395957f47e1270ee542a856c844b82386de"
+# Slug, source stem, title, English summary, Hindi summary, published expected stdout.
+DECIMAL_EXAMPLES = (
+    ("arithmetic", "decimal_exact", "Exact decimal arithmetic",
+     "Tax calculation, arrays and rounded division preserve exact base-10 values.",
+     "टैक्स, array और स्पष्ट राउंडिंग के साथ सटीक दशमलव गणना।",
+     b"235.99\n0.3\n0.33\n"),
+    ("rounding", "rounding_and_conversion", "Rounding and conversion",
+     "Compare half-even and half-up ties, decimal formatting and integer conversion.",
+     "half_even और half_up, टेक्स्ट फॉर्मेटिंग तथा integer रूपांतरण की तुलना।",
+     b"0.33\n0.13\n1.22\n-1.23\n1.20\n0.00\n42 42\n"),
+    ("interactive", "interactive/exact_decimal", "Exact interactive input",
+     "Input a Decimal using a Hindi prompt, then display exactly two places.",
+     "हिन्दी प्रॉम्प्ट में decimal इनपुट लेकर दो दशमलव स्थान दिखाएँ।",
+     "राशि> 2.68\n".encode("utf-8")),
+)
+
+
+def decimal_url(slug: str) -> str:
+    return f"workshops/exact-decimal/{slug}/index.html"
+
+
+def read_decimal_workshop() -> dict:
+    """Reject drift in this newer compiler track, independently of the core course."""
+    target = json.loads((DECIMAL_DIR / "compiler-target.json").read_text(encoding="utf-8"))
+    if (target.get("source_commit") != DECIMAL_PIN
+            or target.get("version") != "0.0.6-alpha.11"
+            or target.get("release_tag") != "v0.0.6-alpha.11"
+            or target.get("status") != "prerelease"):
+        raise ValueError("unreviewed alpha.11 Decimal compiler provenance")
+    for slug, stem, _, _, _, output in DECIMAL_EXAMPLES:
+        source = DECIMAL_DIR / f"{stem}.srp"
+        fixture = DECIMAL_DIR / f"{stem}.stdout"
+        if not source.is_file() or not fixture.is_file():
+            raise ValueError(f"missing alpha.11 Decimal sample or fixture: {stem}")
+        source.read_text(encoding="utf-8")
+        if read_expected_stdout(fixture) != output:
+            raise ValueError(f"alpha.11 Decimal fixture changed: {stem}")
+        input_path = DECIMAL_DIR / f"{stem}.stdin"
+        if stem.startswith("interactive/"):
+            if read_optional_stdin(input_path) != b"2.675\n":
+                raise ValueError("alpha.11 typed input fixture changed")
+        elif input_path.exists():
+            raise ValueError(f"unexpected Decimal input fixture: {stem}")
+    return target
+
+
+def render_decimal_overview() -> str:
+    target = read_decimal_workshop()
+    page = "workshops/exact-decimal/index.html"
+    cards = "".join(
+        f'<a class="lesson-card" href="{escape(rel(page, decimal_url(slug)))}">'
+        f'<span class="lesson-number">{i:02}</span>'
+        f'<span class="lesson-description"><strong>{escape(title)}</strong><span>{escape(en)}</span></span>'
+        f'<span class="lesson-arrow" aria-hidden="true">↗</span></a>'
+        for i, (slug, stem, title, en, hi, output) in enumerate(DECIMAL_EXAMPLES, 1)
+    )
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(page, 'index.html'))}">Home</a><span>/</span>
+<span aria-current="page">Exact Decimal workshop</span></nav>
+<header class="page-heading"><p class="eyebrow">OPTIONAL · PUBLISHED SCARP ALPHA.11</p>
+<h1>Exact Decimal programming</h1>
+<p class="lead">Three real interpreter examples, exact output and English/Hindi explanations. These are not additional core course lessons.</p>
+<div class="guide-links"><a href="{REPOSITORY}/blob/main/tutorials/exact-decimal/README.md">Complete English + हिन्दी guide ↗</a>
+<a href="{escape(target['release_url'])}">Published compiler release ↗</a></div></header>
+<section aria-label="Decimal examples">{cards}</section>
+<section class="run-panel"><h2>Compiler compatibility</h2>
+<p>Requires Scarp <strong>v{escape(target['version'])}</strong> at source commit <code>{DECIMAL_PIN}</code>.
+The numbered course still targets alpha.4. Decimal supports at most 28 coefficient digits and 18 fractional places; the native emitters do not yet support Decimal.</p>
+<p lang="hi">यह alpha.11 की अलग कार्यशाला है। मूल 52 पाठ alpha.4 पर ही हैं। वेबसाइट पर Scarp कोड नहीं चलता।</p>
+<p>The website only displays verified source and fixtures; run code locally.</p></section>
+</main>"""
+    return page_shell(page, "Scarp exact Decimal workshop", "Independent alpha.11 Scarp Decimal programming workshop.", main, "project-layout")
+
+
+def render_decimal_example(slug: str) -> str:
+    target = read_decimal_workshop()
+    item = next((entry for entry in DECIMAL_EXAMPLES if entry[0] == slug), None)
+    if item is None:
+        raise ValueError(f"unknown Decimal example: {slug}")
+    slug, stem, title, en, hi, expected = item
+    page = decimal_url(slug)
+    path = f"tutorials/exact-decimal/{stem}.srp"
+    source = (ROOT / path).read_text(encoding="utf-8")
+    interactive = stem.startswith("interactive/")
+    command = f"scarp exec {'--interactive ' if interactive else ''}{path}"
+    stdin_panel = ""
+    if interactive:
+        data = (DECIMAL_DIR / f"{stem}.stdin").read_text(encoding="utf-8")
+        stdin_panel = f"""<section class="code-panel output-panel" aria-labelledby="decimal-stdin-title">
+<div class="panel-heading"><h2 id="decimal-stdin-title">Typed input · UTF-8</h2></div>
+<pre><code>{escape(data)}</code></pre></section>"""
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{escape(rel(page, 'index.html'))}">Home</a><span>/</span>
+<a href="{escape(rel(page, 'workshops/exact-decimal/index.html'))}">Decimal workshop</a><span>/</span>
+<span aria-current="page">{escape(title)}</span></nav>
+<header class="page-heading"><p class="eyebrow">SCARP v{escape(target['version'])} · REAL INTERPRETER OUTPUT</p>
+<h1>{escape(title)}</h1><p class="lead">{escape(en)}</p>
+<div class="guide-links"><a href="{REPOSITORY}/blob/main/{escape(path)}">Original source ↗</a>
+<a href="{REPOSITORY}/blob/main/tutorials/exact-decimal/README.md">English/Hindi guide ↗</a></div></header>
+<div class="project-source-grid">
+<section class="code-panel" aria-labelledby="decimal-source-title"><div class="panel-heading">
+<div><span class="eyebrow">SCARP SOURCE</span><h2 id="decimal-source-title">{escape(stem.split('/')[-1])}.srp</h2></div>
+<button type="button" class="copy-button" data-copy="scarp-code">Copy code</button></div>
+<pre><code id="scarp-code">{highlight_scarp(source)}</code></pre></section>
+<section class="code-panel" aria-labelledby="decimal-output-title"><div class="panel-heading">
+<div><span class="eyebrow">EXPECTED STDOUT</span><h2 id="decimal-output-title">Exact output</h2></div>
+<span class="verified-tag">Verified fixture</span></div>
+<pre><code>{escape(expected.decode('utf-8'))}</code></pre></section>
+{stdin_panel}</div>
+<section class="run-panel"><h2>Read, verify, execute</h2>
+<p lang="en">{escape(en)}</p><p lang="hi">{escape(hi)}</p>
+<pre><code>scarp verify {escape(path)}
+{escape(command)}</code></pre>
+<p>{'The interactive input API requires --interactive; without it the compiler reports E0054.' if interactive else 'Use the published alpha.11 interpreter; do not run this program with the alpha.4 core course compiler.'}</p>
+<p>There is no live Scarp execution on this static website. The published source and byte-exact stdout are verified by separate Linux/Windows/macOS jobs.</p></section>
+<p class="fine-print">Source commit <code>{DECIMAL_PIN}</code> · <a href="{escape(target['release_url'])}">v{escape(target['version'])} release</a>.</p>
+</main>"""
+    return page_shell(page, title, en, main, "project-layout")
+
+
 def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
@@ -1292,6 +1423,15 @@ def build(destination: Path) -> int:
     navigation_path = destination / "projects/source-navigation/index.html"
     navigation_path.parent.mkdir(parents=True, exist_ok=True)
     navigation_path.write_text(render_source_navigation_page(target), encoding="utf-8", newline="\n")
+    # The alpha.11 pages are independent of the 52 core lessons and their saved progress.
+    read_decimal_workshop()
+    overview_path = destination / "workshops/exact-decimal/index.html"
+    overview_path.parent.mkdir(parents=True, exist_ok=True)
+    overview_path.write_text(render_decimal_overview(), encoding="utf-8", newline="\n")
+    for slug, *_ in DECIMAL_EXAMPLES:
+        workshop_page = destination / decimal_url(slug)
+        workshop_page.parent.mkdir(parents=True, exist_ok=True)
+        workshop_page.write_text(render_decimal_example(slug), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1308,6 +1448,8 @@ def build(destination: Path) -> int:
     urls = ["index.html", "projects/index.html",
             "projects/module-inspection/index.html",
             "projects/source-navigation/index.html", "labs/index.html"]
+    urls.append("workshops/exact-decimal/index.html")
+    urls.extend(decimal_url(slug) for slug, *_ in DECIMAL_EXAMPLES)
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)
@@ -1331,7 +1473,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons, 6 chapters, and three project tutorials at {args.output.resolve()}")
+    print(f"Built {count} standalone lessons, 6 chapters, and three project tutorials, plus the alpha.11 Decimal workshop, at {args.output.resolve()}")
     return 0
 
 
