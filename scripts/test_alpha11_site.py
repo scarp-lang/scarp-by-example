@@ -6,6 +6,7 @@ import json
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
+from html import escape as html_escape
 from pathlib import Path
 from unittest.mock import patch
 
@@ -58,7 +59,7 @@ class DecimalPagesTests(unittest.TestCase):
                         (DECIMAL_DIR / f"{stem}.srp").read_text(encoding="utf-8"),
                     )
                     for line in output.decode("utf-8").splitlines():
-                        self.assertIn(line, html)
+                        self.assertIn(html_escape(line), html)
                     if stem.startswith("interactive/"):
                         self.assertIn("E0054", html)
                         self.assertIn("2.675", html)
