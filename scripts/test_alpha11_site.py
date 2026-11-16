@@ -66,6 +66,13 @@ class DecimalPagesTests(unittest.TestCase):
                     else:
                         self.assertNotIn("id=\"decimal-stdin-title\"", html)
 
+    def test_mismatched_compiler_pin_is_rejected_before_site_generation(self):
+        bad = {"source_commit": "0" * 40, "version": "0.0.6-alpha.11",
+               "release_tag": "v0.0.6-alpha.11", "status": "prerelease"}
+        with patch("build_site.json.loads", return_value=bad):
+            with self.assertRaisesRegex(ValueError, "compiler provenance"):
+                read_decimal_workshop()
+
     def test_corrupt_stdin_cannot_be_rendered(self):
         with patch("build_site.read_optional_stdin", return_value=b"wrong"):
             with self.assertRaisesRegex(ValueError, "input fixture changed"):
