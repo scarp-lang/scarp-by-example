@@ -305,7 +305,7 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <div class="chapter-grid">{''.join(tiles)}</div>
 </section>
 <section class="project-feature container-wide" aria-labelledby="projects-heading">
-<div><p class="eyebrow">NOW SUPPORTED IN ALPHA.4</p>
+<div><p class="eyebrow">SCARP PROJECT WORKFLOW</p>
 <h2 id="projects-heading">Go beyond a single file.</h2>
 <p>Learn how the real Scarp compiler creates a project, validates its manifest without running code and launches its declared entrypoint.</p>
 <a class="primary-button" href="{escape(rel("index.html", "projects/index.html"))}">Build your first project →</a></div>
