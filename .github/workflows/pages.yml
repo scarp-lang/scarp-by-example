@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: f04be0758cbce405ddcdb229699b0ff83c09d207
+          ref: e755fda37cdaeed29434e848cb5dd41f2f2e7eb2
           path: .compiler
           persist-credentials: false
 
@@ -79,6 +79,9 @@ jobs:
 
       - name: Smoke-test Scarp-first CLI before publishing
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
+
+      - name: Verify published alpha.13 collections and Result workshop
+        run: python scripts/verify_alpha13_compat.py --compiler .compiler/target/debug/scarp --compiler-source .compiler
 
       - name: Generate static course catalog
         run: python scripts/build_site.py
