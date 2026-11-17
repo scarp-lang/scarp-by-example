@@ -1290,6 +1290,7 @@ def render_modern_collections_page(target: dict) -> str:
         expected = read_expected_stdout(fixture_path).decode("utf-8")
         if not source.strip() or not expected.endswith("\n"):
             raise ValueError(f"modern workshop source or fixture is incomplete: {name}")
+        displayed_output = expected.replace(chr(13), chr(92) + "r")
         index.append(
             f'<a class="lab-card" href="#example-{escape(name)}">'
             f'<span class="eyebrow">PUBLISHED SOURCE</span>'
@@ -1311,7 +1312,7 @@ def render_modern_collections_page(target: dict) -> str:
 <section class="code-panel output-panel" aria-label="{escape(heading)} expected output">
 <div class="panel-heading"><h3>{escape(name)}.stdout</h3>
 <span class="verified-tag">Exact compiler fixture</span></div>
-<pre><code>{escape(expected.replace(chr(13), r'\r'))}</code></pre>
+<pre><code>{escape(displayed_output)}</code></pre>
 <div class="panel-footer"><a href="{escape(origin)}.stdout">View exact output ↗</a></div></section>
 </div>
 <p class="fine-print">Run locally:
