@@ -4,5 +4,5 @@
   "source_commit": "0814997dc43982eb707a9a1aee72aab3a7ac8b41",
   "release_url": "https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.9",
   "status": "prerelease",
-  "course_compatibility": "independent; the 52 numbered lessons remain pinned to alpha.4"
+  "course_compatibility": "independent published alpha.9 workshop; the 52 numbered lessons use the separate active compiler pin in docs/compiler-target.json"
 }

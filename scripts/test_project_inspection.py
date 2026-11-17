@@ -18,10 +18,11 @@ class ProjectInspectionTests(unittest.TestCase):
         cls.root = ROOT / "tutorials/module-inspection"
         cls.target = read_course()[2]
 
-    def test_published_alpha4_target_preserves_alpha5_project_fixture(self):
-        self.assertEqual(self.target["release_tag"], "v0.0.6-alpha.4")
+    def test_current_compiler_target_preserves_historical_alpha5_project_fixture(self):
+        self.assertEqual(self.target["release_tag"], "v" + self.target["version"])
         self.assertEqual(self.target["source_commit"],
-                         "f04be0758cbce405ddcdb229699b0ff83c09d207")
+                         json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["source_commit"])
+        self.assertRegex(self.target["source_commit"], r"^[0-9a-f]{40}$")
         self.assertEqual((self.root / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: module-inspection\nentry: src/main.srp\n")
         self.assertEqual((self.root / "src/main.srp").read_bytes(),
@@ -68,7 +69,7 @@ class ProjectInspectionTests(unittest.TestCase):
             target = Path(directory)
             self.assertEqual(build(target), 52)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 69)
+            self.assertEqual(len(pages), 70)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")

@@ -1,0 +1,8 @@
+{
+  "version": "0.0.6-alpha.13",
+  "release_tag": "v0.0.6-alpha.13",
+  "source_commit": "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2",
+  "release_url": "https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.13",
+  "status": "prerelease",
+  "course_compatibility": "independent eight-program workshop; course also tested on active compiler"
+}

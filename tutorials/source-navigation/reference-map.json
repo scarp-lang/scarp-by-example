@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "compiler_commit": "f04be0758cbce405ddcdb229699b0ff83c09d207",
+  "compiler_commit": "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2",
   "files": [
     "src/main.srp",
     "src/lib/navigation_values.srp"

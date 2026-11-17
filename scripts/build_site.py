@@ -305,7 +305,7 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <div class="chapter-grid">{''.join(tiles)}</div>
 </section>
 <section class="project-feature container-wide" aria-labelledby="projects-heading">
-<div><p class="eyebrow">NOW SUPPORTED IN ALPHA.4</p>
+<div><p class="eyebrow">SCARP PROJECT WORKFLOW</p>
 <h2 id="projects-heading">Go beyond a single file.</h2>
 <p>Learn how the real Scarp compiler creates a project, validates its manifest without running code and launches its declared entrypoint.</p>
 <a class="primary-button" href="{escape(rel("index.html", "projects/index.html"))}">Build your first project →</a></div>
@@ -320,7 +320,8 @@ scarp launch hello-world</code></pre></div>
 <p>Target: <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> (prerelease) · pinned commit <code>{escape(target["source_commit"][:12])}</code></p></div>
 <div class="compat-links"><a href="{REPOSITORY}/blob/main/docs/cli-quickstart.md">CLI quickstart ↗</a>
 <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें ↗</a>
-<a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy ↗</a></div>
+<a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy ↗</a>
+<a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a></div>
 </section>
 </main>"""
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
@@ -1259,6 +1260,98 @@ def render_lesson_page(lesson: Lesson, all_lessons: list[Lesson], chapter: list[
     return page_shell(page, lesson.title, lesson.description, main, "lesson-layout")
 
 
+
+MODERN_WORKSHOP = (
+    ("typed_dynamic_lists", "Typed dynamic lists", "Lists of typed records and nested values"),
+    ("persistent_list_updates", "Persistent list updates", "Push, set and remove return new snapshots"),
+    ("typed_maps", "Canonical typed maps", "Typed keys, nested values and deterministic ordering"),
+    ("persistent_maps", "Persistent map updates", "Set, remove, lookup and preserved snapshots"),
+    ("map_projections", "Ordered map projections", "Map keys and values become aligned typed lists"),
+    ("typed_submission", "Checked Option and Result", "Explicit constructors and exhaustive matches"),
+    ("typed_propagation", "Explicit failure propagation", "Scoped immutable binding initializers with ?"),
+    ("aggregate_resource_boundaries", "Aggregate snapshots", "Independent map projections and boolean key order"),
+)
+
+
+def render_modern_collections_page(target: dict) -> str:
+    """Render eight pinned upstream source+output pairs without browser execution."""
+    page = "workshops/modern-collections/index.html"
+    workshop = ROOT / "tutorials/modern-collections"
+    compiler = json.loads((workshop / "compiler-target.json").read_text(encoding="utf-8"))
+    for key in ("version", "release_tag", "source_commit", "release_url"):
+        if compiler.get(key) != target.get(key):
+            raise ValueError(f"modern workshop compiler {key} differs from course target")
+    demonstrations = []
+    index = []
+    for name, heading, summary in MODERN_WORKSHOP:
+        source_path = workshop / f"{name}.srp"
+        fixture_path = workshop / f"{name}.stdout"
+        source = source_path.read_text(encoding="utf-8")
+        expected = read_expected_stdout(fixture_path).decode("utf-8")
+        if not source.strip() or not expected.endswith("\n"):
+            raise ValueError(f"modern workshop source or fixture is incomplete: {name}")
+        displayed_output = expected.replace(chr(13), chr(92) + "r")
+        index.append(
+            f'<a class="lab-card" href="#example-{escape(name)}">'
+            f'<span class="eyebrow">PUBLISHED SOURCE</span>'
+            f'<h2>{escape(heading)}</h2><p>{escape(summary)}</p>'
+            f'<span class="lab-open">Read runnable source →</span></a>'
+        )
+        local = f"tutorials/modern-collections/{name}"
+        origin = REPOSITORY + "/blob/main/" + local
+        demonstrations.append(f"""
+<section class="lesson-notes" id="example-{escape(name)}" aria-labelledby="title-{escape(name)}">
+<header class="page-heading"><p class="eyebrow">REAL SCARP ALPHA.13 PROGRAM</p>
+<h2 id="title-{escape(name)}">{escape(heading)}</h2>
+<p>{escape(summary)}</p></header>
+<div class="code-grid">
+<section class="code-panel" aria-label="{escape(heading)} Scarp source">
+<div class="panel-heading"><h3>{escape(name)}.srp</h3></div>
+<pre><code>{highlight_scarp(source)}</code></pre>
+<div class="panel-footer"><a href="{escape(origin)}.srp">View source on GitHub ↗</a></div></section>
+<section class="code-panel output-panel" aria-label="{escape(heading)} expected output">
+<div class="panel-heading"><h3>{escape(name)}.stdout</h3>
+<span class="verified-tag">Exact compiler fixture</span></div>
+<pre><code>{escape(displayed_output)}</code></pre>
+<div class="panel-footer"><a href="{escape(origin)}.stdout">View exact output ↗</a></div></section>
+</div>
+<p class="fine-print">Run locally:
+<code>scarp verify {escape(local)}.srp</code> then
+<code>scarp exec {escape(local)}.srp</code>.
+<a href="#example-index">All eight examples ↑</a></p>
+</section>""")
+
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<span aria-current="page">Modern collections workshop</span></nav>
+<header class="page-heading">
+<p class="eyebrow">SCARP v{escape(target["version"])} · SOURCE-VERIFIED WORKSHOP</p>
+<h1>Typed lists, maps and checked results</h1>
+<p class="lead">Eight actual Scarp programs, copied from the published compiler and paired with exact expected output. Read each program, predict its result and try it locally.</p>
+<div class="guide-links"><a href="{REPOSITORY}/blob/main/tutorials/modern-collections/README.md">Full English / हिन्दी guide ↗</a>
+<a href="{escape(target["release_url"])}">Official compiler prerelease ↗</a></div>
+</header>
+<section class="run-panel" aria-labelledby="modern-run-title">
+<h2 id="modern-run-title">Run Scarp on your computer</h2>
+<p>Use the published compiler build at immutable source commit <code>{escape(target["source_commit"])}</code>. The website does not execute code in your browser.</p>
+<code>python scripts/verify_alpha13_compat.py --compiler /path/to/scarp --compiler-source /path/to/pinned/compiler</code>
+<p>Lists and maps are immutable, bounded snapshots. Option / Result and the restricted <code>?</code> binding propagation were introduced in alpha.12 and are verified against alpha.13 here.</p></section>
+<section id="example-index" aria-labelledby="modern-index-title">
+<h2 id="modern-index-title">Eight compiler-backed examples</h2>
+<div class="lab-grid">{''.join(index)}</div></section>
+{''.join(demonstrations)}
+<section class="lesson-notes" aria-labelledby="modern-hi-title" lang="hi">
+<h2 id="modern-hi-title">हिन्दी में अभ्यास</h2>
+<p>हर उदाहरण में असली Scarp कोड और उसका प्रमाणित आउटपुट दिया गया है। पहले आउटपुट का अनुमान लगाएँ, फिर अपने कंप्यूटर पर verify और exec से जाँचें। List और map को बदलने वाले फ़ंक्शन नया snapshot लौटाते हैं; पुराना मान नहीं बदलता।</p>
+<p><a href="{REPOSITORY}/blob/main/tutorials/modern-collections/README.md">पूरी हिन्दी और अंग्रेज़ी गाइड ↗</a></p>
+</section>
+<p class="fine-print">Source copies, stdout fixtures, version and SHA are checked by GitHub Actions. Native C11 code generation, browser execution, networking and asynchronous runtimes are not implied.</p>
+</main>"""
+    return page_shell(page, "Modern Scarp collections by example",
+                      "Eight release-pinned Scarp list, map and checked-result examples with exact output.",
+                      main, "project-layout")
+
 def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
@@ -1292,6 +1385,9 @@ def build(destination: Path) -> int:
     navigation_path = destination / "projects/source-navigation/index.html"
     navigation_path.parent.mkdir(parents=True, exist_ok=True)
     navigation_path.write_text(render_source_navigation_page(target), encoding="utf-8", newline="\n")
+    modern_path = destination / "workshops/modern-collections/index.html"
+    modern_path.parent.mkdir(parents=True, exist_ok=True)
+    modern_path.write_text(render_modern_collections_page(target), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1307,7 +1403,8 @@ def build(destination: Path) -> int:
     # Discoverable, stable directory URLs for search engines and learners.
     urls = ["index.html", "projects/index.html",
             "projects/module-inspection/index.html",
-            "projects/source-navigation/index.html", "labs/index.html"]
+            "projects/source-navigation/index.html",
+            "workshops/modern-collections/index.html", "labs/index.html"]
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)

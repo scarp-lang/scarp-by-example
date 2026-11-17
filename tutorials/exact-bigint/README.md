@@ -2,7 +2,7 @@
 
 This optional hands-on workshop uses **published Scarp v0.0.6-alpha.9**, source commit `0814997dc43982eb707a9a1aee72aab3a7ac8b41`. Its source and output files are **byte-for-byte copies of the published compiler examples**, not hypothetical syntax. [Published alpha.9 release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.9).
 
-**Compatibility boundary:** This workshop needs alpha.9. The numbered course on `main` remains pinned to alpha.4; alpha.5–alpha.8 additions live in separate review branches. Do not copy these examples into the earlier course without upgrading its compiler tests. This is interpreter execution; alpha.9 does not add a native executable build command.
+**Compatibility boundary:** This workshop needs alpha.9. The active numbered course now targets alpha.13 through `docs/compiler-target.json`. This is still an independently frozen alpha.9 historical workshop: it verifies against its own original alpha.9 source commit and must not silently follow the newer course checkout. This is interpreter execution; alpha.9 does not add a native executable build command.
 
 ## Run the three examples
 
@@ -40,7 +40,7 @@ The verifier checks the checkout commit, binary version, upstream source/output 
 
 ## हिन्दी अभ्यास
 
-यह कार्यशाला प्रकाशित **Scarp v0.0.6-alpha.9** के लिए है। मुख्य 52 पाठ अभी alpha.4 पर ही सत्यापित हैं।
+यह कार्यशाला प्रकाशित **Scarp v0.0.6-alpha.9** के लिए है। मुख्य 52 पाठ अब alpha.13 compiler पर जाँचे जाते हैं, लेकिन यह BigInt कार्यशाला अपने प्रकाशित alpha.9 source pin पर स्वतंत्र रूप से जाँची जाती है।
 
 1. `bigint_arithmetic.srp` में बड़ी धनात्मक संख्या में 1 जोड़ें और देखें कि परिणाम `integer` की 64-bit सीमा से बड़ा होकर भी सटीक रहता है।
 2. ऋणात्मक संख्या का भाग तथा शेषफल देखें। भागफल शून्य की ओर घटता है और गैर-शून्य शेषफल का चिह्न भाज्य के समान रहता है।
