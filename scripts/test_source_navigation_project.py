@@ -57,7 +57,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
             self.assertEqual(build(dest), 52)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 69)
+            self.assertEqual(len(list(dest.rglob("index.html"))), 70)
             self.assertTrue((dest / "projects/source-navigation/index.html").is_file())
             self.assertTrue((dest / "reference-explorer.js").is_file())
             self.assertIn("projects/source-navigation/",
