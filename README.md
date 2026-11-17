@@ -65,7 +65,7 @@ The collections and `option<T>` / `result<T,E>` language features arrived in alp
 | [04 · Numerical collections](examples/04-collections/README.md) | Numeric vectors, norms, refinement, windows and numeric kernels | Runnable lessons |
 | [05 · Modules](examples/05-modules/README.md) | Imports, exported definitions, private helpers, numeric collections and inspectable signatures | Runnable lessons |
 | [06 · AI foundations](examples/06-ai-foundations/README.md) | Matrix inference, composition, numerical probabilities and explicit gradients | Runnable lessons |
-| [Future topics](docs/roadmap.md) | Structured errors, general collections, async, networking, agents | Not taught as implemented |
+| [Future topics](docs/roadmap.md) | General exceptions, sets, async, networking and agents | Not taught as implemented |
 
 **Status is not a promise of stable semantics.** Each section records its upstream example provenance and current CI target. Advanced examples represent numeric building blocks, **not** an integrated model-training framework.
 
