@@ -1,0 +1,68 @@
+name: Verify published alpha.14 patterns and compatibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tutorials/structured-patterns/**"
+      - "scripts/verify_alpha14_patterns.py"
+      - "scripts/test_alpha14_patterns.py"
+      - ".github/workflows/alpha14-patterns.yml"
+      - "docs/compatibility.md"
+      - "README.md"
+  pull_request:
+    paths:
+      - "tutorials/structured-patterns/**"
+      - "scripts/verify_alpha14_patterns.py"
+      - "scripts/test_alpha14_patterns.py"
+      - ".github/workflows/alpha14-patterns.yml"
+      - "docs/compatibility.md"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha14-patterns-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  alpha14-workshop-and-course:
+    name: Alpha.14 compatibility / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check out exact published alpha.14 compiler source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: 43627b74af5fccccc5e233e98207413983ebafc1
+          path: .compiler-alpha14
+          persist-credentials: false
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - name: Test workshop provenance and failure guards
+        run: python -m unittest discover -s scripts -p 'test_alpha14_patterns.py'
+      - name: Build alpha.14 from the immutable checkout
+        run: cargo build --locked --offline --manifest-path .compiler-alpha14/Cargo.toml
+      - name: Check workshop and core-course compatibility on alpha.14
+        shell: bash
+        run: |
+          set -euo pipefail
+          compiler=.compiler-alpha14/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha14_patterns.py --compiler "$compiler" --compiler-source .compiler-alpha14
+          python scripts/verify_examples.py --compiler "$compiler"
+          python scripts/verify_guided_labs.py --compiler "$compiler"
+          python scripts/verify_cli.py --compiler "$compiler"

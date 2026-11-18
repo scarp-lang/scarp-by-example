@@ -26,6 +26,14 @@ See the [source-pinned modern collections and checked-results workshop](../tutor
 
 **Boundaries:** This is an interpreter-backed language. Native C11 and ELF64 scalar backends remain experimental and restricted. Do not infer a production native compiler, async runtime, networking, GPU backend, package registry, general heap mutation or automatic differentiation from these examples. Lists/maps are immutable snapshots with explicit resource limits.
 
+## Published alpha.14 compatibility preview (separate from the active target)
+
+[Scarp v0.0.6-alpha.14](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.14) was published 18 November 2026 at exact source commit `43627b74af5fccccc5e233e98207413983ebafc1`. It improves diagnostics for nested record/tuple/array destructuring patterns, checks deterministic map projections and adds **Rust-host-only** editor-cache and checked ELF64 integer kernel behavior. These changes do not provide a general native-code Scarp command or new pattern guards.
+
+The [alpha.14 workshop](../tutorials/structured-patterns/README.md) imports two source-and-output pairs from that immutable compiler commit. The separate [alpha.14 compatibility workflow](../.github/workflows/alpha14-patterns.yml) checks their committed Git-object provenance, compiler version, static verification and exact output **and additionally runs the existing numbered course, labs and CLI** on Linux, Windows and macOS.
+
+**Promotion gate:** The main `docs/compiler-target.json` and both active compiler workflows continue to select alpha.13. Alpha.14 is a **candidate compatibility target**, not yet the proven default for this repository. Move the shared pin and update all human labels only after the independent matrix passes and a separate reviewed change confirms Pages, lessons, CLI, labs and historical workshop behavior. Do not rewrite expected outputs just to silence a regression.
+
 ## Build and verify exact source
 
 The annotated `v0.0.6-alpha.13` tag dereferences to **`e755fda37cdaeed29434e848cb5dd41f2f2e7eb2`**. Both active CI compiler checkouts must use that full immutable SHA, recorded in `compiler-target.json`. Historic workshops retain their own immutable compiler pins.
