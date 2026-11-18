@@ -2,7 +2,7 @@
 
 **Compiler provenance:** Published [Scarp v0.0.6-alpha.14](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.14), exact compiler commit `43627b74af5fccccc5e233e98207413983ebafc1` (18 November 2026). The two `.srp` programs and two `.stdout` fixtures in this directory are **byte-identical to the corresponding committed compiler examples** at that pin. These are interpreter-backed programs, not sample pseudocode.
 
-This optional workshop deliberately does **not** replace the separately validated alpha.13 baseline for the 52 numbered lessons. Its dedicated three-OS CI will also rerun those existing lessons and labs against alpha.14 to detect compatibility regressions before changing the default pin.
+This workshop remains immutable at the published alpha.14 source. The separately reviewed course-promotion change proposes alpha.14 as the **active target for all 52 numbered lessons**; their existing files and output fixtures are preserved. The dedicated Linux/Windows/macOS workshop workflow independently rechecks those lessons and labs.
 
 ## Website learning pages
 

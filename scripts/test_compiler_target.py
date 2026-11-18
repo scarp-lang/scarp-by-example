@@ -111,6 +111,18 @@ class CompilerTargetTests(unittest.TestCase):
                 )
 
 
+    def test_historical_alpha13_source_remains_independently_pinned(self):
+        historical = "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2"
+        for workflow in WORKFLOWS:
+            with self.subTest(workflow=workflow.name):
+                entries = checkout_inputs(workflow.read_text(encoding="utf-8"))
+                previous = [entry for entry in entries if entry.get("path") == ".compiler-alpha13"]
+                self.assertEqual(len(previous), 1)
+                self.assertEqual(previous[0]["repository"], "scarp-lang/scarp")
+                self.assertEqual(previous[0]["ref"], historical)
+                self.assertIn(".compiler-alpha13/Cargo.toml", workflow.read_text(encoding="utf-8"))
+                self.assertIn("--compiler-source .compiler-alpha13", workflow.read_text(encoding="utf-8"))
+
 class CompilerCheckoutParserTests(unittest.TestCase):
     SHA = "a" * 40
     HISTORICAL = "b" * 40

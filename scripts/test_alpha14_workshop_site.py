@@ -47,13 +47,13 @@ class CodeText(HTMLParser):
 
 
 class PublishedAlpha14WebsiteTests(unittest.TestCase):
-    def test_manifest_is_independent_of_main_course_pin(self):
+    def test_manifest_is_same_as_proposed_active_course_pin(self):
         manifest = json.loads(TARGET.read_text(encoding="utf-8"))
         active = json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))
         self.assertEqual(manifest["source_commit"], PIN)
         self.assertEqual(manifest["version"], VERSION)
-        self.assertNotEqual(manifest["source_commit"], active["source_commit"])
-        self.assertEqual(active["version"], "0.0.6-alpha.13")
+        self.assertEqual(manifest["source_commit"], active["source_commit"])
+        self.assertEqual(active["version"], "0.0.6-alpha.14")
 
     def test_dedicated_pages_preserve_original_source_and_stdout_dom(self):
         self.assertEqual(len(ALPHA14_WORKSHOP), 2)

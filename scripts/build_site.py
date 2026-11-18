@@ -963,7 +963,9 @@ line with the fixture. Do not compare symbol ID numbers between invocations.</p>
 तुलना न करें।</p></div></div>
 <p class="notes-provenance">Pinned published
 <a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>
-· source <code>{escape(target["source_commit"][:12])}</code>.
+· active-course source <code>{escape(target["source_commit"][:12])}</code>.
+The authored reference map records a separately reviewed alpha.13 source commit
+<code>e755fda37cda</code>; its semantic links are also rechecked with the active compiler in CI.
 Read-only metadata is not program output. The browser does not execute Scarp.</p></section>
 <section class="lab-reveals" aria-label="Self-check questions">
 <details><summary>Which <code>base</code> is read inside <code>twice(value: library.adjust(n: base + step))</code>?</summary>
@@ -1280,9 +1282,16 @@ def render_modern_collections_page(target: dict) -> str:
     page = "workshops/modern-collections/index.html"
     workshop = ROOT / "tutorials/modern-collections"
     compiler = json.loads((workshop / "compiler-target.json").read_text(encoding="utf-8"))
-    for key in ("version", "release_tag", "source_commit", "release_url"):
-        if compiler.get(key) != target.get(key):
-            raise ValueError(f"modern workshop compiler {key} differs from course target")
+    historic = {
+        "version": "0.0.6-alpha.13",
+        "release_tag": "v0.0.6-alpha.13",
+        "source_commit": "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2",
+        "release_url": "https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.13",
+        "status": "prerelease",
+    }
+    for key, value in historic.items():
+        if compiler.get(key) != value:
+            raise ValueError(f"modern workshop compiler {key} differs from published alpha.13 pin")
     demonstrations = []
     index = []
     for name, heading, summary in MODERN_WORKSHOP:
@@ -1328,15 +1337,15 @@ def render_modern_collections_page(target: dict) -> str:
 <a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
 <span aria-current="page">Modern collections workshop</span></nav>
 <header class="page-heading">
-<p class="eyebrow">SCARP v{escape(target["version"])} · SOURCE-VERIFIED WORKSHOP</p>
+<p class="eyebrow">SCARP v{escape(compiler["version"])} · SOURCE-VERIFIED WORKSHOP</p>
 <h1>Typed lists, maps and checked results</h1>
 <p class="lead">Eight actual Scarp programs, copied from the published compiler and paired with exact expected output. Read each program, predict its result and try it locally.</p>
 <div class="guide-links"><a href="{REPOSITORY}/blob/main/tutorials/modern-collections/README.md">Full English / हिन्दी guide ↗</a>
-<a href="{escape(target["release_url"])}">Official compiler prerelease ↗</a></div>
+<a href="{escape(compiler["release_url"])}">Official compiler prerelease ↗</a></div>
 </header>
 <section class="run-panel" aria-labelledby="modern-run-title">
 <h2 id="modern-run-title">Run Scarp on your computer</h2>
-<p>Use the published compiler build at immutable source commit <code>{escape(target["source_commit"])}</code>. The website does not execute code in your browser.</p>
+<p>Use the published compiler build at immutable source commit <code>{escape(compiler["source_commit"])}</code>. The website does not execute code in your browser.</p>
 <code>python scripts/verify_alpha13_compat.py --compiler /path/to/scarp --compiler-source /path/to/pinned/compiler</code>
 <p>Lists and maps are immutable, bounded snapshots. Option / Result and the restricted <code>?</code> binding propagation were introduced in alpha.12 and are verified against alpha.13 here.</p></section>
 <section id="example-index" aria-labelledby="modern-index-title">
@@ -1356,8 +1365,8 @@ def render_modern_collections_page(target: dict) -> str:
 
 
 
-# These two source-backed pages are optional: the main course remains alpha.13.
-# Do not use a moving compiler ref or count these as numbered lessons.
+# These two published-source pages are independent of the numbered lesson inventory.
+# Never use a moving compiler ref or count them as numbered lessons.
 ALPHA14_WORKSHOP = (
     (
         "structured_pattern_coverage",
@@ -1431,8 +1440,8 @@ and practical exercises.</p>
 <code>{escape(compiler["source_commit"])}</code>.
 The website does not execute code in your browser.</p>
 <code>python scripts/verify_alpha14_patterns.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
-<p>The 52 numbered lessons and the main course compiler target remain pinned to alpha.13
-until a separately reviewed compatibility promotion.</p>
+<p>The 52 numbered lessons now share this alpha.14 compiler target in the proposed
+course promotion; the historical alpha.13 workshop keeps its own immutable pin.</p>
 </section>
 <section aria-labelledby="patterns-examples">
 <h2 id="patterns-examples">Choose a source-backed example</h2>
@@ -1517,8 +1526,8 @@ def render_alpha14_example_page(name: str) -> str:
 <a href="{escape(rel(page, "workshops/structured-patterns/index.html"))}">← Workshop overview</a>
 {siblings}</nav>
 <p class="fine-print">Source and expected output are imported under the upstream
-Apache-2.0 license. The numbered course remains pinned to alpha.13;
-this optional workshop does not claim a native Scarp compiler or browser runtime.</p>
+Apache-2.0 license. The numbered course uses the published alpha.14 compiler in this proposed
+promotion; this workshop does not claim a native Scarp compiler or browser runtime.</p>
 </main>"""
     return page_shell(page, title,
         f"Official Scarp alpha.14 example: {summary}", main, "project-layout")

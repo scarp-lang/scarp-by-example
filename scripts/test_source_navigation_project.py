@@ -20,7 +20,9 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         cls.target = read_course()[2]
 
     def test_manifest_source_and_stdout_are_compiler_fixtures(self):
-        self.assertEqual(self.target["version"], "0.0.6-alpha.13")
+        self.assertEqual(self.target["version"], "0.0.6-alpha.14")
+        self.assertEqual(load_reference_map()["compiler_commit"],
+                         "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2")
         self.assertEqual((PROJECT / "Scarp.project").read_bytes(),
                          b"scarp-project: 1\nname: source-navigation\nentry: src/main.srp\n")
         main = (PROJECT / "src/main.srp").read_text(encoding="utf-8")
