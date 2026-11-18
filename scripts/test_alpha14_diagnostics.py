@@ -98,8 +98,9 @@ class Alpha14DiagnosticWorkshopTests(unittest.TestCase):
             folder = temporary / "tutorials/structured-patterns/diagnostics"
             shutil.copytree(DIRECTORY, folder)
             source = folder / f"{IDS[0]}.invalid.srp"
-            source.write_text(source.read_text(encoding="utf-8").replace("first", "a"),
-                              encoding="utf-8")
+            source.write_bytes(
+                source.read_bytes().replace(b"first", b"a")
+            )
             with self.assertRaisesRegex(VerificationError, "byte span or source drift"):
                 load_cases(temporary)
             shutil.copyfile(DIRECTORY / source.name, source)
