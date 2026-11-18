@@ -99,12 +99,12 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
             self.assertIn(f'href="{slug}/index.html"', page)
         self.assertIn("website does not execute code in your browser", page)
 
-    def test_build_adds_three_routes_without_changing_progress_inventory(self):
+    def test_build_adds_four_workshop_routes_without_changing_progress_inventory(self):
         with tempfile.TemporaryDirectory() as folder:
             out = Path(folder)
             self.assertEqual(build(out), 52)
             pages = sorted((out / "workshops/structured-patterns").rglob("index.html"))
-            self.assertEqual(len(pages), 3)
+            self.assertEqual(len(pages), 4)
             self.assertEqual(len(list(out.rglob("index.html"))), 74)
             home = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="workshops/structured-patterns/index.html"', home)
