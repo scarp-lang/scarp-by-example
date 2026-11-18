@@ -20,7 +20,7 @@ class ModernWorkshopSiteTests(unittest.TestCase):
     def test_page_includes_every_actual_source_and_exact_output(self):
         html = render_modern_collections_page(self.target)
         self.assertEqual(len(MODERN_WORKSHOP), 8)
-        self.assertIn(self.target["source_commit"], html)
+        self.assertIn("e755fda37cdaeed29434e848cb5dd41f2f2e7eb2", html)
         self.assertIn('lang="hi"', html)
         self.assertIn("website does not execute code in your browser", html)
         for name, _, _ in MODERN_WORKSHOP:
@@ -55,13 +55,22 @@ class ModernWorkshopSiteTests(unittest.TestCase):
                 (output / "sitemap.xml").read_text(encoding="utf-8"),
             )
 
-    def test_malformed_or_cross_release_manifest_rejected(self):
-        target = dict(self.target)
-        target["source_commit"] = "0" * 40
-        with self.assertRaisesRegex(ValueError, "modern workshop compiler source_commit"):
-            render_modern_collections_page(target)
+    def test_historical_workshop_does_not_follow_active_compiler(self):
         manifest = json.loads((WORKSHOP / "compiler-target.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], self.target["version"])
+        self.assertEqual(manifest["version"], "0.0.6-alpha.13")
+        self.assertEqual(manifest["source_commit"], "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2")
+        self.assertEqual(self.target["version"], "0.0.6-alpha.14")
+        html = render_modern_collections_page(self.target)
+        self.assertIn(manifest["source_commit"], html)
+        self.assertNotIn(self.target["source_commit"], html)
+
+    def test_rejects_historical_manifest_drift(self):
+        from unittest.mock import patch
+        manifest = json.loads((WORKSHOP / "compiler-target.json").read_text(encoding="utf-8"))
+        manifest["source_commit"] = "0" * 40
+        with patch("build_site.json.loads", return_value=manifest):
+            with self.assertRaisesRegex(ValueError, "modern workshop compiler source_commit"):
+                render_modern_collections_page(self.target)
 
 
 if __name__ == "__main__":

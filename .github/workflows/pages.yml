@@ -28,8 +28,17 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: e755fda37cdaeed29434e848cb5dd41f2f2e7eb2
+          ref: 43627b74af5fccccc5e233e98207413983ebafc1
           path: .compiler
+          persist-credentials: false
+
+
+      - name: Check out independently pinned alpha.13 workshop compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: e755fda37cdaeed29434e848cb5dd41f2f2e7eb2
+          path: .compiler-alpha13
           persist-credentials: false
 
       - name: Set up Rust
@@ -80,8 +89,11 @@ jobs:
       - name: Smoke-test Scarp-first CLI before publishing
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
 
+      - name: Build historical alpha.13 compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha13/Cargo.toml
+
       - name: Verify published alpha.13 collections and Result workshop
-        run: python scripts/verify_alpha13_compat.py --compiler .compiler/target/debug/scarp --compiler-source .compiler
+        run: python scripts/verify_alpha13_compat.py --compiler .compiler-alpha13/target/debug/scarp --compiler-source .compiler-alpha13
 
       - name: Generate static course catalog
         run: python scripts/build_site.py
