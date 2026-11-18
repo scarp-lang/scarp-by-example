@@ -963,7 +963,9 @@ line with the fixture. Do not compare symbol ID numbers between invocations.</p>
 तुलना न करें।</p></div></div>
 <p class="notes-provenance">Pinned published
 <a href="{escape(target["release_url"])}">v{escape(target["version"])}</a>
-· source <code>{escape(target["source_commit"][:12])}</code>.
+· active-course source <code>{escape(target["source_commit"][:12])}</code>.
+The authored reference map records a separately reviewed alpha.13 source commit
+<code>e755fda37cda</code>; its semantic links are also rechecked with the active compiler in CI.
 Read-only metadata is not program output. The browser does not execute Scarp.</p></section>
 <section class="lab-reveals" aria-label="Self-check questions">
 <details><summary>Which <code>base</code> is read inside <code>twice(value: library.adjust(n: base + step))</code>?</summary>

@@ -23,6 +23,15 @@ class ReferenceExplorerTests(unittest.TestCase):
         self.assertEqual({s["id"] for s in mapping["symbols"] if s["name"] == "base"},
                          {"base-outer", "base-inner"})
 
+    def test_original_reference_pin_is_independent_of_active_course(self):
+        from source_explorer import REVIEWED_COMPILER_COMMIT
+        self.assertEqual(REVIEWED_COMPILER_COMMIT,
+                         "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2")
+        self.assertEqual(load_reference_map()["compiler_commit"], REVIEWED_COMPILER_COMMIT)
+        active = json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))
+        self.assertEqual(active["version"], "0.0.6-alpha.14")
+        self.assertNotEqual(active["source_commit"], REVIEWED_COMPILER_COMMIT)
+
     def test_utf8_byte_span_is_not_character_offset(self):
         source = "é x\n".encode("utf-8")
         self.assertEqual(byte_span(source, 1, 3, "x"), (3, 4))
@@ -51,9 +60,6 @@ class ReferenceExplorerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             shutil.copytree(ROOT / PROJECT, root / PROJECT)
-            (root / "docs").mkdir()
-            shutil.copyfile(ROOT / "docs/compiler-target.json",
-                            root / "docs/compiler-target.json")
             path = root / INDEX
             data = json.loads(path.read_text(encoding="utf-8"))
             data["compiler_commit"] = "wrong pin"
