@@ -17,6 +17,7 @@ from lesson_notes import HindiNote, read_hindi_notes, render_hindi_note
 from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
+from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -321,7 +322,8 @@ scarp launch hello-world</code></pre></div>
 <div class="compat-links"><a href="{REPOSITORY}/blob/main/docs/cli-quickstart.md">CLI quickstart ↗</a>
 <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें ↗</a>
 <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy ↗</a>
-<a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a></div>
+<a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a>
+<a href="workshops/structured-patterns/index.html">New: alpha.14 structured patterns ↗</a></div>
 </section>
 </main>"""
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
@@ -1352,6 +1354,175 @@ def render_modern_collections_page(target: dict) -> str:
                       "Eight release-pinned Scarp list, map and checked-result examples with exact output.",
                       main, "project-layout")
 
+
+
+# These two source-backed pages are optional: the main course remains alpha.13.
+# Do not use a moving compiler ref or count these as numbered lessons.
+ALPHA14_WORKSHOP = (
+    (
+        "structured_pattern_coverage",
+        "nested-record-tuples",
+        "Nested record and tuple patterns",
+        "Bind fields from a tagged record and destructure a tuple.",
+        "A Move variant contains a Point record. The selected case binds "
+        "horizontal and vertical, then a separate tuple binding adds 4 and 9. "
+        "Predict 12, 30 and 13 before checking the recorded output.",
+        "Move variant में Point record है। चुना गया case horizontal और vertical "
+        "को bind करता है। फिर tuple से 4 और 9 का योग निकलता है। "
+        "आउटपुट देखने से पहले 12, 30 और 13 का अनुमान लगाएँ।",
+        "Change the tuple values in a separate local copy and predict the final line.",
+        "अलग कॉपी में tuple के मान बदलकर अंतिम पंक्ति का अनुमान लगाएँ।",
+    ),
+    (
+        "map_string_projection_snapshots",
+        "persistent-map-projections",
+        "Deterministic map projections",
+        "Compare canonical key/value lists across persistent map snapshots.",
+        "The original map has three string keys. Each map_set or map_remove "
+        "returns a new value: map_keys and map_values stay paired in canonical "
+        "key order, and the original still prints its initial contents.",
+        "मूल map में तीन string keys हैं। map_set और map_remove नया snapshot "
+        "देते हैं। map_keys और map_values एक समान canonical क्रम में रहते हैं, "
+        "और मूल map नहीं बदलता।",
+        "Match each key with the value at the same index, then explain the final two lines.",
+        "एक ही index की key और value मिलाएँ; फिर अंतिम दो पंक्तियों का कारण बताएँ।",
+    ),
+)
+
+
+def alpha14_manifest() -> dict:
+    """Fail closed if the published-release provenance is not exactly pinned."""
+    validate_alpha14_manifest()
+    return json.loads(ALPHA14_TARGET.read_text(encoding="utf-8"))
+
+
+def alpha14_example_path(slug: str) -> str:
+    return f"workshops/structured-patterns/{slug}/index.html"
+
+
+def render_alpha14_workshop_index() -> str:
+    """Render the discoverable overview, without expanding the 52-lesson course."""
+    compiler = alpha14_manifest()
+    page = "workshops/structured-patterns/index.html"
+    cards = []
+    for name, slug, title, summary, *_ in ALPHA14_WORKSHOP:
+        href = escape(rel(page, alpha14_example_path(slug)))
+        cards.append(f"""<a class="lab-card" href="{href}">
+<span class="eyebrow">SOURCE-PINNED SCARP ALPHA.14</span>
+<h2>{escape(title)}</h2><p>{escape(summary)}</p>
+<span class="lab-open">Open dedicated example →</span></a>""")
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<span aria-current="page">Structured patterns workshop</span></nav>
+<header class="page-heading">
+<p class="eyebrow">OPTIONAL WORKSHOP · PUBLISHED SCARP v{escape(compiler["version"])}</p>
+<h1>Patterns and deterministic map snapshots</h1>
+<p class="lead">Learn from two real published compiler examples, each on its own page
+with original Scarp source, byte-exact expected output, English/Hindi explanations
+and practical exercises.</p>
+<div class="guide-links">
+<a href="{REPOSITORY}/blob/main/tutorials/structured-patterns/README.md">English / हिन्दी workshop guide ↗</a>
+<a href="{escape(compiler["release_url"])}">Official alpha.14 release ↗</a>
+</div></header>
+<section class="run-panel" aria-labelledby="patterns-run">
+<h2 id="patterns-run">Run the examples locally</h2>
+<p>Use Scarp v{escape(compiler["version"])} from immutable compiler commit
+<code>{escape(compiler["source_commit"])}</code>.
+The website does not execute code in your browser.</p>
+<code>python scripts/verify_alpha14_patterns.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
+<p>The 52 numbered lessons and the main course compiler target remain pinned to alpha.13
+until a separately reviewed compatibility promotion.</p>
+</section>
+<section aria-labelledby="patterns-examples">
+<h2 id="patterns-examples">Choose a source-backed example</h2>
+<div class="lab-grid">{''.join(cards)}</div>
+</section>
+<section class="lesson-notes" lang="hi" aria-labelledby="patterns-hindi">
+<h2 id="patterns-hindi">हिन्दी में सीखें</h2>
+<p>इन दोनों उदाहरणों का Scarp source और आउटपुट प्रकाशित compiler से लिया गया है।
+हर उदाहरण का अलग पेज खोलें, आउटपुट का अनुमान लगाएँ और अपने कंप्यूटर पर
+<code>scarp verify</code> तथा <code>scarp exec</code> चलाकर जाँचें।</p>
+</section>
+<p class="fine-print">The alpha.14 editor-cache and checked ELF64 APIs are Rust-host capabilities,
+not general language functions or a native <code>scarp compile</code> command.</p>
+</main>"""
+    return page_shell(page, "Scarp alpha.14 patterns workshop",
+        "Two published Scarp examples with original source and exact output.",
+        main, "project-layout")
+
+
+def render_alpha14_example_page(name: str) -> str:
+    """Create a standalone page from the source and exact stdout checked into Git."""
+    compiler = alpha14_manifest()
+    lesson = next((item for item in ALPHA14_WORKSHOP if item[0] == name), None)
+    if lesson is None:
+        raise ValueError(f"unknown alpha.14 workshop example: {name}")
+    _name, slug, title, summary, english, hindi, exercise, hi_exercise = lesson
+    page = alpha14_example_path(slug)
+    workshop = ROOT / "tutorials/structured-patterns"
+    source = (workshop / f"{name}.srp").read_text(encoding="utf-8")
+    expected = read_expected_stdout(workshop / f"{name}.stdout").decode("utf-8")
+    if not source.strip() or not expected.endswith("\n"):
+        raise ValueError(f"alpha.14 source or output is incomplete: {name}")
+    display_output = expected.replace(chr(13), chr(92) + "r")
+    local = f"tutorials/structured-patterns/{name}"
+    upstream = (f"{COMPILER}/blob/{compiler['source_commit']}/examples/{name}")
+    siblings = "".join(
+        f'<a href="{escape(rel(page, alpha14_example_path(other_slug)))}">'
+        f'{escape(other_title)} →</a>'
+        for other_name, other_slug, other_title, *_ in ALPHA14_WORKSHOP
+        if other_name != name
+    )
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<a href="{escape(rel(page, "workshops/structured-patterns/index.html"))}">Alpha.14 workshop</a>
+<span>/</span><span aria-current="page">{escape(title)}</span></nav>
+<header class="page-heading">
+<p class="eyebrow">PUBLISHED SCARP v{escape(compiler["version"])} · ORIGINAL SOURCE</p>
+<h1>{escape(title)}</h1><p class="lead">{escape(summary)}</p>
+<p>Compiler source commit <code>{escape(compiler["source_commit"])}</code></p>
+</header>
+<div class="code-grid">
+<section class="code-panel" aria-label="Original Scarp source">
+<div class="panel-heading"><h2>{escape(name)}.srp</h2></div>
+<pre><code id="scarp-code">{highlight_scarp(source)}</code></pre>
+<div class="panel-footer"><a href="{escape(upstream)}.srp">View pinned compiler source ↗</a></div>
+</section>
+<section class="code-panel output-panel" aria-label="Recorded compiler output">
+<div class="panel-heading"><h2>{escape(name)}.stdout</h2>
+<span class="verified-tag">Exact output fixture</span></div>
+<pre><code id="scarp-output">{escape(display_output)}</code></pre>
+<div class="panel-footer"><a href="{escape(upstream)}.stdout">View pinned output fixture ↗</a></div>
+</section>
+</div>
+<section class="lesson-notes" lang="en" aria-labelledby="pattern-en">
+<h2 id="pattern-en">Understand the example</h2>
+<p>{escape(english)}</p>
+<h3>Try it yourself</h3><p>{escape(exercise)}</p>
+</section>
+<section class="lesson-notes" lang="hi" aria-labelledby="pattern-hi">
+<h2 id="pattern-hi">हिन्दी में समझें</h2>
+<p>{escape(hindi)}</p>
+<h3>अभ्यास</h3><p>{escape(hi_exercise)}</p>
+</section>
+<section class="run-panel" aria-labelledby="pattern-run">
+<h2 id="pattern-run">Run against the published compiler</h2>
+<p><code>scarp verify {escape(local)}.srp</code></p>
+<p><code>scarp exec {escape(local)}.srp</code></p>
+<p>Use the exact alpha.14 compiler binary. The website does not execute code in your browser.</p>
+</section>
+<nav class="step-nav" aria-label="Workshop examples">
+<a href="{escape(rel(page, "workshops/structured-patterns/index.html"))}">← Workshop overview</a>
+{siblings}</nav>
+<p class="fine-print">Source and expected output are imported under the upstream
+Apache-2.0 license. The numbered course remains pinned to alpha.13;
+this optional workshop does not claim a native Scarp compiler or browser runtime.</p>
+</main>"""
+    return page_shell(page, title,
+        f"Official Scarp alpha.14 example: {summary}", main, "project-layout")
+
 def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
@@ -1388,6 +1559,13 @@ def build(destination: Path) -> int:
     modern_path = destination / "workshops/modern-collections/index.html"
     modern_path.parent.mkdir(parents=True, exist_ok=True)
     modern_path.write_text(render_modern_collections_page(target), encoding="utf-8", newline="\n")
+    alpha14_index = destination / "workshops/structured-patterns/index.html"
+    alpha14_index.parent.mkdir(parents=True, exist_ok=True)
+    alpha14_index.write_text(render_alpha14_workshop_index(), encoding="utf-8", newline="\n")
+    for name, slug, *_ in ALPHA14_WORKSHOP:
+        page = destination / alpha14_example_path(slug)
+        page.parent.mkdir(parents=True, exist_ok=True)
+        page.write_text(render_alpha14_example_page(name), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1404,7 +1582,9 @@ def build(destination: Path) -> int:
     urls = ["index.html", "projects/index.html",
             "projects/module-inspection/index.html",
             "projects/source-navigation/index.html",
-            "workshops/modern-collections/index.html", "labs/index.html"]
+            "workshops/modern-collections/index.html",
+            "workshops/structured-patterns/index.html", "labs/index.html"]
+    urls.extend(alpha14_example_path(slug) for _, slug, *_ in ALPHA14_WORKSHOP)
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
     urls.extend(lesson.url for lesson in lessons)

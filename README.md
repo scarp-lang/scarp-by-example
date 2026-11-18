@@ -55,6 +55,12 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 
 The collections and `option<T>` / `result<T,E>` language features arrived in alpha.12. Alpha.13 primarily improves cache management, editor-host generation handling, propagation payload reuse and resource checks, rather than adding new collection syntax. Cache and editor features are **Rust embedding APIs**, not Scarp calls, native executables or browser execution. Previously opened alpha.10/alpha.11 feature pull requests are independent and are not silently merged by this compatibility change.
 
+## Structured patterns and deterministic maps (published alpha.14 preview)
+
+[Read the alpha.14 English/Hindi workshop](tutorials/structured-patterns/README.md) to run two **exact upstream source-and-output pairs**: nested record/tuple destructuring and canonical map key/value projections across persistent updates. The independently pinned verifier checks published compiler Git objects and the executable version, then runs static verification and byte-exact output comparisons. A separate [Linux/Windows/macOS workflow](.github/workflows/alpha14-patterns.yml) also rechecks the original 52 numbered lessons, guided labs and CLI against alpha.14.
+
+**Compatibility rollout:** The active course and Pages compiler target remains **alpha.13** until the alpha.14 compatibility matrix passes and a separate baseline-promotion change is reviewed. This new workshop does not merge the older draft feature PRs, change existing fixtures, or imply a stable or native-compiled Scarp release.
+
 ## Course
 
 | Section | Topics | Status |

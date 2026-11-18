@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from verify_cli import CliSmokeError, invoke, require
+from verify_cli import CliSmokeError, invoke, main, require
 from verify_examples import ROOT
 
 
@@ -49,6 +49,17 @@ class CliSmokeTests(unittest.TestCase):
         with self.assertRaisesRegex(CliSmokeError, "exceeded 2s"):
             invoke(Path("scarp"), "verify", "example.srp", timeout=2)
 
+
+    @patch("verify_cli.smoke_test")
+    def test_explicit_candidate_version_forwarded_without_changing_default(self, smoke):
+        self.assertEqual(main(["--compiler", str(Path(__file__).resolve()),
+                               "--expected-version", "0.0.6-alpha.14"]), 0)
+        smoke.assert_called_once_with(Path(__file__).resolve(), 15,
+                                      expected_version="0.0.6-alpha.14")
+        smoke.reset_mock()
+        self.assertEqual(main(["--compiler", str(Path(__file__).resolve())]), 0)
+        smoke.assert_called_once_with(Path(__file__).resolve(), 15,
+                                      expected_version=None)
 
 if __name__ == "__main__":
     unittest.main()
