@@ -10,6 +10,7 @@ The static learning portal provides [a workshop overview](https://scarp-lang.git
 
 - [Nested record and tuple patterns](https://scarp-lang.github.io/scarp-by-example/workshops/structured-patterns/nested-record-tuples/)
 - [Persistent map projections](https://scarp-lang.github.io/scarp-by-example/workshops/structured-patterns/persistent-map-projections/)
+- [Fix nine parser syntax errors](https://scarp-lang.github.io/scarp-by-example/workshops/structured-patterns/diagnostics/) — verified E0004 error spans and working repairs
 
 These are source-backed documentation pages, not live interpreter playgrounds. The links become public on GitHub Pages only after the reviewed change is merged and deployed.
 
@@ -28,6 +29,18 @@ python scripts/verify_alpha14_patterns.py --compiler /absolute/path/to/scarp --c
 ~~~
 
 Windows users should use `scarp.exe` for the executable; the verifier requires the actual Git checkout at the commit above, not an arbitrary source directory. It checks the compiler version and **committed Git objects**, then invokes static verification and compares exact UTF-8 stdout bytes.
+
+## Diagnose and fix invalid patterns
+
+The [diagnostic repair fixtures](diagnostics/cases.json) extend the upstream parser regression scenarios: nine intentionally invalid `.invalid.srp` snippets, nine runnable `.fixed.srp` repairs and exact `.stdout` fixtures. Their published-alpha.14 verifier checks the **actual** compiler JSON diagnostic code (`E0004`), message, source span in UTF-8 bytes, Unicode-scalar line/column and no partial stdout. Corrected programs must pass static verification and produce the checked-in output.
+
+Run with an exact alpha.14 binary and its source checkout:
+
+~~~sh
+python scripts/verify_alpha14_diagnostics.py --compiler /absolute/path/to/scarp --compiler-source /path/to/scarp-alpha14-git-checkout
+~~~
+
+The original invalid snippets are adapted from the compiler's [pattern separator regression tests](https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.14/tests/pattern_separator_diagnostics.rs); the repaired programs and exercises are teaching additions, not claimed verbatim upstream files. वेबसाइट पर कोड चलता नहीं है; कंपाइलर की जाँच अपने कंप्यूटर पर करें।
 
 ## 1. Nested record and tuple patterns
 

@@ -1,0 +1,2 @@
+bind (single,) = (1,);
+print(single);

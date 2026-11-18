@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "version": "0.0.6-alpha.14",
+  "release_tag": "v0.0.6-alpha.14",
+  "source_commit": "43627b74af5fccccc5e233e98207413983ebafc1",
+  "source_reference": "https://github.com/scarp-lang/scarp/blob/v0.0.6-alpha.14/tests/pattern_separator_diagnostics.rs",
+  "cases": [
+    {
+      "id": "missing-tuple-comma",
+      "title": "Tuple: missing comma",
+      "title_hi": "ट्यूपल में कॉमा गायब",
+      "message_part": "expected ',' between destructuring pattern members",
+      "token": "second",
+      "span": [
+        39,
+        45
+      ],
+      "start": {
+        "line": 2,
+        "column": 13
+      },
+      "end": {
+        "line": 2,
+        "column": 19
+      },
+      "explanation": "Separate consecutive tuple names with a comma.",
+      "explanation_hi": "लगातार tuple के नामों के बीच कॉमा लगाएँ।"
+    },
+    {
+      "id": "missing-record-comma",
+      "title": "Nested record: missing comma",
+      "title_hi": "नेस्टेड रिकॉर्ड में कॉमा गायब",
+      "message_part": "expected ',' between destructuring pattern members",
+      "token": "y",
+      "span": [
+        23,
+        24
+      ],
+      "start": {
+        "line": 1,
+        "column": 24
+      },
+      "end": {
+        "line": 1,
+        "column": 25
+      },
+      "explanation": "Separate record fields even inside a tuple pattern.",
+      "explanation_hi": "Tuple के भीतर record fields को भी कॉमा से अलग करें।"
+    },
+    {
+      "id": "missing-array-comma",
+      "title": "Fixed array: missing comma",
+      "title_hi": "ऐरे में कॉमा गायब",
+      "message_part": "expected ',' between destructuring pattern members",
+      "token": "right",
+      "span": [
+        11,
+        16
+      ],
+      "start": {
+        "line": 1,
+        "column": 12
+      },
+      "end": {
+        "line": 1,
+        "column": 17
+      },
+      "explanation": "Use a comma between array pattern entries.",
+      "explanation_hi": "Array pattern के दो नामों के बीच कॉमा लगाएँ।"
+    },
+    {
+      "id": "wrong-inner-delimiter",
+      "title": "Nested array: wrong closer",
+      "title_hi": "नेस्टेड ऐरे में गलत ब्रैकेट",
+      "message_part": "expected ']'",
+      "token": ")",
+      "span": [
+        27,
+        28
+      ],
+      "start": {
+        "line": 1,
+        "column": 28
+      },
+      "end": {
+        "line": 1,
+        "column": 29
+      },
+      "explanation": "Close the innermost array with ']' before the tuple's ')'.",
+      "explanation_hi": "पहले अंदर वाला array ']' से और फिर tuple ')' से बंद करें।"
+    },
+    {
+      "id": "wrong-record-delimiter",
+      "title": "Record: wrong closer",
+      "title_hi": "रिकॉर्ड में गलत ब्रैकेट",
+      "message_part": "expected '}'",
+      "token": "]",
+      "span": [
+        23,
+        24
+      ],
+      "start": {
+        "line": 1,
+        "column": 24
+      },
+      "end": {
+        "line": 1,
+        "column": 25
+      },
+      "explanation": "Use '}' to close a named record pattern.",
+      "explanation_hi": "रिकॉर्ड पैटर्न के अंत में '}' लगाएँ।"
+    },
+    {
+      "id": "duplicate-comma",
+      "title": "Tuple: duplicate comma",
+      "title_hi": "ट्यूपल में दो कॉमा",
+      "message_part": "where a destructuring pattern member is required",
+      "token": ",",
+      "span": [
+        11,
+        12
+      ],
+      "start": {
+        "line": 1,
+        "column": 12
+      },
+      "end": {
+        "line": 1,
+        "column": 13
+      },
+      "explanation": "Remove the extra comma instead of inventing an empty element.",
+      "explanation_hi": "खाली तत्व बनाने की जगह अतिरिक्त कॉमा हटाएँ।"
+    },
+    {
+      "id": "empty-group",
+      "title": "Empty tuple pattern",
+      "title_hi": "खाली ट्यूपल पैटर्न",
+      "message_part": "requires at least one member",
+      "token": "(",
+      "span": [
+        5,
+        6
+      ],
+      "start": {
+        "line": 1,
+        "column": 6
+      },
+      "end": {
+        "line": 1,
+        "column": 7
+      },
+      "explanation": "A binding pattern cannot be empty. Supply a member; a one-item tuple needs a trailing comma.",
+      "explanation_hi": "Binding pattern खाली नहीं हो सकता। एक नाम दें; एक-तत्व tuple में अंतिम कॉमा चाहिए।"
+    },
+    {
+      "id": "missing-closer",
+      "title": "Tuple: missing closer at EOF",
+      "title_hi": "ट्यूपल के अंत में ब्रैकेट गायब",
+      "message_part": "expected ')'",
+      "token": "",
+      "span": [
+        12,
+        12
+      ],
+      "start": {
+        "line": 1,
+        "column": 13
+      },
+      "end": {
+        "line": 1,
+        "column": 13
+      },
+      "explanation": "Close the group and supply the initializer.",
+      "explanation_hi": "ग्रुप को बंद करके initializer भी लिखें।"
+    },
+    {
+      "id": "singleton-trailing-comma",
+      "title": "One-item tuple requires comma",
+      "title_hi": "एक-तत्व ट्यूपल में कॉमा चाहिए",
+      "message_part": "one-element tuple pattern requires a trailing comma",
+      "token": "(",
+      "span": [
+        5,
+        6
+      ],
+      "start": {
+        "line": 1,
+        "column": 6
+      },
+      "end": {
+        "line": 1,
+        "column": 7
+      },
+      "explanation": "Write (single,) rather than (single) for a one-element tuple pattern.",
+      "explanation_hi": "एक तत्व वाले tuple के लिए (single,) लिखें, केवल (single) नहीं।"
+    }
+  ]
+}

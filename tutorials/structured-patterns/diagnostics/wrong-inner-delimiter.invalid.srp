@@ -1,0 +1,1 @@
+bind (first, [second, third)) = item;

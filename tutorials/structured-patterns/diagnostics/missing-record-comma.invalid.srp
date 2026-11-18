@@ -1,0 +1,1 @@
+bind (outer, {x: inner y: other}) = item;

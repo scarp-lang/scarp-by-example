@@ -7,6 +7,9 @@ on:
       - "tutorials/structured-patterns/**"
       - "scripts/verify_alpha14_patterns.py"
       - "scripts/test_alpha14_patterns.py"
+      - "scripts/verify_alpha14_diagnostics.py"
+      - "scripts/test_alpha14_diagnostics.py"
+      - "scripts/test_alpha14_diagnostics_site.py"
       - ".github/workflows/alpha14-patterns.yml"
       - "docs/compatibility.md"
       - "README.md"
@@ -15,6 +18,9 @@ on:
       - "tutorials/structured-patterns/**"
       - "scripts/verify_alpha14_patterns.py"
       - "scripts/test_alpha14_patterns.py"
+      - "scripts/verify_alpha14_diagnostics.py"
+      - "scripts/test_alpha14_diagnostics.py"
+      - "scripts/test_alpha14_diagnostics_site.py"
       - ".github/workflows/alpha14-patterns.yml"
       - "docs/compatibility.md"
       - "README.md"
@@ -54,6 +60,8 @@ jobs:
           toolchain: stable
       - name: Test workshop provenance and failure guards
         run: python -m unittest discover -s scripts -p 'test_alpha14_patterns.py'
+      - name: Test E0004 diagnostic lab schema and drift guards
+        run: python -m unittest discover -s scripts -p 'test_alpha14_diagnostics.py'
       - name: Build alpha.14 from the immutable checkout
         run: cargo build --locked --offline --manifest-path .compiler-alpha14/Cargo.toml
       - name: Check workshop and core-course compatibility on alpha.14
@@ -63,6 +71,7 @@ jobs:
           compiler=.compiler-alpha14/target/debug/scarp
           if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
           python scripts/verify_alpha14_patterns.py --compiler "$compiler" --compiler-source .compiler-alpha14
+          python scripts/verify_alpha14_diagnostics.py --compiler "$compiler" --compiler-source .compiler-alpha14
           python scripts/verify_examples.py --compiler "$compiler"
           python scripts/verify_guided_labs.py --compiler "$compiler"
           python scripts/verify_cli.py --compiler "$compiler" --expected-version "0.0.6-alpha.14"

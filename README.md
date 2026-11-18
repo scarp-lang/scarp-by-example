@@ -59,6 +59,8 @@ The collections and `option<T>` / `result<T,E>` language features arrived in alp
 
 [Read the alpha.14 English/Hindi workshop](tutorials/structured-patterns/README.md) to run two **exact upstream source-and-output pairs**: nested record/tuple destructuring and canonical map key/value projections across persistent updates. The independently pinned verifier checks published compiler Git objects and the executable version, then runs static verification and byte-exact output comparisons. A separate [Linux/Windows/macOS workflow](.github/workflows/alpha14-patterns.yml) also rechecks the original 52 numbered lessons, guided labs and CLI against alpha.14.
 
+**New diagnostic repair lab:** [Nine syntax-error exercises](tutorials/structured-patterns/README.md#diagnose-and-fix-invalid-patterns) pair real alpha.14 parser errors with working corrected code, exact E0004 diagnostic spans and recorded stdout. The new dedicated page is part of the static website, not a browser interpreter.
+
 **Compatibility rollout:** This stacked change proposes alpha.14 for the active course and Pages compiler target after successful Linux/Windows/macOS compatibility tests. The independent alpha.13 modern-collections workshop remains frozen at its published source. No existing course stdout fixtures are rewritten, and this does not imply a stable or native-compiled Scarp release.
 
 ## Course

@@ -18,6 +18,7 @@ from practice_questions import read_practice_questions
 from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
 from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
+from verify_alpha14_diagnostics import load_cases as load_alpha14_diagnostics
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -1446,6 +1447,7 @@ course promotion; the historical alpha.13 workshop keeps its own immutable pin.<
 <section aria-labelledby="patterns-examples">
 <h2 id="patterns-examples">Choose a source-backed example</h2>
 <div class="lab-grid">{''.join(cards)}</div>
+<p><a class="secondary-button" href="{escape(rel(page, "workshops/structured-patterns/diagnostics/index.html"))}">Diagnose and repair nine syntax errors →</a></p>
 </section>
 <section class="lesson-notes" lang="hi" aria-labelledby="patterns-hindi">
 <h2 id="patterns-hindi">हिन्दी में सीखें</h2>
@@ -1532,6 +1534,102 @@ promotion; this workshop does not claim a native Scarp compiler or browser runti
     return page_shell(page, title,
         f"Official Scarp alpha.14 example: {summary}", main, "project-layout")
 
+
+
+def render_alpha14_diagnostics_page() -> str:
+    """Teach documented syntax repairs from checked-in, span-validated fixtures."""
+    compiler = alpha14_manifest()
+    cases = load_alpha14_diagnostics()
+    page = "workshops/structured-patterns/diagnostics/index.html"
+    workshop = ROOT / "tutorials/structured-patterns/diagnostics"
+    cards = []
+    exercises = []
+    for case in cases:
+        name = case["id"]
+        local = f"tutorials/structured-patterns/diagnostics/{name}"
+        original = (workshop / f"{name}.invalid.srp").read_text(encoding="utf-8")
+        repaired = (workshop / f"{name}.fixed.srp").read_text(encoding="utf-8")
+        exact_stdout = read_expected_stdout(workshop / f"{name}.stdout").decode("utf-8")
+        cases_path = f"{REPOSITORY}/blob/main/{local}"
+        cards.append(f"""<a class="lab-card" href="#repair-{escape(name)}">
+<span class="eyebrow">SCARP E0004 · REPAIR</span>
+<h2>{escape(case["title"])}</h2>
+<p lang="hi">{escape(case["title_hi"])}</p>
+<span class="lab-open">View broken and repaired source →</span></a>""")
+        exercises.append(f"""
+<section class="lesson-notes" id="repair-{escape(name)}" aria-labelledby="repair-title-{escape(name)}">
+<header class="page-heading">
+<p class="eyebrow">EXPECTED STATIC ERROR E0004 · UTF-8 BYTE SPAN {case["span"][0]}..{case["span"][1]}</p>
+<h2 id="repair-title-{escape(name)}">{escape(case["title"])}</h2>
+<p lang="hi">{escape(case["title_hi"])}</p>
+</header>
+<div class="code-grid">
+<section class="code-panel" aria-label="{escape(case["title"])} invalid source">
+<div class="panel-heading"><h3>Invalid source · intentionally fails verify</h3></div>
+<pre><code id="invalid-{escape(name)}">{highlight_scarp(original)}</code></pre>
+<div class="panel-footer"><a href="{escape(cases_path)}.invalid.srp">View invalid fixture ↗</a></div>
+</section>
+<section class="code-panel" aria-label="{escape(case["title"])} repaired source">
+<div class="panel-heading"><h3>Corrected, executable Scarp</h3></div>
+<pre><code id="fixed-{escape(name)}">{highlight_scarp(repaired)}</code></pre>
+<div class="panel-footer"><a href="{escape(cases_path)}.fixed.srp">View repaired source ↗</a></div>
+</section>
+</div>
+<p><strong>Expected compiler message:</strong> <code>{escape(case["message_part"])}</code>.
+Primary location: line <code>{case["start"]["line"]}</code>,
+column <code>{case["start"]["column"]}</code> (Unicode scalars),
+byte span <code>{case["span"][0]}..{case["span"][1]}</code>.</p>
+<p lang="en">{escape(case["explanation"])}</p>
+<p lang="hi">{escape(case["explanation_hi"])}</p>
+<details class="lab-reveals">
+<summary>Show the repaired program's verified output · सही आउटपुट देखें</summary>
+<pre><code id="output-{escape(name)}">{escape(exact_stdout)}</code></pre>
+</details>
+<p><strong>Try the real compiler locally:</strong></p>
+<p><code>scarp verify --diagnostic-format=json {escape(local)}.invalid.srp</code></p>
+<p><code>scarp verify {escape(local)}.fixed.srp</code></p>
+<p><code>scarp exec {escape(local)}.fixed.srp</code></p>
+<p class="fine-print">The first command must fail with E0004; it is a deliberate lesson,
+not a program to execute. The last command must match the source-backed stdout fixture.</p>
+</section>""")
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<a href="{escape(rel(page, "workshops/structured-patterns/index.html"))}">Alpha.14 workshop</a>
+<span>/</span><span aria-current="page">Repair parser errors</span></nav>
+<header class="page-heading">
+<p class="eyebrow">PUBLISHED SCARP v{escape(compiler["version"])} · STATIC DIAGNOSTICS</p>
+<h1>Repair nine structured-pattern syntax errors</h1>
+<p class="lead">Compare intentionally invalid snippets with working Scarp programs.
+Each broken example must produce E0004 and an independently checked exact UTF-8
+byte span; each repaired example passes verify and prints the recorded result.</p>
+<p lang="hi">नौ जानबूझकर गलत उदाहरणों को ठीक करना सीखें। Compiler का error code
+और UTF-8 byte position जाँचें, फिर सही प्रोग्राम चलाकर वास्तविक आउटपुट देखें।</p>
+</header>
+<section class="run-panel" aria-labelledby="diagnostic-run">
+<h2 id="diagnostic-run">Check diagnostics using the published compiler</h2>
+<p>Compiler source commit <code>{escape(compiler["source_commit"])}</code>.
+The website does not execute code in your browser.</p>
+<code>python scripts/verify_alpha14_diagnostics.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
+<p>Coordinates are zero-based, half-open <strong>UTF-8 byte spans</strong>, while
+source line and column values use one-based <strong>Unicode scalar positions</strong>.
+This distinction matters for the first exercise, which contains Hindi and an emoji.</p>
+<p><a href="{COMPILER}/blob/{escape(compiler["source_commit"])}/tests/pattern_separator_diagnostics.rs">
+Read the original compiler parser regression tests ↗</a></p>
+</section>
+<section aria-labelledby="diagnostic-index">
+<h2 id="diagnostic-index">Nine real compiler error scenarios</h2>
+<div class="lab-grid">{''.join(cards)}</div>
+</section>
+{''.join(exercises)}
+<p class="fine-print">The invalid programs are derived from published parser regression
+tests, not copy-pasted run output. The examples and repaired programs are validated
+by Linux, Windows and macOS jobs. No native compiler or browser execution is implied.</p>
+</main>"""
+    return page_shell(page, "Fix Scarp structured-pattern errors",
+        "Nine published alpha.14 E0004 parser diagnostics with exact source spans and runnable repairs.",
+        main, "project-layout")
+
 def build(destination: Path) -> int:
     lessons, chapters, target = read_course()
     hindi_notes = read_hindi_notes(ROOT)
@@ -1575,6 +1673,9 @@ def build(destination: Path) -> int:
         page = destination / alpha14_example_path(slug)
         page.parent.mkdir(parents=True, exist_ok=True)
         page.write_text(render_alpha14_example_page(name), encoding="utf-8", newline="\n")
+    diagnostic_page = destination / "workshops/structured-patterns/diagnostics/index.html"
+    diagnostic_page.parent.mkdir(parents=True, exist_ok=True)
+    diagnostic_page.write_text(render_alpha14_diagnostics_page(), encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1592,7 +1693,8 @@ def build(destination: Path) -> int:
             "projects/module-inspection/index.html",
             "projects/source-navigation/index.html",
             "workshops/modern-collections/index.html",
-            "workshops/structured-patterns/index.html", "labs/index.html"]
+            "workshops/structured-patterns/index.html",
+            "workshops/structured-patterns/diagnostics/index.html", "labs/index.html"]
     urls.extend(alpha14_example_path(slug) for _, slug, *_ in ALPHA14_WORKSHOP)
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)
