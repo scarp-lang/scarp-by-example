@@ -21,7 +21,7 @@ Scarp is a development-stage programming language. This learning repository sele
 - Exact decimal arithmetic arrived in alpha.11; the existing separately proposed Decimal feature workshop has its own release pin.
 - Alpha.12 introduced bounded immutable typed lists and maps, concrete Option/Result variants, checked matching and restricted `?` propagation on immutable bind initializers in compatible named functions.
 - Alpha.13 improved propagation/resource behavior and Rust embedding cache APIs. The eight-program [modern collections workshop](../tutorials/modern-collections/README.md) deliberately stays pinned to **published alpha.13**, including all 16 exact upstream source/output files.
-- Alpha.14 improves parsing diagnostics for nested tuple/array/record binding patterns, tests deterministic map projections, and extends Rust-host-only editor caches and checked ELF64 integer object emission. The [alpha.14 structured-patterns workshop](../tutorials/structured-patterns/README.md) shows two original source-and-output pairs on separate bilingual website pages.
+- Alpha.14 improves parsing diagnostics for nested tuple/array/record binding patterns, tests deterministic map projections, and extends Rust-host-only editor caches and checked ELF64 integer object emission. The [alpha.14 structured-patterns workshop](../tutorials/structured-patterns/README.md) shows two original source-and-output pairs on separate bilingual website pages. An additional nine-case diagnostic repair lab checks the published parser's E0004 JSON messages and UTF-8 byte spans, then verifies each repaired program and exact output.
 
 **Scope:** The active CLI runs programs with the local interpreter. Rust embedding interfaces for native C11/ELF64 object generation are experimental and restricted: no general `scarp compile` CLI, unrestricted native compilation, browser interpreter, networking, async runtime, GPU backend or automatic differentiation is implied.
 
@@ -44,6 +44,7 @@ python scripts/verify_examples.py --compiler /absolute/path/to/scarp
 python scripts/verify_guided_labs.py --compiler /absolute/path/to/scarp
 python scripts/verify_cli.py --compiler /absolute/path/to/scarp
 python scripts/verify_alpha14_patterns.py --compiler /absolute/path/to/scarp --compiler-source /path/to/alpha14/compiler/git/checkout
+python scripts/verify_alpha14_diagnostics.py --compiler /absolute/path/to/scarp --compiler-source /path/to/alpha14/compiler/git/checkout
 python -m unittest discover -s scripts -p 'test_*.py'
 python scripts/build_site.py --output dist
 ~~~
