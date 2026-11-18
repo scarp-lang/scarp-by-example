@@ -90,7 +90,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
     def test_overview_provenance_and_linked_exercises(self):
         page = render_alpha14_workshop_index()
         self.assertIn(PIN, page)
-        self.assertIn("Published", page)
+        self.assertIn("PUBLISHED SCARP", page)
         self.assertIn('lang="hi"', page)
         self.assertIn("52 numbered lessons", page)
         self.assertEqual(page.count('class="lab-card"'), 2)
