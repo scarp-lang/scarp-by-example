@@ -59,7 +59,7 @@ def require(
         raise CliSmokeError(f"{label}: expected a diagnostic on stderr")
 
 
-def smoke_test(compiler: Path, timeout: int = 15) -> None:
+def smoke_test(compiler: Path, timeout: int = 15, *, expected_version: str | None = None) -> None:
     """Prove published source-pinned commands, static checks and project workflows."""
     version = invoke(compiler, "version", timeout=timeout)
     require(version, "version", nonempty_stdout=True, stderr=b"")
@@ -86,7 +86,7 @@ def smoke_test(compiler: Path, timeout: int = 15) -> None:
             or capabilities.get("native_executable") is not False):
         raise CliSmokeError("diagnose --json: misleading or unsupported capabilities")
     target = json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))
-    if capabilities.get("version") != target["version"] or capabilities.get("project_workflow") is not True:
+    if capabilities.get("version") != (expected_version or target["version"]) or capabilities.get("project_workflow") is not True:
         raise CliSmokeError("diagnose --json: expected pinned published compiler capabilities")
     expected_version = f"scarp {capabilities['version']}\n".encode("utf-8")
     if version.stdout != expected_version:
@@ -539,6 +539,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compiler", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=15)
+    parser.add_argument("--expected-version", default=None,
+                        help="explicit published candidate version; default is the active course pin")
     args = parser.parse_args(argv)
     if args.timeout <= 0:
         parser.error("--timeout must be positive")
@@ -546,7 +548,7 @@ def main(argv: list[str] | None = None) -> int:
     if not compiler.is_file():
         parser.error(f"compiler not found: {compiler}")
     try:
-        smoke_test(compiler, args.timeout)
+        smoke_test(compiler, args.timeout, expected_version=args.expected_version)
     except (CliSmokeError, OSError, ValueError) as error:
         print(f"FAIL: {error}", file=sys.stderr)
         return 1

@@ -65,4 +65,4 @@ jobs:
           python scripts/verify_alpha14_patterns.py --compiler "$compiler" --compiler-source .compiler-alpha14
           python scripts/verify_examples.py --compiler "$compiler"
           python scripts/verify_guided_labs.py --compiler "$compiler"
-          python scripts/verify_cli.py --compiler "$compiler"
+          python scripts/verify_cli.py --compiler "$compiler" --expected-version "0.0.6-alpha.14"
