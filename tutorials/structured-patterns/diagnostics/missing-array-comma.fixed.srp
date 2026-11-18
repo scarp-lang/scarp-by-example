@@ -1,0 +1,2 @@
+bind [left, right] = [array: 1, 2];
+print(left + right);

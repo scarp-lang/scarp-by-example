@@ -1,0 +1,4 @@
+record Point { x: integer, y: integer }
+bind item = (1, new Point { x: 2, y: 3 });
+bind (outer, {x: inner, y: other}) = item;
+print(outer + inner + other);
