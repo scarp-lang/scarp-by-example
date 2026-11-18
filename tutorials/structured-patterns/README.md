@@ -4,7 +4,17 @@
 
 This optional workshop deliberately does **not** replace the separately validated alpha.13 baseline for the 52 numbered lessons. Its dedicated three-OS CI will also rerun those existing lessons and labs against alpha.14 to detect compatibility regressions before changing the default pin.
 
+## Website learning pages
+
+The static learning portal provides [a workshop overview](https://scarp-lang.github.io/scarp-by-example/workshops/structured-patterns/) and a **separate page for each original program**:
+
+- [Nested record and tuple patterns](https://scarp-lang.github.io/scarp-by-example/workshops/structured-patterns/nested-record-tuples/)
+- [Persistent map projections](https://scarp-lang.github.io/scarp-by-example/workshops/structured-patterns/persistent-map-projections/)
+
+These are source-backed documentation pages, not live interpreter playgrounds. The links become public on GitHub Pages only after the reviewed change is merged and deployed.
+
 ## Run the original source
+
 
 From this learning repository, with the **exact published alpha.14** `scarp` executable:
 
