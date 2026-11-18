@@ -24,7 +24,7 @@ class Alpha14DiagnosticSiteTests(unittest.TestCase):
         self.assertIn('lang="hi"', html)
         self.assertIn("The website does not execute code in your browser", html)
         self.assertEqual(html.count('class="lab-card"'), len(IDS))
-        self.assertEqual(html.count('id="repair-'), len(IDS))
+        self.assertEqual(html.count('class="lesson-notes" id="repair-'), len(IDS))
         for case in self.cases:
             identifier = case["id"]
             with self.subTest(identifier=identifier):

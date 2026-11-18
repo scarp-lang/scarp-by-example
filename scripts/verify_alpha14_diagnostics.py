@@ -98,7 +98,9 @@ def check_diagnostic(case: dict, source: Path, result: subprocess.CompletedProce
         diagnostic = json.loads(text)
     except (UnicodeDecodeError, ValueError) as error:
         raise VerificationError(f"{case['id']}: expected one UTF-8 JSON diagnostic") from error
-    primary = diagnostic.get("primary") if isinstance(diagnostic, dict) else None
+    if not isinstance(diagnostic, dict):
+        raise VerificationError(f"{case['id']}: expected one diagnostic object")
+    primary = diagnostic.get("primary")
     if (
         diagnostic.get("schema_version") != 1
         or diagnostic.get("severity") != "error"
