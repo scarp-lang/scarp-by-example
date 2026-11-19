@@ -1441,8 +1441,8 @@ and practical exercises.</p>
 <code>{escape(compiler["source_commit"])}</code>.
 The website does not execute code in your browser.</p>
 <code>python scripts/verify_alpha14_patterns.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
-<p>The 52 numbered lessons now share this alpha.14 compiler target in the proposed
-course promotion; the historical alpha.13 workshop keeps its own immutable pin.</p>
+<p>The structured-patterns workshop stays pinned to historical alpha.14; numbered
+lessons and the alpha.13 workshop each have their own independent compiler pins.</p>
 </section>
 <section aria-labelledby="patterns-examples">
 <h2 id="patterns-examples">Choose a source-backed example</h2>
@@ -1528,8 +1528,8 @@ def render_alpha14_example_page(name: str) -> str:
 <a href="{escape(rel(page, "workshops/structured-patterns/index.html"))}">← Workshop overview</a>
 {siblings}</nav>
 <p class="fine-print">Source and expected output are imported under the upstream
-Apache-2.0 license. The numbered course uses the published alpha.14 compiler in this proposed
-promotion; this workshop does not claim a native Scarp compiler or browser runtime.</p>
+Apache-2.0 license. The numbered course has an independent active compiler pin; this workshop stays
+on historical alpha.14 and has no native compiler or browser runtime.</p>
 </main>"""
     return page_shell(page, title,
         f"Official Scarp alpha.14 example: {summary}", main, "project-layout")

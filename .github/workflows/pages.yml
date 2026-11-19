@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: 43627b74af5fccccc5e233e98207413983ebafc1
+          ref: a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281
           path: .compiler
           persist-credentials: false
 
@@ -79,6 +79,9 @@ jobs:
 
       - name: Build pinned compiler
         run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
+
+      - name: Verify alpha.15 frontend limits and UTF-8 budgets
+        run: python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp --compiler-source .compiler
 
       - name: Verify runnable examples before publication
         run: python scripts/verify_examples.py --compiler .compiler/target/debug/scarp

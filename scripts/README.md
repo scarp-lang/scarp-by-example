@@ -21,3 +21,17 @@ To upgrade compiler compatibility, update `docs/compiler-target.json`, the prima
 The source-navigation CLI smoke checks the two-module `tutorials/source-navigation` project (originally introduced in alpha.6) against the active alpha.13 compiler. It validates exact interpreter output, both shadowed `base` definitions and their reference targets, argument labels, imported visibility and UTF-8 byte spans on the supported CI platforms. Static inspection is never presented as program stdout.
 
 **Current compiler workshop:** `scripts/verify_alpha13_compat.py` checks eight official alpha.13 list/map/Option/Result examples against the exact published compiler checkout, expected binary version, byte-identical upstream source and output, static verification and exact execution bytes. The main examples and Pages workflows run it alongside the existing course gates. The static course site generates a dedicated modern workshop page with source and exact expected output; browser execution is not provided.
+
+## Published alpha.15 limits regression
+
+The primary CI and Pages gates run `scripts/verify_alpha15_limits.py` against the
+exact alpha.15 compiler checkout. It checks the full commit SHA, executable
+version, source-backed string comparison output, the exact 1 MiB frontend
+inspection boundary and the 129-byte string comparison work budget.
+
+```sh
+python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp --compiler-source .compiler
+```
+
+The verifier creates only disposable files, uses standard-library Python and
+runs independently of the historical alpha.13 and alpha.14 workshops.
