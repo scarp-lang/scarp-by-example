@@ -1,0 +1,5 @@
+// Equality and inequality compare UTF-8 text.
+bind first = "नमस्ते";
+bind second = "नमस्ते";
+print(first == second);
+print(first != "अलग");
