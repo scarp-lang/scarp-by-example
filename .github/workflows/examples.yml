@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: 43627b74af5fccccc5e233e98207413983ebafc1
+          ref: a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281
           path: .compiler
           persist-credentials: false
 
@@ -66,6 +66,14 @@ jobs:
       - name: Verify alpha.13 collections and result samples (Windows)
         if: runner.os == 'Windows'
         run: python scripts/verify_alpha13_compat.py --compiler .compiler-alpha13/target/debug/scarp.exe --compiler-source .compiler-alpha13
+
+      - name: Verify alpha.15 frontend limits and UTF-8 budgets (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp --compiler-source .compiler
+
+      - name: Verify alpha.15 frontend limits and UTF-8 budgets (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp.exe --compiler-source .compiler
 
       - name: Check every source and exact stdout
         if: runner.os != 'Windows'
