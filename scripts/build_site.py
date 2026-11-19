@@ -1441,8 +1441,8 @@ and practical exercises.</p>
 <code>{escape(compiler["source_commit"])}</code>.
 The website does not execute code in your browser.</p>
 <code>python scripts/verify_alpha14_patterns.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
-<p>The structured-patterns workshop stays pinned to historical alpha.14; numbered
-lessons and the alpha.13 workshop each have their own independent compiler pins.</p>
+<p>This structured-patterns workshop stays pinned to historical alpha.14; the 52 numbered lessons
+have an independent active compiler pin, as does the older alpha.13 workshop.</p>
 </section>
 <section aria-labelledby="patterns-examples">
 <h2 id="patterns-examples">Choose a source-backed example</h2>
