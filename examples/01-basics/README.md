@@ -22,6 +22,7 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 | [14 · Bitwise fields](14-bitwise-fields.srp) | Hex/binary integer literals, `|=`, `&`, `>>>`, `<<` and `~` | `3`, `10`, signed 64-bit minimum, `-1` |
 | [15 · Control escapes](15-control-escapes.srp) | Tab, literal carriage return and escaped backslashes | Three output lines with exact tab and inline CR bytes |
 | [16 · Text construction](16-text-construction.srp) | `text_concat`, Unicode-scalar `text_slice`, `text_repeat`, length vs UTF-8 bytes | `Hello, 🌍`, `🌍🌍🌍`, `8 11` |
+| [17 · Boolean input](17-boolean-input.srp) | Published alpha.17 `input_boolean`, interactive prompts, exact `.stdin` fixtures and `break` | Two prompts followed by `Continuing` and `Stopped` |
 
 **Run any lesson:** `scarp exec examples/01-basics/01-hello.srp` from this repository root, with the compiler executable on `PATH`. Or use its absolute path.
 
@@ -43,6 +44,8 @@ All examples are copied from the [Scarp compiler example suite](https://github.c
 
 - **16:** `text_concat` joins strings, `text_slice(text, 7, 1)` selects the globe emoji as **one Unicode scalar value**, and `text_repeat` makes three copies. `text_len("Hello, 🌍")` counts 8 Unicode scalars, but `text_bytes` reports 11 UTF-8 bytes because the globe uses four bytes. This does not promise grapheme-cluster-aware slicing or Unicode normalization.
 
-**Practice:** predict the stdout before opening a fixture, then run `scarp verify` and `scarp exec` on the lesson.
+**17 · Interactive boolean input (published alpha.17):** This sample is an exact upstream compiler example; its original comment uses the upstream path. In this course run `scarp verify examples/01-basics/17-boolean-input.srp` and then `scarp exec --interactive --input-file examples/01-basics/17-boolean-input.stdin examples/01-basics/17-boolean-input.srp`. The input contains the *lowercase* lines `true` and `false`. Both prompts are printed before buffered program results; the exact line breaks in `.stdout` are authoritative. Invalid input is a compiler error, not silently treated as `false`. A static website cannot prompt for input or execute Scarp.
+
+**Practice:** predict the stdout before opening a fixture, then run `scarp verify` and `scarp exec` on the lesson (the interactive example needs `--interactive --input-file`).
 
 **Note:** `bind` is not a mutable variable. `var` allows reassignment. The pinned compiler accepts both `print` and `println` in these examples; older releases may differ.

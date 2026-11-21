@@ -145,6 +145,16 @@ integer और float के बीच स्पष्ट रूपांतर�
 
 **अभ्यास:** `"Hello, 🌍"` में आठ Unicode scalar और 11 बाइट क्यों हैं? `text_slice(greeting, 7, 1)` किस स्थान का मान चुनता है?
 
+### 17 · इंटरैक्टिव बूलियन इनपुट
+
+प्रकाशित Scarp alpha.17 में `input_boolean("Continue (true/false)? ")` से `true` या `false` पढ़ा जा सकता है। यहाँ `repeat` दो बार पूछता है। `true` पर `Continuing` छपता है; `false` पर `Stopped` और फिर `break` के कारण लूप बंद होता है। `.stdin` में क्रम से `true` और `false` हैं। इनपुट ठीक इसी लोअरकेस वर्तनी में होना चाहिए।
+
+[Scarp स्रोत](../../examples/01-basics/17-boolean-input.srp) · [सटीक अपेक्षित आउटपुट](../../examples/01-basics/17-boolean-input.stdout)
+
+**चलाने का सही तरीका:** `scarp exec --interactive --input-file examples/01-basics/17-boolean-input.stdin examples/01-basics/17-boolean-input.srp`। सामान्य `scarp verify` प्रोग्राम का प्रकार जाँचता है, इनपुट नहीं पढ़ता। वेबसाइट स्वयं कंपाइलर नहीं चलाती।
+
+**अभ्यास:** अगर पहला इनपुट `false` हो, तो कितनी बार प्रश्न दिखाई देगा? `Stopped` के बाद `break` क्यों है?
+
 ## अभ्यास पूरा करने के बाद
 
 आउटपुट फ़ाइल में अंतिम newline होना **या नहीं होना** भी महत्त्वपूर्ण है। नए प्रयोग अपने स्थानीय कॉपी पर करें, और मूल अपेक्षित आउटपुट का उपयोग तुलना के लिए करें।
