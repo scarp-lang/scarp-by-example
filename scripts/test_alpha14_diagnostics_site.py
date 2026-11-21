@@ -59,9 +59,9 @@ class Alpha14DiagnosticSiteTests(unittest.TestCase):
     def test_site_adds_one_page_without_polluting_progress(self):
         with tempfile.TemporaryDirectory() as root:
             output = Path(root)
-            self.assertEqual(build(output), 52)
+            self.assertEqual(build(output), 55)
             index_files = list(output.rglob("index.html"))
-            self.assertEqual(len(index_files), 74)
+            self.assertEqual(len(index_files), 77)
             route = "workshops/structured-patterns/diagnostics/index.html"
             self.assertTrue((output / route).is_file())
             self.assertIn(
@@ -72,7 +72,7 @@ class Alpha14DiagnosticSiteTests(unittest.TestCase):
             overview = (output / "workshops/structured-patterns/index.html").read_text(encoding="utf-8")
             self.assertIn('href="diagnostics/index.html"', overview)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(search), 52)
+            self.assertEqual(len(search), 55)
             self.assertNotIn("missing-tuple-comma", json.dumps(search))
 
 

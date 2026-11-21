@@ -58,8 +58,8 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
     def test_website_build_and_sitemap_include_workshop(self):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
-            self.assertEqual(build(dest), 52)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 74)
+            self.assertEqual(build(dest), 55)
+            self.assertEqual(len(list(dest.rglob("index.html"))), 77)
             self.assertTrue((dest / "projects/source-navigation/index.html").is_file())
             self.assertTrue((dest / "reference-explorer.js").is_file())
             self.assertIn("projects/source-navigation/",
