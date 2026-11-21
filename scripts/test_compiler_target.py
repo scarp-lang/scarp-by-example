@@ -123,6 +123,23 @@ class CompilerTargetTests(unittest.TestCase):
                 self.assertIn(".compiler-alpha13/Cargo.toml", workflow.read_text(encoding="utf-8"))
                 self.assertIn("--compiler-source .compiler-alpha13", workflow.read_text(encoding="utf-8"))
 
+    def test_historical_alpha15_boundary_compiler_is_independently_pinned(self):
+        historical = "a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281"
+        for workflow in WORKFLOWS:
+            with self.subTest(workflow=workflow.name):
+                contents = workflow.read_text(encoding="utf-8")
+                entries = checkout_inputs(contents)
+                previous = [item for item in entries if item.get("path") == ".compiler-alpha15"]
+                self.assertEqual(len(previous), 1)
+                self.assertEqual(previous[0]["repository"], "scarp-lang/scarp")
+                self.assertEqual(previous[0]["ref"], historical)
+                self.assertIn(".compiler-alpha15/Cargo.toml", contents)
+                self.assertIn("--compiler-source .compiler-alpha15", contents)
+                self.assertIn(
+                    "scripts/verify_alpha15_limits.py --compiler .compiler-alpha15/",
+                    contents,
+                )
+
 class CompilerCheckoutParserTests(unittest.TestCase):
     SHA = "a" * 40
     HISTORICAL = "b" * 40
