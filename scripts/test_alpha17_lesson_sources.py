@@ -49,6 +49,11 @@ class Alpha17LessonSourceTests(unittest.TestCase):
         }
         self.assertTrue(lesson_names <= discovered)
 
+    def test_git_keeps_input_fixtures_lf_on_all_platforms(self):
+        from verify_examples import ROOT
+        rules = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+        self.assertIn("*.stdin text eol=lf", rules)
+
     def test_boolean_input_and_output_are_byte_exact(self):
         path = EXAMPLES / "01-basics" / "17-boolean-input.srp"
         self.assertEqual(read_optional_stdin(path.with_suffix(".stdin")), b"true\nfalse\n")
