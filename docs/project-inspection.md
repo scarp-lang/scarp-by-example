@@ -1,6 +1,6 @@
 # Inspect a Scarp project without executing it
 
-**Current course compiler:** [Scarp v0.0.6-alpha.3](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.3), source commit `ceff07d9014f466974e0c9e02fc5d23573f55777` (**prerelease**, not stable). Project-directory inspection was introduced in compiler alpha.5 and is retained.
+**Current course compiler:** [Scarp v0.0.6-alpha.15](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.15), source commit `a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281` (**prerelease**, not stable). Project-directory inspection was introduced in compiler alpha.5 and is retained.
 
 Introduced in the published alpha.5 CLI: `scarp inspect modules --json PROJECT_DIRECTORY`. This resolves an explicit `Scarp.project`, statically checks its entrypoint and relative imports, then emits **schema-version-1 module metadata**. It does **not** run `print` or any ordinary program statement.
 
@@ -40,7 +40,7 @@ The helper `src/lib/math.srp` exports a public compile-time scalar binding:
 pub bind answer = 21 * 2;
 ```
 
-The checked-in output fixture is one line, `42`. The project is **separate** from the 52 numbered runnable course lessons.
+The checked-in output fixture is one line, `42`. The project is **separate** from the 55 numbered runnable course lessons.
 
 ## 2. Inspect first, then launch
 
