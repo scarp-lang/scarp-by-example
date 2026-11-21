@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281
+          ref: 7831a37939965f557ce746e1d86bf82d3d629f74
           path: .compiler
           persist-credentials: false
 
@@ -45,6 +45,14 @@ jobs:
           path: .compiler-alpha13
           persist-credentials: false
 
+      - name: Check out independently pinned alpha.15 limits compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281
+          path: .compiler-alpha15
+          persist-credentials: false
+
       - name: Set up Rust toolchain
         uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
@@ -55,6 +63,9 @@ jobs:
 
       - name: Build compiler from pinned source
         run: cargo build --locked --offline --manifest-path .compiler/Cargo.toml
+
+      - name: Build historical alpha.15 compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha15/Cargo.toml
 
       - name: Build historical alpha.13 compiler
         run: cargo build --locked --offline --manifest-path .compiler-alpha13/Cargo.toml
@@ -69,11 +80,11 @@ jobs:
 
       - name: Verify alpha.15 frontend limits and UTF-8 budgets (Linux/macOS)
         if: runner.os != 'Windows'
-        run: python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp --compiler-source .compiler
+        run: python scripts/verify_alpha15_limits.py --compiler .compiler-alpha15/target/debug/scarp --compiler-source .compiler-alpha15
 
       - name: Verify alpha.15 frontend limits and UTF-8 budgets (Windows)
         if: runner.os == 'Windows'
-        run: python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp.exe --compiler-source .compiler
+        run: python scripts/verify_alpha15_limits.py --compiler .compiler-alpha15/target/debug/scarp.exe --compiler-source .compiler-alpha15
 
       - name: Check every source and exact stdout
         if: runner.os != 'Windows'
