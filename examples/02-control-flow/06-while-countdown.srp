@@ -1,0 +1,7 @@
+// A >= loop counts down when its counter decreases every iteration.
+var remaining = 5;
+while remaining >= 1 {
+    print(remaining);
+    remaining -= 1;
+}
+print(remaining);

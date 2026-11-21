@@ -1,0 +1,9 @@
+// Multiply the values from 1 through 5, including the upper bound.
+var factor = 1;
+var product = 1;
+while factor <= 5 {
+    product *= factor;
+    factor += 1;
+}
+print(product);
+print(factor);

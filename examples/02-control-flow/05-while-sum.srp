@@ -1,0 +1,9 @@
+// The <= comparison includes 10; update i so the loop eventually stops.
+var i = 1;
+var total = 0;
+while i <= 10 {
+    total += i;
+    i += 1;
+}
+print(total);
+print(i);
