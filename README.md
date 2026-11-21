@@ -67,6 +67,10 @@ The collections and `option<T>` / `result<T,E>` language features arrived in alp
 
 The alpha.16 release introduced bounded finite-vector `median` and `quantile` and Unicode text/number utilities. Published alpha.17 adds `array_len` and `array_get_or` for fixed arrays, plus `input_boolean` for explicitly interactive console execution. These capabilities are documented in the [alpha.17 release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17). The active lesson suite is retested at the exact release commit; this section does **not** claim that the numbered curriculum already contains dedicated alpha.17 lessons.
 
+## New alpha.17 runnable lessons
+
+Three original upstream programs from the exact [Scarp v0.0.6-alpha.17](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17) source commit have joined the numbered curriculum: [boolean input with a real `.stdin` fixture](examples/01-basics/17-boolean-input.srp), [fixed-array traversal and safe fallback](examples/04-collections/13-fixed-array-traversal.srp), and [median and quantile](examples/04-collections/14-order-statistics.srp). The local command for the interactive program uses `scarp exec --interactive --input-file INPUT SOURCE`. All source, stdin and stdout fixture bytes are verified against their original compiler Git blobs. The course now contains **58 numbered lessons** in six chapters. The static website displays code and input but cannot execute it.
+
 ## Alpha.15 compiler boundaries
 
 [Read the source-backed alpha.15 limits tutorial](tutorials/alpha15-limits/README.md) ([हिन्दी](docs/hi/alpha15-limits.md)). The new independent verification gate tests the **1 MiB source-inspection boundary** and the **work-step budget for UTF-8 string equality** using the **independently pinned alpha.15 compiler**, not the active course compiler. It does not add an artificial browser interpreter or renumber the pre-existing core lessons. The additional while-foundations lessons are numbered within chapter 02.
@@ -97,7 +101,7 @@ No network calls or external Python packages are required by the verifier. A les
 
 ## Translations and contributions
 
-English remains the canonical source language. **[Read all 55 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture, and is displayed directly on its corresponding lesson page using a language toggle. Neither Scarp syntax nor verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
+English remains the canonical source language. **[Read all 58 lessons in Hindi](docs/hi/README.md)** through companion guides for all six chapters. Each translated explanation links to the original `.srp` and exact `.stdout` fixture, and is displayed directly on its corresponding lesson page using a language toggle. Neither Scarp syntax nor verified outputs are translated. See [translation guidelines](docs/translations/README.md), [contributing](CONTRIBUTING.md), and the [lesson format](docs/lesson-format.md).
 
 ## Support Scarp learning resources
 
