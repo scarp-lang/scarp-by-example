@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "release_tag": "v0.0.6-alpha.14",
+  "compiler_source_commit": "43627b74af5fccccc5e233e98207413983ebafc1",
+  "course_baseline_commit": "03e0c93807e509e0a3a88da37e7ea4b3f6ef98d8",
+  "lessons": [
+    {
+      "source": "examples/01-basics/01-hello.srp",
+      "source_blob": "27f238aa93444b2b06505c73bcfd4e48b7e6f107",
+      "stdout": "examples/01-basics/01-hello.stdout",
+      "stdout_blob": "b3db9f161912933c3aaa91b998d734b03abaecd1"
+    },
+    {
+      "source": "examples/01-basics/02-bindings.srp",
+      "source_blob": "bb85f3b595c0870b40a63d493d6dce8e20c20a05",
+      "stdout": "examples/01-basics/02-bindings.stdout",
+      "stdout_blob": "2841df3aa67aebb9e60428ac886714a5b08ee03f"
+    },
+    {
+      "source": "examples/01-basics/03-mutable.srp",
+      "source_blob": "c30d49cd49a93fe1f09b7a408f259e5cef8624c8",
+      "stdout": "examples/01-basics/03-mutable.stdout",
+      "stdout_blob": "b5f4bf8d0f6c6e65f076de751d5bf07031294f98"
+    },
+    {
+      "source": "examples/01-basics/04-arithmetic.srp",
+      "source_blob": "573e2780bf7f41219a559807c92ec3d250659735",
+      "stdout": "examples/01-basics/04-arithmetic.stdout",
+      "stdout_blob": "6f15d0caf0de23f7b7f598d7b5e67386d1ddd598"
+    },
+    {
+      "source": "examples/01-basics/05-booleans.srp",
+      "source_blob": "a013c92f92419514a795bd822de6327b75e0338d",
+      "stdout": "examples/01-basics/05-booleans.stdout",
+      "stdout_blob": "2cdda450af29de45fe75e690e97109e9edab0751"
+    },
+    {
+      "source": "examples/01-basics/06-scopes.srp",
+      "source_blob": "f1d87dfae47d91778e8e52cc5a81608c92e2b25a",
+      "stdout": "examples/01-basics/06-scopes.stdout",
+      "stdout_blob": "7f3d0fbd57031735fbf696c9665081107c0e9cf4"
+    },
+    {
+      "source": "examples/01-basics/07-string-bindings.srp",
+      "source_blob": "4ce8d65666e3b486e83eb021985a1c655055b4cd",
+      "stdout": "examples/01-basics/07-string-bindings.stdout",
+      "stdout_blob": "f548182fc1bee4fc2ae86a3213b9d2f1d13dc63c"
+    },
+    {
+      "source": "examples/01-basics/08-output.srp",
+      "source_blob": "9f080ec27a124fd09d817da843a795af8bb04f5f",
+      "stdout": "examples/01-basics/08-output.stdout",
+      "stdout_blob": "e3ae143631b9fb78bb91c5dc5a1d44f2fadc53a9"
+    },
+    {
+      "source": "examples/01-basics/09-unicode.srp",
+      "source_blob": "21a4af18062cd9d16471a65a01e53d0450b343bb",
+      "stdout": "examples/01-basics/09-unicode.stdout",
+      "stdout_blob": "dad4404cc7d7582bf1ba88058a4d8ada39e5ddcf"
+    },
+    {
+      "source": "examples/01-basics/10-unicode-text.srp",
+      "source_blob": "1c7294e08312ff30e91b28e049c79564740bf10a",
+      "stdout": "examples/01-basics/10-unicode-text.stdout",
+      "stdout_blob": "c0e222567de954693f9a07f09c8511718ae2e307"
+    },
+    {
+      "source": "examples/01-basics/11-scalar-conversions.srp",
+      "source_blob": "eeb7e78b58586c9c84f86c3f40766f2f5190487c",
+      "stdout": "examples/01-basics/11-scalar-conversions.stdout",
+      "stdout_blob": "55f9fbd1c8acf74828283c47e7fd03dddb5eb6cf"
+    },
+    {
+      "source": "examples/01-basics/12-escapes.srp",
+      "source_blob": "fa05bb5e483a235103610823128a62edb4d40cd1",
+      "stdout": "examples/01-basics/12-escapes.stdout",
+      "stdout_blob": "1874fcada7a21cb0ec674075ec3487100e952c8b"
+    },
+    {
+      "source": "examples/01-basics/13-comments.srp",
+      "source_blob": "b5492aa263805f6c1be62f2b49f20d0ae67a74ec",
+      "stdout": "examples/01-basics/13-comments.stdout",
+      "stdout_blob": "dca7d8ee39538ffb28b7a1c64d6b637c0088897a"
+    },
+    {
+      "source": "examples/01-basics/14-bitwise-fields.srp",
+      "source_blob": "80b08f3d4bc61927c75a8c49816748207f8ac951",
+      "stdout": "examples/01-basics/14-bitwise-fields.stdout",
+      "stdout_blob": "06df0d8a3490b79649eb4c705a270f68d1c318e5"
+    },
+    {
+      "source": "examples/01-basics/15-control-escapes.srp",
+      "source_blob": "e979779be234ade81e8b036c851ea502a85b8e88",
+      "stdout": "examples/01-basics/15-control-escapes.stdout",
+      "stdout_blob": "ec2de29483b6495c67c97e7a12ad4882bf27ae3f"
+    },
+    {
+      "source": "examples/01-basics/16-text-construction.srp",
+      "source_blob": "5ec0e7e412e1140e4cfba92255d2b97dea126710",
+      "stdout": "examples/01-basics/16-text-construction.stdout",
+      "stdout_blob": "273800b78a2e33b686cbba5dc2cb1afa3b1ed3e0"
+    },
+    {
+      "source": "examples/02-control-flow/01-decisions.srp",
+      "source_blob": "888e02534b043c861ab3bf1683539b2b8e502e48",
+      "stdout": "examples/02-control-flow/01-decisions.stdout",
+      "stdout_blob": "bec09dd0c1adb7553af8f18179749746bf1be5a7"
+    },
+    {
+      "source": "examples/02-control-flow/02-while-loops.srp",
+      "source_blob": "118d0285f4457f11649a87072377f4be69777053",
+      "stdout": "examples/02-control-flow/02-while-loops.stdout",
+      "stdout_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "source": "examples/02-control-flow/03-repeat.srp",
+      "source_blob": "d19b37f0c7454e64f7c8a093782c01c8cdc05711",
+      "stdout": "examples/02-control-flow/03-repeat.stdout",
+      "stdout_blob": "9807191ab0a725715beff8f74c1b49fe8dd17e59"
+    },
+    {
+      "source": "examples/02-control-flow/04-nested-repeat.srp",
+      "source_blob": "52b3027b5e995ada053ed67322be6b4e66af5419",
+      "stdout": "examples/02-control-flow/04-nested-repeat.stdout",
+      "stdout_blob": "5a53a86cfe303da953e2e53485d0ccb3facb0c9c"
+    },
+    {
+      "source": "examples/02-control-flow/05-while-sum.srp",
+      "source_blob": "c8f7c61eff06a34554960178c5c0606aaf8cc4a9",
+      "stdout": "examples/02-control-flow/05-while-sum.stdout",
+      "stdout_blob": "eb35cffb8705ef9ae847eeea4dff11c1b6c5a911"
+    },
+    {
+      "source": "examples/02-control-flow/06-while-countdown.srp",
+      "source_blob": "0630dae22fe3525f50823b0c529c5693d2b41ecc",
+      "stdout": "examples/02-control-flow/06-while-countdown.stdout",
+      "stdout_blob": "4a9dac24b3a70dbba763d5375d6ea392936f1862"
+    },
+    {
+      "source": "examples/02-control-flow/07-while-product.srp",
+      "source_blob": "abe2e64b8b7985f98ad295daec0689a25ac6307c",
+      "stdout": "examples/02-control-flow/07-while-product.stdout",
+      "stdout_blob": "4a121c5939f07d3551ed060fd20c102f30352b27"
+    },
+    {
+      "source": "examples/03-functions/01-typed-functions.srp",
+      "source_blob": "221502cb333f3fc402c7db3fc864c86157845b18",
+      "stdout": "examples/03-functions/01-typed-functions.stdout",
+      "stdout_blob": "92f018f8f101dacedc3ed158167ee44cee086c6c"
+    },
+    {
+      "source": "examples/03-functions/02-recursion.srp",
+      "source_blob": "10dea8767045b5d9210494d8970acc48469bb52f",
+      "stdout": "examples/03-functions/02-recursion.stdout",
+      "stdout_blob": "1e17d8b3d24a3fd3a5ea3be8f69cfbb0c8ecf22e"
+    },
+    {
+      "source": "examples/03-functions/03-function-contracts.srp",
+      "source_blob": "126e6d525a0c62270a60e7a56d7812f5e675a95c",
+      "stdout": "examples/03-functions/03-function-contracts.stdout",
+      "stdout_blob": "2b86cc0528bfee95e942f643f5107c070639ed76"
+    },
+    {
+      "source": "examples/03-functions/04-terminal-recursion.srp",
+      "source_blob": "f4d185dd6769bded43604cd24b47411f469a54fe",
+      "stdout": "examples/03-functions/04-terminal-recursion.stdout",
+      "stdout_blob": "a949a93dfcca659638ff00284e1d1703accef77a"
+    },
+    {
+      "source": "examples/04-collections/01-vectors.srp",
+      "source_blob": "cad3456d6c2ba83a3199e726a36de84d7ed5aade",
+      "stdout": "examples/04-collections/01-vectors.stdout",
+      "stdout_blob": "e566db6eb486a97d50c41d48770e1e44972a0bb2"
+    },
+    {
+      "source": "examples/04-collections/02-vector-windows.srp",
+      "source_blob": "335ced906bf5aa5212e3e070a27e984e3e003951",
+      "stdout": "examples/04-collections/02-vector-windows.stdout",
+      "stdout_blob": "0d10e88985ee7229f8a96fd910e2f8c36b4d6a35"
+    },
+    {
+      "source": "examples/04-collections/03-integer-collections.srp",
+      "source_blob": "18e95bcfbe18e2ce61ddc022e340790be84f9234",
+      "stdout": "examples/04-collections/03-integer-collections.stdout",
+      "stdout_blob": "1732495bad8f250f1195c89cb1ae0e5a75fa5d9f"
+    },
+    {
+      "source": "examples/04-collections/04-typed-declarations.srp",
+      "source_blob": "c8bc19d4324b4963e4fae57ad49c2fc82d8c6d1d",
+      "stdout": "examples/04-collections/04-typed-declarations.stdout",
+      "stdout_blob": "726d76a39c5cdfa5edf272d72df09fe026bfc05c"
+    },
+    {
+      "source": "examples/04-collections/05-float-smoothing.srp",
+      "source_blob": "566d75032bbe78c8d7bb8651ab7ee0f3753c2172",
+      "stdout": "examples/04-collections/05-float-smoothing.stdout",
+      "stdout_blob": "720dafd16bfcdf344606633a1aecfe8247657f37"
+    },
+    {
+      "source": "examples/04-collections/06-tile-windows.srp",
+      "source_blob": "9dc0a91057df7e927f04dd97a8d7a49670f3454f",
+      "stdout": "examples/04-collections/06-tile-windows.stdout",
+      "stdout_blob": "aba940ec515cdcd97ee6436796f8f5b6284416e5"
+    },
+    {
+      "source": "examples/04-collections/07-numerical-kernels.srp",
+      "source_blob": "a18cbfc6e2a2847bbc3296ed257795ed65864a3f",
+      "stdout": "examples/04-collections/07-numerical-kernels.stdout",
+      "stdout_blob": "14dfaecc0b73ca9612c4dee2d29bd978bfaaa9b8"
+    },
+    {
+      "source": "examples/04-collections/08-vector-probabilities.srp",
+      "source_blob": "8e8be1da7929fd67518948ba6d55d8bea41ca0c1",
+      "stdout": "examples/04-collections/08-vector-probabilities.stdout",
+      "stdout_blob": "9d18fad36753cd8275ea6a167a74f8197d4411d9"
+    },
+    {
+      "source": "examples/04-collections/09-vector-norm.srp",
+      "source_blob": "a6b9d2dedbdc8698513c16888900f187bf8f69a8",
+      "stdout": "examples/04-collections/09-vector-norm.stdout",
+      "stdout_blob": "ec7f3ccbcccd0d680bfbf1e30f881aba39bc6c0c"
+    },
+    {
+      "source": "examples/04-collections/10-float-refinement.srp",
+      "source_blob": "fc7033edb2fc06bdbf8b7362d8a0c05d06aa165e",
+      "stdout": "examples/04-collections/10-float-refinement.stdout",
+      "stdout_blob": "6cfbaf4b1026f63edb0bf69afb11d7a29f27af3d"
+    },
+    {
+      "source": "examples/04-collections/11-vector-allocation.srp",
+      "source_blob": "ba605aa8d0457820ef8c46b842749f9e580ee0d4",
+      "stdout": "examples/04-collections/11-vector-allocation.stdout",
+      "stdout_blob": "17730065d12887f87d87358698100de3adafda11"
+    },
+    {
+      "source": "examples/04-collections/12-root-mean-square.srp",
+      "source_blob": "dfe5cf9ab0315d129d526bf07073706f12629bba",
+      "stdout": "examples/04-collections/12-root-mean-square.stdout",
+      "stdout_blob": "4907d4d251328b6bff584a5297fdd488020e7660"
+    },
+    {
+      "source": "examples/05-modules/01-modular-inference.srp",
+      "source_blob": "dc60d01338e7b0351c6378c3afa4edf8d979b2af",
+      "stdout": "examples/05-modules/01-modular-inference.stdout",
+      "stdout_blob": "a53feed4eeb8d23f4311fadd319e3f77d4b25cc6"
+    },
+    {
+      "source": "examples/05-modules/02-constant-expressions.srp",
+      "source_blob": "6583869eb2b36ec954fb96191ca1c7eb3d1a64a3",
+      "stdout": "examples/05-modules/02-constant-expressions.stdout",
+      "stdout_blob": "90905109043700fef79db022b78d9f30de03da10"
+    },
+    {
+      "source": "examples/05-modules/03-integer-series.srp",
+      "source_blob": "48848d6f4c6abd35571ebfaf5631baf48bd11ba2",
+      "stdout": "examples/05-modules/03-integer-series.stdout",
+      "stdout_blob": "51173662b0dd6b5849bf971411558dae84d5d289"
+    },
+    {
+      "source": "examples/05-modules/04-public-private-api.srp",
+      "source_blob": "9fd4aebd39e542c76a5105ffb2a723d03172c45e",
+      "stdout": "examples/05-modules/04-public-private-api.stdout",
+      "stdout_blob": "2c60de8529e6531e5070ebc93b369181960ab5c9"
+    },
+    {
+      "source": "examples/05-modules/05-exported-signatures.srp",
+      "source_blob": "f3733f61725830e8f1d0e697ee222283e2077b0a",
+      "stdout": "examples/05-modules/05-exported-signatures.stdout",
+      "stdout_blob": "d81cc0710eb6cf9efd5b920a8453e1e07157b6cd"
+    },
+    {
+      "source": "examples/06-ai-foundations/01-matrix-inference.srp",
+      "source_blob": "bed22f72cae440f86381e1929167315db2772517",
+      "stdout": "examples/06-ai-foundations/01-matrix-inference.stdout",
+      "stdout_blob": "63685682300331fa661a422aaa8a4d3ea75b5e9c"
+    },
+    {
+      "source": "examples/06-ai-foundations/02-classification-gradient.srp",
+      "source_blob": "5a2a14705684a83d9326bcc27cf98f24fe26a0e2",
+      "stdout": "examples/06-ai-foundations/02-classification-gradient.stdout",
+      "stdout_blob": "52f1309f18655aa4cd5a7b287c6966bbfbf7ec29"
+    },
+    {
+      "source": "examples/06-ai-foundations/03-classification-loss.srp",
+      "source_blob": "6913cf754ed0ebecfe1092ca79c7ef11fb3620df",
+      "stdout": "examples/06-ai-foundations/03-classification-loss.stdout",
+      "stdout_blob": "3cc34e4ede6e646240c19656fe9805d8de4778a9"
+    },
+    {
+      "source": "examples/06-ai-foundations/04-score-selection.srp",
+      "source_blob": "9084cc7617e86ce96c29d286d0cf54018aab8162",
+      "stdout": "examples/06-ai-foundations/04-score-selection.stdout",
+      "stdout_blob": "9ed6c44b9acb70216a993b2cfbe82c6b60d3c502"
+    },
+    {
+      "source": "examples/06-ai-foundations/05-matrix-targets.srp",
+      "source_blob": "d4cd1a760fae235d63c5cea9d20ee33df1ae5ee9",
+      "stdout": "examples/06-ai-foundations/05-matrix-targets.stdout",
+      "stdout_blob": "2cc3a4e11cbfb492980d29c26e783fb189115729"
+    },
+    {
+      "source": "examples/06-ai-foundations/06-matrix-forward.srp",
+      "source_blob": "58f182f412e511dc3e0218e28faa446295973901",
+      "stdout": "examples/06-ai-foundations/06-matrix-forward.stdout",
+      "stdout_blob": "5ba14f73a1981ce4e235dc7e1c3f8eca319fde18"
+    },
+    {
+      "source": "examples/06-ai-foundations/07-log-space.srp",
+      "source_blob": "b8485deb6e566456140a262788e02eb7d9fd9a6e",
+      "stdout": "examples/06-ai-foundations/07-log-space.stdout",
+      "stdout_blob": "5345327696988925fed9ef2e19ca27a4d21cbcfd"
+    },
+    {
+      "source": "examples/06-ai-foundations/08-coefficient-fit.srp",
+      "source_blob": "0cdc1aa9e1213420aaa209a6b5e53f1f492b324c",
+      "stdout": "examples/06-ai-foundations/08-coefficient-fit.stdout",
+      "stdout_blob": "bb101b641b9bd8575e3f9813b83abaa7bb616890"
+    },
+    {
+      "source": "examples/06-ai-foundations/09-linear-transform.srp",
+      "source_blob": "d1d716c577ca12a334dfe18bca392ae5882957dd",
+      "stdout": "examples/06-ai-foundations/09-linear-transform.stdout",
+      "stdout_blob": "bba52633a06c9523ca39655bd70680d6983dd38a"
+    },
+    {
+      "source": "examples/06-ai-foundations/10-class-score-ties.srp",
+      "source_blob": "e85923ed8fa1c012393aa8b3761080e4702b4f2f",
+      "stdout": "examples/06-ai-foundations/10-class-score-ties.stdout",
+      "stdout_blob": "aa1754492c67ae8b377a4e9973b57ca1b55345cb"
+    },
+    {
+      "source": "examples/06-ai-foundations/11-matrix-probabilities.srp",
+      "source_blob": "2fbabd699a4d5d19b40e3dfd046a95b299420700",
+      "stdout": "examples/06-ai-foundations/11-matrix-probabilities.stdout",
+      "stdout_blob": "cd6ebfa1f9d3cc5f91d91e2b063155ccf8f1ee67"
+    }
+  ]
+}
