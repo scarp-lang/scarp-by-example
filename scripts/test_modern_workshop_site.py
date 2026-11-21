@@ -42,8 +42,8 @@ class ModernWorkshopSiteTests(unittest.TestCase):
     def test_generated_page_is_discoverable_and_counted(self):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder)
-            self.assertEqual(build(output), 55)
-            self.assertEqual(len(list(output.rglob("index.html"))), 77)
+            self.assertEqual(build(output), 58)
+            self.assertEqual(len(list(output.rglob("index.html"))), 80)
             page = output / "workshops/modern-collections/index.html"
             self.assertTrue(page.is_file())
             self.assertIn(
