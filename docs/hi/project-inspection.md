@@ -1,6 +1,6 @@
 # Scarp प्रोजेक्ट के मॉड्यूल बिना प्रोग्राम चलाए देखें
 
-**इस कोर्स का वर्तमान कंपाइलर:** [Scarp v0.0.6-alpha.15](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.15), स्रोत कमिट `a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281`। यह **प्री-रिलीज़** है, stable नहीं। मॉड्यूल निरीक्षण पहली बार alpha.5 में आया था।
+**इस कोर्स का वर्तमान कंपाइलर:** [Scarp v0.0.6-alpha.17](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17), स्रोत कमिट `7831a37939965f557ce746e1d86bf82d3d629f74`। यह **प्री-रिलीज़** है, stable नहीं। मॉड्यूल निरीक्षण पहली बार alpha.5 में आया था।
 
 alpha.5 से उपलब्ध `scarp inspect modules --json PROJECT_DIRECTORY` उपलब्ध है। यह `Scarp.project` फ़ाइल पढ़कर entrypoint और उसके imports की **static जाँच** करता है और schema-v1 मॉड्यूल जानकारी देता है। सामान्य प्रोग्राम की `print` जैसी पंक्तियाँ नहीं चलाता।
 

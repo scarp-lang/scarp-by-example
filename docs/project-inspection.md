@@ -1,6 +1,6 @@
 # Inspect a Scarp project without executing it
 
-**Current course compiler:** [Scarp v0.0.6-alpha.15](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.15), source commit `a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281` (**prerelease**, not stable). Project-directory inspection was introduced in compiler alpha.5 and is retained.
+**Current course compiler:** [Scarp v0.0.6-alpha.17](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17), source commit `7831a37939965f557ce746e1d86bf82d3d629f74` (**prerelease**, not stable). Project-directory inspection was introduced in compiler alpha.5 and is retained.
 
 Introduced in the published alpha.5 CLI: `scarp inspect modules --json PROJECT_DIRECTORY`. This resolves an explicit `Scarp.project`, statically checks its entrypoint and relative imports, then emits **schema-version-1 module metadata**. It does **not** run `print` or any ordinary program statement.
 
