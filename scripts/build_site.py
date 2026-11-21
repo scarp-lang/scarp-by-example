@@ -1411,7 +1411,7 @@ def alpha14_example_path(slug: str) -> str:
 
 
 def render_alpha14_workshop_index() -> str:
-    """Render the discoverable overview, without expanding the 55-lesson course."""
+    """Render the discoverable overview, without expanding the 58-lesson course."""
     compiler = alpha14_manifest()
     page = "workshops/structured-patterns/index.html"
     cards = []
@@ -1441,7 +1441,7 @@ and practical exercises.</p>
 <code>{escape(compiler["source_commit"])}</code>.
 The website does not execute code in your browser.</p>
 <code>python scripts/verify_alpha14_patterns.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
-<p>This structured-patterns workshop stays pinned to historical alpha.14; the 55 numbered lessons
+<p>This structured-patterns workshop stays pinned to historical alpha.14; the 58 numbered lessons
 have an independent active compiler pin, as does the older alpha.13 workshop.</p>
 </section>
 <section aria-labelledby="patterns-examples">
