@@ -1,6 +1,6 @@
 # 04 · Numeric collections and types
 
-**Scope:** the current compiler offers specialised numeric vectors, integer collections and matrix/tile operations, **not** a general-purpose list/map/set library.
+**Scope:** this chapter focuses on numeric vectors, integer collections, matrices/tiles and now fixed arrays. The alpha.12+ compiler also supports separately documented typed lists and maps; see the independently pinned alpha.13 workshop. These lessons are not an exhaustive collection API reference.
 
 | Lesson | Learn | Expected behavior |
 | --- | --- | --- |
@@ -16,6 +16,8 @@
 | [10 · Float refinement](10-float-refinement.srp) | Newton-style square-root refinement, bounded steps, typed contracts | `sqrt2 checked true`, then `sqrt9 3.0` |
 | [11 · Vector allocation](11-vector-allocation.srp) | `fill`, `len` and `sum` on a three-element numerical vector | `3.0 3` |
 | [12 · Root mean square](12-root-mean-square.srp) | Stable `rms` on signals and visible vector windows | `balanced 2.0`, `window 2.5`, `finite true`, `zero 0.0` |
+| [13 · Fixed array traversal](13-fixed-array-traversal.srp) | `[array: ...]`, `array_len` and safe `array_get_or` with a fallback | `Total: 60`, `Missing reading: 0`, `Empty length: 0` |
+| [14 · Order statistics](14-order-statistics.srp) | `median`, Type-7 `quantile`, and immutable vector windows | `3.0`, `1.75`, `4.75`, `2.0`, then the unchanged vector |
 
 Run `scarp run examples/04-collections/01-vectors.srp` from this repository root or pass an absolute lesson path. Compare the exact `.stdout` beside each file.
 
@@ -48,3 +50,12 @@ Run `scarp run examples/04-collections/01-vectors.srp` from this repository root
 **12 · Stable RMS:** `rms(samples)` computes the root mean square of a nonempty finite vector. Four samples `[2.0, -2.0, 2.0, -2.0]` give RMS 2.0. Selecting `[3.0, 4.0, 0.0, 0.0]` through `window` gives RMS 2.5. The compiler uses scaling so the tested large finite values remain finite without squaring them directly. An empty vector is a runtime error. This requires Scarp v0.0.6-alpha.1; the operation neither modifies the input nor trains a model.
 
 **Practice:** Square the four window values, add, divide by four, and take the square root. Why is the result different from `norm`?
+
+
+## Fixed arrays and order statistics — published alpha.17 and alpha.16
+
+**13 · Traverse fixed arrays:** The compiler's `[array: 10, 20, 30]` is a fixed array, not a numeric `vector`. `array_len(readings)` returns 3, so `repeat` visits indices 0, 1 and 2. `array_get_or(readings, 3, 0)` safely returns the supplied integer fallback when the index is out of range. Plain `readings[3]` still raises an error. `array_len([array: <integer>])` reports 0 on a typed empty array. Predict why the total is 60.
+
+**14 · Median and quantiles:** The alpha.16 `median` and `quantile` functions process finite numerical vectors. This exact upstream program prints median 3.0, first/third quartiles 1.75 and 4.75, then median 2.0 for the window. The original vector remains `[4.0, 1.0, 7.0, 2.0]`; sorting is an internal bounded copy, not an in-place mutation. Try reordering the input vector on your own checkout; the median stays the same.
+
+Both programs and their exact `.stdout` fixtures are copied from published Scarp v0.0.6-alpha.17 at commit `7831a37939965f557ce746e1d86bf82d3d629f74`. These source files retain the compiler's Apache-2.0 licensing; bilingual teaching notes are original MIT-licensed explanations.
