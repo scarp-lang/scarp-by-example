@@ -19,6 +19,7 @@ from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
 from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
 from verify_alpha14_diagnostics import load_cases as load_alpha14_diagnostics
+from alpha6_input_page import render_page as render_alpha6_input_page
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -323,6 +324,7 @@ scarp launch hello-world</code></pre></div>
 <div class="compat-links"><a href="{REPOSITORY}/blob/main/docs/cli-quickstart.md">CLI quickstart ↗</a>
 <a lang="hi" href="{REPOSITORY}/blob/main/docs/hi/README.md">हिन्दी में सीखें ↗</a>
 <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy ↗</a>
+<a href="workshops/input-and-tuples/index.html">Learn input and tuples ↗</a>
 <a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a>
 <a href="workshops/structured-patterns/index.html">New: alpha.14 structured patterns ↗</a></div>
 </section>
@@ -1663,6 +1665,15 @@ def build(destination: Path) -> int:
     navigation_path = destination / "projects/source-navigation/index.html"
     navigation_path.parent.mkdir(parents=True, exist_ok=True)
     navigation_path.write_text(render_source_navigation_page(target), encoding="utf-8", newline="\n")
+    alpha6_path = destination / "workshops/input-and-tuples/index.html"
+    alpha6_path.parent.mkdir(parents=True, exist_ok=True)
+    alpha6_path.write_text(
+        render_alpha6_input_page(
+            ROOT, page_shell, rel, escape, render_lesson,
+            read_expected_stdout, read_optional_stdin
+        ),
+        encoding="utf-8", newline="\n",
+    )
     modern_path = destination / "workshops/modern-collections/index.html"
     modern_path.parent.mkdir(parents=True, exist_ok=True)
     modern_path.write_text(render_modern_collections_page(target), encoding="utf-8", newline="\n")
@@ -1692,6 +1703,7 @@ def build(destination: Path) -> int:
     urls = ["index.html", "projects/index.html",
             "projects/module-inspection/index.html",
             "projects/source-navigation/index.html",
+            "workshops/input-and-tuples/index.html",
             "workshops/modern-collections/index.html",
             "workshops/structured-patterns/index.html",
             "workshops/structured-patterns/diagnostics/index.html", "labs/index.html"]

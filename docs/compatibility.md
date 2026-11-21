@@ -17,6 +17,7 @@ Scarp is a development-stage programming language. This learning repository sele
 ## Source-language support and limits
 
 - Scarp's original numbered course covers bindings, output, control flow, typed functions, numerical operations, imports, project commands, static inspection and AI-oriented numerical primitives.
+- Published alpha.6 supports redirected `read_line()` and immutable tuple values; the [bilingual input and tuples workshop](../tutorials/input-and-tuples/README.md) remains separately pinned to `cdf6a3924ec2a36c7beca5a9aec4f01a0bce515e`. Its dedicated workflow exercises raw UTF-8 redirected stdin and E0055 on premature EOF. **Alpha.6 does not support `--interactive` or `--input-file`**; those are newer CLI features.
 - The alpha.9 [historical BigInt workshop](../tutorials/exact-bigint/README.md) remains frozen to its own published compiler.
 - Exact decimal arithmetic arrived in alpha.11; the existing separately proposed Decimal feature workshop has its own release pin.
 - Alpha.12 introduced bounded immutable typed lists and maps, concrete Option/Result variants, checked matching and restricted `?` propagation on immutable bind initializers in compatible named functions.
