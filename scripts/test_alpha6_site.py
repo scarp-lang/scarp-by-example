@@ -89,6 +89,7 @@ class Alpha6SiteTests(unittest.TestCase):
                 (dest / "sitemap.xml").read_text(encoding="utf-8"),
             )
             self.assertNotIn("scarp exec --interactive", page)
+            self.assertNotIn("workshops/index.html", page)
 
     def test_home_uses_same_58_lesson_catalog(self):
         page, count = render_catalog()
