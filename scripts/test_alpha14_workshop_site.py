@@ -92,7 +92,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
         self.assertIn(PIN, page)
         self.assertIn("PUBLISHED SCARP", page)
         self.assertIn('lang="hi"', page)
-        self.assertIn("52 numbered lessons", page)
+        self.assertIn("55 numbered lessons", page)
         self.assertEqual(page.count('class="lab-card"'), 2)
         for _, slug, heading, *_ in ALPHA14_WORKSHOP:
             self.assertIn(heading, page)
@@ -102,10 +102,10 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
     def test_build_adds_four_workshop_routes_without_changing_progress_inventory(self):
         with tempfile.TemporaryDirectory() as folder:
             out = Path(folder)
-            self.assertEqual(build(out), 52)
+            self.assertEqual(build(out), 55)
             pages = sorted((out / "workshops/structured-patterns").rglob("index.html"))
             self.assertEqual(len(pages), 4)
-            self.assertEqual(len(list(out.rglob("index.html"))), 74)
+            self.assertEqual(len(list(out.rglob("index.html"))), 77)
             home = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="workshops/structured-patterns/index.html"', home)
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
@@ -117,7 +117,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
                     route.removesuffix("index.html"), sitemap,
                 )
             search = json.loads((out / "search-index.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(search), 52)
+            self.assertEqual(len(search), 55)
             self.assertNotIn("structured-patterns", json.dumps(search))
 
     def test_malformed_pin_and_unknown_examples_fail_closed(self):
