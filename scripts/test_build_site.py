@@ -147,8 +147,9 @@ class SiteTests(unittest.TestCase):
             self.assertIn("Static <code>scarp verify</code> does not read input", markup)
             command = lesson_exec_command(source)
             self.assertIn("scarp exec ", command)
-            self.assertIn(" < ", command)
-            self.assertTrue(command.endswith("/01-input.stdin"))
+            self.assertIn("scarp exec --interactive --input-file ", command)
+            self.assertIn("/01-input.stdin ", command)
+            self.assertTrue(command.endswith("/01-input.srp"))
 
     def test_fixture_rendering_distinguishes_escapes_and_no_input(self):
         original = ("नमस्ते" + chr(92) + chr(13) + chr(10) + chr(0) + chr(9)).encode("utf-8")

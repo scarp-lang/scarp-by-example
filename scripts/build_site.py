@@ -996,13 +996,13 @@ def visible_stdin(data: bytes) -> str:
 
 
 def lesson_exec_command(source: Path) -> str:
-    """Include deterministic stdin redirection only when a fixture exists."""
-    command = "scarp exec " + source.relative_to(ROOT).as_posix()
+    """Print the exact local command used by fixture-backed CI verification."""
+    command = "scarp exec "
     stdin = source.with_suffix(".stdin")
     if stdin.is_file():
         read_optional_stdin(stdin)  # Same UTF-8 and size gate as the lesson verifier.
-        command += " < " + stdin.relative_to(ROOT).as_posix()
-    return command
+        command += "--interactive --input-file " + stdin.relative_to(ROOT).as_posix() + " "
+    return command + source.relative_to(ROOT).as_posix()
 
 
 def render_lesson(source: Path, stdout: Path, description: str) -> str:

@@ -199,7 +199,12 @@ class StdinFixtureTests(unittest.TestCase):
         ]
         with patch("verify_examples.subprocess.run", side_effect=results) as runner:
             verify_one(Path("scarp"), self.source, self.output, 5)
-        self.assertEqual([call.kwargs["input"] for call in runner.call_args_list], [b"", data])
+        self.assertEqual([call.kwargs["input"] for call in runner.call_args_list], [b"", b""])
+        self.assertEqual(
+            runner.call_args_list[1].args[0],
+            ["scarp", "exec", "--interactive", "--input-file",
+             str(self.source.with_suffix(".stdin")), str(self.source)],
+        )
 
     def test_orphan_input_is_rejected(self):
         (self.chapter / "02-orphan.stdin").write_bytes(b"ignored\n")

@@ -107,11 +107,17 @@ def verify_one(compiler: Path, lesson: Path, expected_path: Path, timeout: int) 
     expected = read_expected_stdout(expected_path)
     provided_stdin = read_optional_stdin(lesson.with_suffix(".stdin"))
     for command in ("verify", "exec"):
+        # Explicit input files are reproducible across terminals and CI hosts.
+        # A .stdin fixture opts into interactive prompts when executing.
+        args = [str(compiler), command]
+        if command == "exec" and lesson.with_suffix(".stdin").is_file():
+            args += ["--interactive", "--input-file", str(lesson.with_suffix(".stdin"))]
+        args.append(str(lesson))
         try:
             result = subprocess.run(
-                [str(compiler), command, str(lesson)],
+                args,
                 cwd=ROOT,
-                input=provided_stdin if command == "exec" else b"",
+                input=b"",
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 timeout=timeout,
