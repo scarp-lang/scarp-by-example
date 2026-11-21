@@ -2,7 +2,7 @@
 
 Scarp is a development-stage programming language. This learning repository selects an **immutable, publicly published compiler source commit**; a tag alone does not prove compatibility without real operating-system tests.
 
-## Proposed active target: Scarp alpha.15
+## Active course target: Scarp alpha.15
 
 | Property | Target |
 | --- | --- |
@@ -12,7 +12,7 @@ Scarp is a development-stage programming language. This learning repository sele
 | Main verification | [Linux, Windows and macOS source/output jobs](../.github/workflows/examples.yml), [Pages/catalog build](../.github/workflows/pages.yml), compiler-target tests and release-pinned workshop fidelity |
 | Previous main target | [Scarp v0.0.6-alpha.14](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.14), `43627b74af5fccccc5e233e98207413983ebafc1` |
 
-**Integration status:** This pull request proposes promoting the active course from published alpha.14 to alpha.15. Until its CI succeeds and it merges, the default branch and production Pages retain their prior target. All 52 numbered lessons and exact output fixtures are preserved.
+**Integration status:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) passed the Linux, Windows and macOS compiler jobs and the static-site build, and merged into `main` on 21 November 2026. The active source pin is alpha.15 even though newer compiler prereleases exist; do not silently switch to compiler `main`. The expanded course adds three independently fixture-tested while lessons, bringing the numbered catalog to 55. Live Pages deployment must be checked separately.
 
 ## Source-language support and limits
 

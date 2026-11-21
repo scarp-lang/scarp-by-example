@@ -61,11 +61,11 @@ The collections and `option<T>` / `result<T,E>` language features arrived in alp
 
 **New diagnostic repair lab:** [Nine syntax-error exercises](tutorials/structured-patterns/README.md#diagnose-and-fix-invalid-patterns) pair real alpha.14 parser errors with working corrected code, exact E0004 diagnostic spans and recorded stdout. The new dedicated page is part of the static website, not a browser interpreter.
 
-**Compatibility rollout:** This update proposes alpha.15 for the active course and Pages compiler after Linux/Windows/macOS verification. The alpha.13 and alpha.14 workshops retain independent immutable compiler pins. No numbered lesson output fixtures are rewritten and no stable or native-compiled release is implied.
+**Compatibility status:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) merged the active course's alpha.15 compiler pin after Linux/Windows/macOS verification. The alpha.13 and alpha.14 workshops retain independent immutable compiler pins. No numbered lesson output fixtures are rewritten and no stable or native-compiled release is implied.
 
 ## Alpha.15 compiler boundaries
 
-[Read the source-backed alpha.15 limits tutorial](tutorials/alpha15-limits/README.md) ([हिन्दी](docs/hi/alpha15-limits.md)). The new independent verification gate tests the **1 MiB source-inspection boundary** and the **work-step budget for UTF-8 string equality** using the exact published compiler. It does not add an artificial browser interpreter or renumber the 52 lessons.
+[Read the source-backed alpha.15 limits tutorial](tutorials/alpha15-limits/README.md) ([हिन्दी](docs/hi/alpha15-limits.md)). The new independent verification gate tests the **1 MiB source-inspection boundary** and the **work-step budget for UTF-8 string equality** using the exact published compiler. It does not add an artificial browser interpreter or renumber the pre-existing core lessons. The additional while-foundations lessons are numbered within chapter 02.
 
 ## Course
 
