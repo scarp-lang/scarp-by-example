@@ -12,7 +12,7 @@ Scarp is a development-stage programming language. This learning repository sele
 | Main verification | [Linux, Windows and macOS source/output jobs](../.github/workflows/examples.yml), [Pages/catalog build](../.github/workflows/pages.yml), compiler-target tests and release-pinned workshop fidelity |
 | Previous main target | [Scarp v0.0.6-alpha.15](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.15), `a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281` |
 
-**Integration status:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) previously established alpha.15 after Linux, Windows, macOS and website verification. This follow-up proposes the published alpha.17 release at its immutable commit, rather than floating compiler `main`. The expanded 55-lesson course, all golden output fixtures and historical workshop provenance remain intact. The new release needs independent PR checks before merge; live Pages deployment must be checked separately.
+**Integration status:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) previously established alpha.15 after Linux, Windows, macOS and website verification. This follow-up proposes the published alpha.17 release at its immutable commit, rather than floating compiler `main`. The 58-lesson course adds three new alpha.16/alpha.17 source-backed examples while preserving all earlier lesson output fixtures. Its active alpha.17 verification is independent of the 55-entry frozen alpha.14 course snapshot, which remains locked to recorded source and output Git blob hashes. The new release needs independent PR checks before merge; live Pages deployment must be checked separately.
 
 ## Source-language support and limits
 
@@ -58,7 +58,7 @@ To verify the **historical** alpha.13 workshop, separately build the exact alpha
 python scripts/verify_alpha13_compat.py --compiler /path/to/alpha13/scarp --compiler-source /path/to/alpha13/compiler/git/checkout
 ~~~
 
-For the historical alpha.14 structured-pattern and diagnostic workshops, build source commit `43627b74af5fccccc5e233e98207413983ebafc1` in a separate checkout and run `scripts/verify_alpha14_patterns.py` and `scripts/verify_alpha14_diagnostics.py` using that binary and source directory. The active alpha.17 binary cannot replace these pinned provenance checks.
+For the historical alpha.14 structured-pattern, diagnostic and frozen 55-lesson workshops, build source commit `43627b74af5fccccc5e233e98207413983ebafc1` in a separate checkout and run `scripts/verify_alpha14_patterns.py`, `scripts/verify_alpha14_diagnostics.py` and `scripts/verify_alpha14_course.py` using that binary and source directory (the frozen lesson verifier only needs the compiler executable). The active alpha.17 binary cannot replace these pinned provenance checks.
 
 Historical programs and fixtures are compared to their original committed sources and executed against the corresponding release. CLI version, silent static verification and byte-exact UTF-8 stdout are checked. Python-only tests do not replace running the actual compiler.
 
