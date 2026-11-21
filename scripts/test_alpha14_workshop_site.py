@@ -53,7 +53,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
         self.assertEqual(manifest["source_commit"], PIN)
         self.assertEqual(manifest["version"], VERSION)
         self.assertNotEqual(manifest["source_commit"], active["source_commit"])
-        self.assertEqual(active["version"], "0.0.6-alpha.15")
+        self.assertEqual(active["version"], "0.0.6-alpha.17")
 
     def test_dedicated_pages_preserve_original_source_and_stdout_dom(self):
         self.assertEqual(len(ALPHA14_WORKSHOP), 2)
