@@ -1,0 +1,73 @@
+name: Verify separately pinned alpha.6 input and tuples
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tutorials/input-and-tuples/**"
+      - "scripts/verify_alpha6_workshop.py"
+      - "scripts/test_alpha6_workshop.py"
+      - "scripts/alpha6_input_page.py"
+      - "scripts/test_alpha6_site.py"
+      - "scripts/build_site.py"
+      - ".github/workflows/alpha6-input-tuples.yml"
+      - ".gitattributes"
+      - "docs/compatibility.md"
+      - "README.md"
+  pull_request:
+    paths:
+      - "tutorials/input-and-tuples/**"
+      - "scripts/verify_alpha6_workshop.py"
+      - "scripts/test_alpha6_workshop.py"
+      - "scripts/alpha6_input_page.py"
+      - "scripts/test_alpha6_site.py"
+      - "scripts/build_site.py"
+      - ".github/workflows/alpha6-input-tuples.yml"
+      - ".gitattributes"
+      - "docs/compatibility.md"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha6-input-tuples-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  published-alpha6:
+    name: Alpha.6 stdin/tuple workshop / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check out immutable published alpha.6 compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: cdf6a3924ec2a36c7beca5a9aec4f01a0bce515e
+          path: .compiler-alpha6
+          persist-credentials: false
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - name: Test version pin, source identities, EOF contract and website
+        run: python -m unittest discover -s scripts -p 'test_alpha6_*.py'
+      - name: Build independently pinned Scarp alpha.6
+        run: cargo build --locked --offline --manifest-path .compiler-alpha6/Cargo.toml
+      - name: Execute exact UTF-8 stdin and verify atomic EOF handling
+        shell: bash
+        run: |
+          set -euo pipefail
+          compiler=.compiler-alpha6/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha6_workshop.py --compiler "$compiler" --compiler-source .compiler-alpha6
