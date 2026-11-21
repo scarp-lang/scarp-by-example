@@ -25,7 +25,7 @@ PATH_RE = re.compile(r"^examples/[0-9]{2}-[a-z0-9-]+/[0-9]{2}-[a-z0-9-]+\.srp$")
 
 
 def git_blob_sha(data: bytes) -> str:
-    return hashlib.sha1(f"blob {len(data)}\\0".encode("ascii") + data).hexdigest()
+    return hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest()
 
 
 def validate_manifest(document: dict, root: Path = ROOT) -> list[tuple[Path, Path]]:

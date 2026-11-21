@@ -49,7 +49,7 @@ class FrozenCourseTests(unittest.TestCase):
             validate_manifest(self.metadata)
 
     def test_git_blob_hash_is_sensitive_to_bytes(self):
-        self.assertNotEqual(git_blob_sha(b"alpha14\\n"), git_blob_sha(b"alpha17\\n"))
+        self.assertNotEqual(git_blob_sha(b"alpha14\n"), git_blob_sha(b"alpha17\n"))
 
     def test_workflow_checks_only_historical_subset_with_old_compiler(self):
         from verify_examples import ROOT

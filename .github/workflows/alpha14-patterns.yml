@@ -7,6 +7,9 @@ on:
       - "tutorials/structured-patterns/**"
       - "scripts/verify_alpha14_patterns.py"
       - "scripts/test_alpha14_patterns.py"
+      - "scripts/verify_alpha14_course.py"
+      - "scripts/test_verify_alpha14_course.py"
+      - "docs/historical-alpha14-course.json"
       - "scripts/verify_alpha14_diagnostics.py"
       - "scripts/test_alpha14_diagnostics.py"
       - "scripts/test_alpha14_diagnostics_site.py"
@@ -18,6 +21,9 @@ on:
       - "tutorials/structured-patterns/**"
       - "scripts/verify_alpha14_patterns.py"
       - "scripts/test_alpha14_patterns.py"
+      - "scripts/verify_alpha14_course.py"
+      - "scripts/test_verify_alpha14_course.py"
+      - "docs/historical-alpha14-course.json"
       - "scripts/verify_alpha14_diagnostics.py"
       - "scripts/test_alpha14_diagnostics.py"
       - "scripts/test_alpha14_diagnostics_site.py"
@@ -64,7 +70,7 @@ jobs:
         run: python -m unittest discover -s scripts -p 'test_alpha14_diagnostics.py'
       - name: Build alpha.14 from the immutable checkout
         run: cargo build --locked --offline --manifest-path .compiler-alpha14/Cargo.toml
-      - name: Check workshop and core-course compatibility on alpha.14
+      - name: Verify frozen alpha.14 course and pinned diagnostic workshops
         shell: bash
         run: |
           set -euo pipefail
@@ -72,6 +78,6 @@ jobs:
           if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
           python scripts/verify_alpha14_patterns.py --compiler "$compiler" --compiler-source .compiler-alpha14
           python scripts/verify_alpha14_diagnostics.py --compiler "$compiler" --compiler-source .compiler-alpha14
-          python scripts/verify_examples.py --compiler "$compiler"
+          python scripts/verify_alpha14_course.py --compiler "$compiler"
           python scripts/verify_guided_labs.py --compiler "$compiler"
           python scripts/verify_cli.py --compiler "$compiler" --expected-version "0.0.6-alpha.14"
