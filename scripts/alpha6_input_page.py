@@ -125,7 +125,7 @@ copy. Observe the missing-input diagnostic, then restore both lines.</p></div></
 Git-tracked files. A dedicated CI job builds exact compiler commit
 <code>{COMMIT}</code> and checks the real runtime, bytes and EOF behavior.
 This browser never runs Scarp.</p></section>
-<p><a class="secondary-button" href="{escape(rel(page, "workshops/index.html"))}">
+<p><a class="secondary-button" href="{escape(rel(page, "index.html"))}">
 ← Return to the course catalog</a></p>
 <p class="fine-print">Independent release source:
 <a href="{RELEASE}">v{target["version"]}</a> ·
