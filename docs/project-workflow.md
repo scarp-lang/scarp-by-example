@@ -1,6 +1,6 @@
 # Your first real Scarp project (v0.0.5-alpha.5)
 
-This guide teaches project commands first published in Scarp v0.0.5-alpha.5, with historical source provenance at commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`. The current course retests the unchanged project fixture against the active alpha.15 compiler, rather than claiming its original authorship occurred in alpha.13. [Compiler compatibility](compatibility.md) · [हिन्दी गाइड](hi/project-workflow.md)
+This guide teaches project commands first published in Scarp v0.0.5-alpha.5, with historical source provenance at commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`. The current course retests the unchanged project fixture against the active alpha.17 compiler, rather than claiming its original authorship occurred in alpha.13. [Compiler compatibility](compatibility.md) · [हिन्दी गाइड](hi/project-workflow.md)
 
 A project is a directory containing a manifest `Scarp.project` and a selected `.srp` entrypoint. Alpha.4's project workflow uses the real **interpreter**, not native executable generation or package distribution.
 
