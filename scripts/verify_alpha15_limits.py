@@ -15,6 +15,7 @@ PIN = "a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281"
 VERSION = "0.0.6-alpha.15"
 MAX_SOURCE_BYTES = 1_048_576
 LESSON = ROOT / "tutorials" / "alpha15-limits" / "string-comparisons.srp"
+HISTORICAL_TARGET = ROOT / "tutorials" / "alpha15-limits" / "compiler-target.json"
 
 
 class LimitVerificationError(RuntimeError):
@@ -81,9 +82,9 @@ def verify_source_checkout(source: Path) -> None:
 
 
 def verify_alpha15(compiler: Path, source: Path) -> None:
-    target = json.loads((ROOT / "docs/compiler-target.json").read_text("utf-8"))
+    target = json.loads(HISTORICAL_TARGET.read_text("utf-8"))
     if (target.get("version"), target.get("source_commit")) != (VERSION, PIN):
-        raise LimitVerificationError("active compiler metadata is not published alpha.15")
+        raise LimitVerificationError("historical compiler metadata is not published alpha.15")
     verify_source_checkout(source)
     require(call(compiler, "version"), "compiler version",
             stdout=f"scarp {VERSION}\n".encode(), stderr=b"")

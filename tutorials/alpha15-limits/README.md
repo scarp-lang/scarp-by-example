@@ -45,7 +45,7 @@ Run the regression with the real binary and exact compiler checkout:
 python scripts/verify_alpha15_limits.py --compiler /path/to/scarp --compiler-source /path/to/alpha15-checkout
 ```
 
-The verifier checks Git HEAD, binary version, static verification, exact
+The verifier uses this workshop's independent `compiler-target.json` and checks Git HEAD, binary version, static verification, exact
 stdout, both file-size boundaries, JSON errors, and string work quotas.
 It creates temporary files and uses only Python's standard library.
 The website does **not** execute Scarp; experimental semantic-cache revision
