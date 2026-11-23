@@ -106,6 +106,9 @@ jobs:
       - name: Verify modern declarative project before publishing
         run: python scripts/verify_declarative_project.py --compiler .compiler/target/debug/scarp
 
+      - name: Verify legacy-v1 to declarative-v2 migration before publishing
+        run: python scripts/verify_project_migration.py --compiler .compiler/target/debug/scarp
+
       - name: Build historical alpha.13 compiler
         run: cargo build --locked --offline --manifest-path .compiler-alpha13/Cargo.toml
 
