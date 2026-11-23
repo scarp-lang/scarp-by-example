@@ -35,3 +35,24 @@ python scripts/verify_alpha15_limits.py --compiler .compiler/target/debug/scarp 
 
 The verifier creates only disposable files, uses standard-library Python and
 runs independently of the historical alpha.13 and alpha.14 workshops.
+
+## Generated website integrity
+
+After `python scripts/build_site.py` run the dependency-free, offline
+site navigation audit:
+
+```sh
+python scripts/audit_site.py --site dist
+python -m unittest discover -s scripts -p 'test_audit_site.py'
+```
+
+The audit checks **every emitted HTML page** for missing or duplicate
+element IDs, missing local links and JavaScript/CSS/assets, deep-link
+fragments pointing at nonexistent IDs, correct canonical URLs, unsafe
+URL schemes/path traversal and exact sitemap coverage. It does not crawl
+the public web or claim that external GitHub links are live.
+
+The Pages build runs this check **after** site generation and **before**
+artifact upload, so a broken route cannot be published just because all
+Scarp examples compiled correctly. It also runs in PR builds without
+deploying a preview. Browser JavaScript tests remain separate.
