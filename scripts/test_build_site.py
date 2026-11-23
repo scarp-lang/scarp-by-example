@@ -237,7 +237,7 @@ class SiteTests(unittest.TestCase):
             self.assertTrue((output / "checkpoint.js").is_file())
             self.assertTrue((output / "output-practice.js").is_file())
             self.assertTrue((output / "reference-explorer.js").is_file())
-            # Output prediction works on all 58 verified lessons, not just quizzes.
+            # Output prediction works on all 60 verified lessons, not just quizzes.
             for source, _ in discover_examples(EXAMPLES):
                 lesson_html = (output / "lessons" / source.parent.name /
                                source.stem / "index.html").read_text(encoding="utf-8")
