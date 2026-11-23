@@ -109,3 +109,11 @@ jobs:
       - name: Smoke-test Scarp-first CLI (Windows)
         if: runner.os == 'Windows'
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp.exe
+
+      - name: Verify lowercase declarative project, tests and manifest rejection
+        if: runner.os != 'Windows'
+        run: python scripts/verify_declarative_project.py --compiler .compiler/target/debug/scarp
+
+      - name: Verify lowercase declarative project, tests and manifest rejection (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_declarative_project.py --compiler .compiler/target/debug/scarp.exe
