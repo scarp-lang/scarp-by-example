@@ -1,0 +1,4 @@
+import "../src/lib/math.srp" as math;
+
+assert(math.add(19, 23) == 42, "sum must survive migration");
+assert(math.add(-5, 5) == 0, "opposites cancel");

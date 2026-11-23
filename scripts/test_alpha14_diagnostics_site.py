@@ -61,7 +61,7 @@ class Alpha14DiagnosticSiteTests(unittest.TestCase):
             output = Path(root)
             self.assertEqual(build(output), 60)
             index_files = list(output.rglob("index.html"))
-            self.assertEqual(len(index_files), 84)
+            self.assertEqual(len(index_files), 85)
             route = "workshops/structured-patterns/diagnostics/index.html"
             self.assertTrue((output / route).is_file())
             self.assertIn(

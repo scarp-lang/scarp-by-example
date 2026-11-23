@@ -20,6 +20,7 @@ from source_explorer import render_reference_explorer
 from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
 from verify_alpha14_diagnostics import load_cases as load_alpha14_diagnostics
 from alpha6_input_page import render_page as render_alpha6_input_page
+from project_migration_page import render_page as render_project_migration_page
 
 ASSETS = ROOT / "site"
 REPOSITORY = "https://github.com/scarp-lang/scarp-by-example"
@@ -313,7 +314,8 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <p>Learn the modern lowercase <code>scarp.project</code> workflow:
 initialize a project, statically verify its manifest, run source and
 check the two real tests.</p>
-<a class="primary-button" href="{escape(rel("index.html", "projects/declarative/index.html"))}">Build a modern project →</a></div>
+<a class="primary-button" href="{escape(rel("index.html", "projects/declarative/index.html"))}">Build a modern project →</a>
+<a class="secondary-button" href="{escape(rel("index.html", "projects/migration/index.html"))}">Migrate a legacy project →</a></div>
 <div class="project-feature-command"><span>Terminal · Scarp v{escape(target["version"])}</span>
 <pre><code>scarp init hello-world
 scarp verify hello-world
@@ -781,6 +783,7 @@ and there is no registry, lockfile, native executable or browser VM.
 The historical format remains available for old projects.</p>
 <a class="secondary-button"
  href="{escape(rel(page, "projects/index.html"))}">Compare legacy projects →</a>
+<a class="secondary-button" href="{escape(rel(page, "projects/migration/index.html"))}">Migrate a legacy project →</a>
 </section>
 <p class="fine-print">Pinned compiler:
 <a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> ·
@@ -1797,6 +1800,14 @@ def build(destination: Path) -> int:
     declarative_path = destination / "projects/declarative/index.html"
     declarative_path.parent.mkdir(parents=True, exist_ok=True)
     declarative_path.write_text(render_declarative_project_page(target), encoding="utf-8", newline="\n")
+    migration_path = destination / "projects/migration/index.html"
+    migration_path.parent.mkdir(parents=True, exist_ok=True)
+    migration_path.write_text(
+        render_project_migration_page(
+            ROOT, target, page_shell, rel, escape, highlight_scarp
+        ),
+        encoding="utf-8", newline="\n",
+    )
     project_path = destination / "projects/index.html"
     project_path.parent.mkdir(parents=True, exist_ok=True)
     project_path.write_text(render_project_page(target), encoding="utf-8", newline="\n")
@@ -1842,6 +1853,7 @@ def build(destination: Path) -> int:
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
     urls = ["index.html", "projects/index.html", "projects/declarative/index.html",
+            "projects/migration/index.html",
             "projects/module-inspection/index.html",
             "projects/source-navigation/index.html",
             "workshops/input-and-tuples/index.html",
@@ -1872,7 +1884,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons, 6 chapters, and four project tutorials at {args.output.resolve()}")
+    print(f"Built {count} standalone lessons, 6 chapters, and five project tutorials at {args.output.resolve()}")
     return 0
 
 

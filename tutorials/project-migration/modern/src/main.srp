@@ -1,0 +1,3 @@
+import "lib/math.srp" as math;
+
+print("Migrated:", math.add(19, 23));

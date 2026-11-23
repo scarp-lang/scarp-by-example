@@ -43,7 +43,7 @@ For modules, the compiler resolves imports relative to the lesson file. Keep the
 
 The published compiler supports a lowercase, declarative **`scarp.project`** manifest and `scarp init` for new projects. Follow the [English modern-project guide](docs/declarative-projects.md) / [हिन्दी मार्गदर्शिका](docs/hi/declarative-projects.md), or run the complete [two-test project](tutorials/declarative-project/README.md). This course verifies `project info --json`, static `verify`, `run`, no-argument `exec`, test discovery, test execution with a UTF-8 stdin fixture and malformed-manifest rejection using the real pinned compiler.
 
-The earlier `Scarp.project` / `scarp create` workflow is preserved below as historical learning material; do not treat a filename-only lowercase rename as migration.
+The earlier `Scarp.project` / `scarp create` workflow is preserved below as historical learning material; do not treat a filename-only lowercase rename as migration. Learn the exact migration steps in the [source-backed v1→v2 workshop](tutorials/project-migration/README.md) ([English guide](docs/project-migration.md) · [हिन्दी मार्गदर्शिका](docs/hi/project-migration.md)). Both original program trees are byte-identical except for their manifests, and CI checks output, tests, metadata, and a deliberate structured-failure report on the pinned compiler.
 
 ## Project workflow (legacy format, available since alpha.4)
 

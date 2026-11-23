@@ -117,3 +117,11 @@ jobs:
       - name: Verify lowercase declarative project, tests and manifest rejection (Windows)
         if: runner.os == 'Windows'
         run: python scripts/verify_declarative_project.py --compiler .compiler/target/debug/scarp.exe
+
+      - name: Verify legacy-to-declarative project migration parity (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: python scripts/verify_project_migration.py --compiler .compiler/target/debug/scarp
+
+      - name: Verify legacy-to-declarative project migration parity (Windows)
+        if: runner.os == 'Windows'
+        run: python scripts/verify_project_migration.py --compiler .compiler/target/debug/scarp.exe
