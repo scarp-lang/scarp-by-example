@@ -10,6 +10,7 @@ from pathlib import Path
 
 from audit_site import PUBLIC_SITE, audit_site, main
 from build_site import build
+from verify_examples import EXAMPLES, discover_examples
 
 
 def make_site(root: Path) -> None:
@@ -126,10 +127,11 @@ class SiteIntegrityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             count = build(root)
-            self.assertEqual(count, 58)
+            self.assertEqual(count, len(discover_examples(EXAMPLES)))
             report = audit_site(root)
             self.assertTrue(report.valid, "\n".join(report.errors[:30]))
-            self.assertEqual(report.pages, 81)
+            self.assertEqual(report.pages, len(list(root.rglob("*.html"))))
+            self.assertGreater(report.pages, count)
             self.assertGreater(report.links, report.pages)
             self.assertGreater(report.fragments, 0)
 

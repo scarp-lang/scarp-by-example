@@ -9,6 +9,7 @@ Requires only Python's standard library, not a browser or Scarp compiler.
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
@@ -190,7 +191,7 @@ def audit_site(
             (item.text or "").strip()
             for item in sitemap.findall(f"{SITEMAP_NS}url/{SITEMAP_NS}loc")
         ]
-        duplicates = sorted({url for url in seen_urls if seen_urls.count(url) > 1})
+        duplicates = sorted(url for url, count in Counter(seen_urls).items() if count > 1)
         if duplicates:
             report.errors.append(f"sitemap.xml: duplicate locations {duplicates!r}")
         expected_urls = {expected_canonical(root, p, base_url) for p in pages}
