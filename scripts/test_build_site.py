@@ -71,7 +71,7 @@ class SiteTests(unittest.TestCase):
     def test_course_has_matching_chapters_and_true_fixtures(self):
         lessons, chapters, target = read_course()
         self.assertEqual(len(lessons), len(discover_examples(EXAMPLES)))
-        self.assertEqual(len(lessons), 58)
+        self.assertEqual(len(lessons), 60)
         self.assertEqual(len(chapters), 6)
         self.assertEqual(target["version"], json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))["version"])
         for lesson in lessons:
@@ -85,7 +85,7 @@ class SiteTests(unittest.TestCase):
 
     def test_home_is_chapter_focused_not_one_long_code_grid(self):
         page, total = render_catalog()
-        self.assertEqual(total, 58)
+        self.assertEqual(total, 60)
         self.assertEqual(page.count('class="chapter-tile"'), 6)
         self.assertIn("One real program at a time", page)
         self.assertIn('href="chapters/01-basics/index.html"', page)
@@ -188,7 +188,7 @@ class SiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder)
             count = build(output)
-            self.assertEqual(count, 58)
+            self.assertEqual(count, 60)
             self.assertTrue((output / ".nojekyll").is_file())
             sitemap = ET.parse(output / "sitemap.xml")
             locations = [
@@ -196,7 +196,7 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 81)
+            self.assertEqual(len(locations), 83)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/", locations)
@@ -277,13 +277,13 @@ class SiteTests(unittest.TestCase):
             )
             self.assertEqual(len(list((output / "chapters").glob("*/index.html"))), 6)
             pages = list((output / "lessons").glob("*/*/index.html"))
-            self.assertEqual(len(pages), 58)
+            self.assertEqual(len(pages), 60)
             self.assertEqual(
                 sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
                     for page in pages), 18)
-            self.assertEqual(len(list(output.rglob("index.html"))), 81)
+            self.assertEqual(len(list(output.rglob("index.html"))), 83)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(search), 58)
+            self.assertEqual(len(search), 60)
             for item in search:
                 expected_source = (ROOT / "examples" / (item["id"] + ".srp")).read_text(encoding="utf-8")
                 self.assertEqual(item["source"], expected_source)
@@ -292,8 +292,8 @@ class SiteTests(unittest.TestCase):
                 {"examples/" + item["id"] + ".srp" for item in search if item["has_checkpoint"]},
                 question_paths,
             )
-            self.assertEqual(len({x["url"] for x in search}), 58)
-            self.assertEqual(len({x["id"] for x in search}), 58)
+            self.assertEqual(len({x["url"] for x in search}), 60)
+            self.assertEqual(len({x["id"] for x in search}), 60)
             for item in search:
                 self.assertEqual(item["url"], "lessons/" + item["id"] + "/index.html")
                 self.assertRegex(item["id"], r"^[0-9]{2}-[a-z0-9-]+/[0-9]{2}-[a-z0-9-]+$")

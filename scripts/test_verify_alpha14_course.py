@@ -22,7 +22,7 @@ class FrozenCourseTests(unittest.TestCase):
         self.assertEqual(len(pairs), 55)
         discovered = {src for src, _ in discover_examples(EXAMPLES)}
         self.assertTrue({src for src, _ in pairs} <= discovered)
-        self.assertEqual(len(discovered), 58)
+        self.assertEqual(len(discovered), 60)
 
     def test_does_not_smuggle_newer_alpha17_features_into_alpha14(self):
         frozen = {p["source"] for p in self.metadata["lessons"]}
