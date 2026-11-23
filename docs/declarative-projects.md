@@ -133,6 +133,12 @@ rejected. Do not distribute both `scarp.project` and
 `Scarp.project` in the same project: case-sensitive and
 case-insensitive filesystems handle such pairs differently.
 
+For a complete, tested comparison, open the
+[legacy-v1 → declarative-v2 migration workshop](../tutorials/project-migration/README.md)
+([English](project-migration.md) · [हिन्दी](hi/project-migration.md)). It
+keeps source and test fixtures identical in two checked-in projects and
+verifies output plus JSON metadata against the published compiler.
+
 To migrate a legacy sample, create a new lowercase manifest with
 the same intended entry, run `scarp verify` and
 `scarp run`, then remove the older manifest after

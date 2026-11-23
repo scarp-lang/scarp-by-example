@@ -15,6 +15,8 @@
 
 **नया वर्तमान प्रारूप:** [`scarp.project` से असली प्रोजेक्ट बनाएँ](declarative-projects.md) — `scarp init`, `verify`, `run`, `exec` और दो टेस्ट समझें।
 
+**माइग्रेशन वर्कशॉप:** [पुरानी `Scarp.project` से नई `scarp.project` फ़ाइल में बदलें](project-migration.md) — एक ही सोर्स और दो टेस्ट दोनों प्रारूपों में जाँचें।
+
 **पुराना प्रारूप:** [Scarp में अपना पहला प्रोजेक्ट (alpha.4 से उपलब्ध)](project-workflow.md) — `create`, `verify DIRECTORY` और `launch` का प्रयोग सीखें।
 
 **प्रकाशित alpha.6:** [स्रोत में नाम और संदर्भ खोजें](source-navigation.md) — बिना प्रोग्राम चलाए `inspect symbols` और `inspect references` से घोषणाएँ और प्रयोग देखें। [दो-मॉड्यूल वर्कशॉप](https://scarp-lang.github.io/scarp-by-example/projects/source-navigation/) में दो अलग `base` बाइंडिंग खोजें।
