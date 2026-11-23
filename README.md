@@ -39,7 +39,13 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 For modules, the compiler resolves imports relative to the lesson file. Keep the companion `_support` directory with that lesson.
 
-## Project workflow (available since alpha.4)
+## Current project workflow (`scarp.project`)
+
+The published compiler supports a lowercase, declarative **`scarp.project`** manifest and `scarp init` for new projects. Follow the [English modern-project guide](docs/declarative-projects.md) / [हिन्दी मार्गदर्शिका](docs/hi/declarative-projects.md), or run the complete [two-test project](tutorials/declarative-project/README.md). This course verifies `project info --json`, static `verify`, `run`, no-argument `exec`, test discovery, test execution with a UTF-8 stdin fixture and malformed-manifest rejection using the real pinned compiler.
+
+The earlier `Scarp.project` / `scarp create` workflow is preserved below as historical learning material; do not treat a filename-only lowercase rename as migration.
+
+## Project workflow (legacy format, available since alpha.4)
 
 Learn to create, statically verify, and launch a real offline Scarp project. Follow the [English project tutorial](docs/project-workflow.md) or the [हिन्दी प्रोजेक्ट गाइड](docs/hi/project-workflow.md); the [checked-in sample project](tutorials/first-project/Scarp.project) runs with the official interpreter. Project commands are **not** native compilation or package publishing, and the sample is kept separate from the numbered lessons.
 

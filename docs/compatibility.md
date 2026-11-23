@@ -29,6 +29,7 @@ Scarp is a development-stage programming language. This learning repository sele
 
 - Alpha.16 introduces bounded finite-vector median/quantile and Unicode text and integer helpers.
 - Alpha.17 introduces fixed-array `array_len` and `array_get_or` and an explicitly interactive `input_boolean` path.
+- Alpha.8 added the declarative lower-case `scarp.project` v2 format, `scarp init`, `scarp test` and `scarp project info` while preserving legacy `Scarp.project` v1.
 - Alpha.18 adds pure fixed-array `array_set` (a new immutable snapshot), empty-window memory-retention improvements, and default project resolution for `scarp exec`.
 - Alpha.19 adds Rust-host named callable handles, signature/effect compatibility, usage receipts and cumulative execution ledgers. It **does not** add first-class Scarp function values, closures or an unrestricted native compiler CLI. Tuple indexed assignment present in unreleased compiler development must not be demonstrated as published alpha.19 syntax.
 
