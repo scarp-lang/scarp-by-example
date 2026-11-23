@@ -18,6 +18,7 @@
 | [12 · Root mean square](12-root-mean-square.srp) | Stable `rms` on signals and visible vector windows | `balanced 2.0`, `window 2.5`, `finite true`, `zero 0.0` |
 | [13 · Fixed array traversal](13-fixed-array-traversal.srp) | `[array: ...]`, `array_len` and safe `array_get_or` with a fallback | `Total: 60`, `Missing reading: 0`, `Empty length: 0` |
 | [14 · Order statistics](14-order-statistics.srp) | `median`, Type-7 `quantile`, and immutable vector windows | `3.0`, `1.75`, `4.75`, `2.0`, then the unchanged vector |
+| [15 · Persistent fixed-array updates](15-persistent-array-updates.srp) | Pure `array_set`, nested arrays and unchanged original snapshots | `8 99 3`, `one नमस्ते`, `100` |
 
 Run `scarp run examples/04-collections/01-vectors.srp` from this repository root or pass an absolute lesson path. Compare the exact `.stdout` beside each file.
 
@@ -58,4 +59,11 @@ Run `scarp run examples/04-collections/01-vectors.srp` from this repository root
 
 **14 · Median and quantiles:** The alpha.16 `median` and `quantile` functions process finite numerical vectors. This exact upstream program prints median 3.0, first/third quartiles 1.75 and 4.75, then median 2.0 for the window. The original vector remains `[4.0, 1.0, 7.0, 2.0]`; sorting is an internal bounded copy, not an in-place mutation. Try reordering the input vector on your own checkout; the median stays the same.
 
-Both programs and their exact `.stdout` fixtures are copied from published Scarp v0.0.6-alpha.17 at commit `7831a37939965f557ce746e1d86bf82d3d629f74`. These source files retain the compiler's Apache-2.0 licensing; bilingual teaching notes are original MIT-licensed explanations.
+Lessons 13 and 14 and their exact `.stdout` fixtures are copied from published Scarp v0.0.6-alpha.17 at commit `7831a37939965f557ce746e1d86bf82d3d629f74`. These source files retain the compiler's Apache-2.0 licensing; bilingual teaching notes are original MIT-licensed explanations.
+
+## Persistent fixed-array updates — published alpha.18
+
+**15 · `array_set`:** `array_set(original, 1, 99)` creates a **new** three-item array. The original second item stays `8`, while the new second item is `99`. Nested replacement similarly leaves `"one"` unchanged in the original and introduces `"नमस्ते"` in the new array. The `pure funcra replace_last` example shows composable pure updates returning `100`. Invalid indices and element type mismatches are errors: `array_set` is not an unchecked or in-place mutation operation.
+
+The entire lesson and output pair are copied from the [published alpha.19 compiler tree](https://github.com/scarp-lang/scarp/blob/e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75/examples/array_updates.srp), which includes the alpha.18 feature. The official compiler verifies and executes the lesson in CI, and a Git-blob regression test protects exact provenance. This is not source-level ownership management.
+

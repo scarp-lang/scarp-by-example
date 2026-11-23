@@ -8,6 +8,7 @@ Learn the current compiler's typed function declaration syntax: `funcra`. Functi
 | [02 · Recursion](02-recursion.srp) | Recursive Fibonacci and mutually recursive even/odd tests | `55`, then `true false` |
 | [03 · Function contracts](03-function-contracts.srp) | Default and named arguments, `needs` and `ensures` contracts | `10`, `3`, `12 12` |
 | [04 · Terminal recursion](04-terminal-recursion.srp) | A direct self-return with an accumulator, default argument, and `needs` contract | `128` |
+| [05 · Callable effect boundaries](05-callable-effect-boundaries.srp) | Named pure/effectful functions; direct calls rather than function values | `12`, then `7` |
 
 Use `scarp run examples/03-functions/01-typed-functions.srp` from the repository root; use `scarp check PATH` to validate a lesson. Exact fixtures appear in matching `.stdout` files.
 
@@ -16,3 +17,5 @@ Use `scarp run examples/03-functions/01-typed-functions.srp` from the repository
 **New lesson:** [03 · Function contracts](03-function-contracts.srp) demonstrates caller-defined defaults and named arguments. The `needs` condition checks a precondition; `ensures` states a result property. Explore the example with its deliberately valid calls before writing an invalid call in a separate local file.
 
 **04 · Terminal recursion:** `count(n, total)` returns a direct call to itself until `n` reaches zero; `total` accumulates the count. The compiler's upstream example notes that this form **can** reuse an execution frame, but this lesson makes no claim that every recursive call is optimized or that arbitrary recursion is unbounded. Predict why `count(128)` prints `128`.
+
+**05 · Callable effect boundaries (published alpha.19):** `pure funcra twice` returns a calculation, while `funcra report` prints a result before returning another value. A direct named call to `report(6)` prints `12` then `7`. Published alpha.19 also provides **Rust embedding APIs** for callable handles and invocation receipts; this does not make functions first-class values or introduce closures into Scarp source code. The lesson source and output are exact upstream copies from the published release.
