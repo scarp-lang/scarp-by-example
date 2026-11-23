@@ -24,7 +24,12 @@ class DeclarativeProjectTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "scarp.project").write_bytes((PROJECT / "scarp.project").read_bytes())
+            modern_bytes = (root / "scarp.project").read_bytes()
             (root / "Scarp.project").write_text("scarp-project: 1\n", encoding="utf-8")
+            # Case-insensitive volumes cannot represent the two spellings
+            # simultaneously. Keep the duplicate-file test Linux-specific.
+            if (root / "scarp.project").read_bytes() != modern_bytes:
+                self.skipTest("case-insensitive filesystem aliases the two manifest spellings")
             (root / "tests").mkdir()
             (root / "src").mkdir()
             for path in ("src/main.srp", "src/totals.srp", *TEST_PATHS):

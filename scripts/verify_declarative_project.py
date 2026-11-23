@@ -38,7 +38,9 @@ def validate_fixtures(project: Path = PROJECT) -> bytes:
     manifest = project / "scarp.project"
     if manifest.read_bytes() != MANIFEST:
         raise ProjectVerificationError("modern project manifest changed; review its contract")
-    if (project / "Scarp.project").exists():
+    # Compare actual directory-entry spellings, not the result of a case-insensitive
+    # filesystem lookup: on Windows/macOS, Scarp.project may alias scarp.project.
+    if any(entry.name == "Scarp.project" for entry in project.iterdir()):
         raise ProjectVerificationError("do not mix legacy and declarative manifests")
     if (project / "tests/02-input.stdin").read_bytes() != b"6\n7\n":
         raise ProjectVerificationError("stdin fixture must be exact, UTF-8 and LF terminated")
