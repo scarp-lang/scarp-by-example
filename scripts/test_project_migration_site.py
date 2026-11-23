@@ -37,7 +37,7 @@ class MigrationSiteTests(unittest.TestCase):
                           (site / "sitemap.xml").read_text(encoding="utf-8"))
             self.assertIn("projects/migration/index.html",
                           (site / "index.html").read_text(encoding="utf-8"))
-            self.assertIn("projects/migration/index.html",
+            self.assertIn('href="../migration/index.html"',
                           (site / "projects/declarative/index.html").read_text(encoding="utf-8"))
 
 
