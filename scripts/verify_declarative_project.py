@@ -162,7 +162,10 @@ def verify(compiler: Path, timeout: int = 15) -> None:
         fresh = root / "fresh-init"
         require(invoke(compiler, "init", str(fresh), timeout=timeout),
                 "modern project init", stdout=None)
-        if not (fresh / "scarp.project").is_file() or (fresh / "Scarp.project").exists():
+        # On case-insensitive volumes, a lookup for "Scarp.project" also
+        # resolves the lowercase file. Inspect exact directory-entry names.
+        names = {entry.name for entry in fresh.iterdir()}
+        if "scarp.project" not in names or "Scarp.project" in names:
             raise ProjectVerificationError("scarp init must create lowercase v2 manifest")
         generated = (fresh / "scarp.project").read_bytes()
         if b'project "fresh-init"' not in generated or b'entry: "src/main.srp"' not in generated:
