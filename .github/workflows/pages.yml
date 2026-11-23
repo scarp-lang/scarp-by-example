@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: 7831a37939965f557ce746e1d86bf82d3d629f74
+          ref: e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75
           path: .compiler
           persist-credentials: false
 
@@ -102,6 +102,9 @@ jobs:
 
       - name: Smoke-test Scarp-first CLI before publishing
         run: python scripts/verify_cli.py --compiler .compiler/target/debug/scarp
+
+      - name: Verify modern declarative project before publishing
+        run: python scripts/verify_declarative_project.py --compiler .compiler/target/debug/scarp
 
       - name: Build historical alpha.13 compiler
         run: cargo build --locked --offline --manifest-path .compiler-alpha13/Cargo.toml

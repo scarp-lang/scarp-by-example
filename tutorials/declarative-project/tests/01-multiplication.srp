@@ -1,0 +1,4 @@
+import "../src/totals.srp" as totals;
+
+assert(totals.multiply(6, 7) == 42, "six times seven should be 42");
+assert(totals.multiply(0, 19) == 0, "multiplying zero should stay zero");

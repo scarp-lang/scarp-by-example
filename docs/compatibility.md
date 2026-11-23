@@ -2,17 +2,17 @@
 
 Scarp is a development-stage programming language. This learning repository selects an **immutable, publicly published compiler source commit**; a tag alone does not prove compatibility without real operating-system tests.
 
-## Proposed active course target: Scarp alpha.17
+## Proposed active course target: Scarp alpha.19
 
 | Property | Target |
 | --- | --- |
-| Published release | [Scarp v0.0.6-alpha.17](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17), 21 November 2026 (prerelease) |
-| Exact annotated-tag source | [`7831a37939965f557ce746e1d86bf82d3d629f74`](https://github.com/scarp-lang/scarp/commit/7831a37939965f557ce746e1d86bf82d3d629f74) |
+| Published release | [Scarp v0.0.6-alpha.19](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.19), 23 November 2026 (prerelease) |
+| Exact annotated-tag source | [`e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75`](https://github.com/scarp-lang/scarp/commit/e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75) |
 | Machine-readable target | [`docs/compiler-target.json`](compiler-target.json) |
-| Main verification | [Linux, Windows and macOS source/output jobs](../.github/workflows/examples.yml), [Pages/catalog build](../.github/workflows/pages.yml), compiler-target tests and release-pinned workshop fidelity |
-| Previous main target | [Scarp v0.0.6-alpha.15](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.15), `a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281` |
+| Main verification | [Linux, Windows and macOS source/output jobs](../.github/workflows/examples.yml), [Pages/catalog build](../.github/workflows/pages.yml), compiler-target tests and historical source fidelity |
+| Previous active target | [Scarp v0.0.6-alpha.17](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17), `7831a37939965f557ce746e1d86bf82d3d629f74` |
 
-**Integration status:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) previously established alpha.15 after Linux, Windows, macOS and website verification. This follow-up proposes the published alpha.17 release at its immutable commit, rather than floating compiler `main`. The 58-lesson course adds three new alpha.16/alpha.17 source-backed examples while preserving all earlier lesson output fixtures. Its active alpha.17 verification is independent of the 55-entry frozen alpha.14 course snapshot, which remains locked to recorded source and output Git blob hashes. The new release needs independent PR checks before merge; live Pages deployment must be checked separately.
+**Integration status:** The annotated `v0.0.6-alpha.19` tag points to the exact compiler source commit above. This PR proposes that published source as the active target and adds two byte-identical upstream programs to reach **60 numbered lessons**. Existing fixtures remain intact. Historical alpha.13, alpha.14 and alpha.15 checks continue to use their independent release source commits. Linux/Windows/macOS and Pages validations plus maintainer review are required before merging; PR creation does not deploy the website.
 
 ## Source-language support and limits
 
@@ -28,16 +28,19 @@ Scarp is a development-stage programming language. This learning repository sele
 **Scope:** The active CLI runs programs with the local interpreter. Rust embedding interfaces for native C11/ELF64 object generation are experimental and restricted: no general `scarp compile` CLI, unrestricted native compilation, browser interpreter, networking, async runtime, GPU backend or automatic differentiation is implied.
 
 - Alpha.16 introduces bounded finite-vector median/quantile and Unicode text and integer helpers.
-- Alpha.17 introduces fixed-array `array_len` and `array_get_or` and an explicitly interactive `input_boolean` path. Neither changes the course's static-site execution model.
+- Alpha.17 introduces fixed-array `array_len` and `array_get_or` and an explicitly interactive `input_boolean` path.
+- Alpha.8 added the declarative lower-case `scarp.project` v2 format, `scarp init`, `scarp test` and `scarp project info` while preserving legacy `Scarp.project` v1.
+- Alpha.18 adds pure fixed-array `array_set` (a new immutable snapshot), empty-window memory-retention improvements, and default project resolution for `scarp exec`.
+- Alpha.19 adds Rust-host named callable handles, signature/effect compatibility, usage receipts and cumulative execution ledgers. It **does not** add first-class Scarp function values, closures or an unrestricted native compiler CLI. Tuple indexed assignment present in unreleased compiler development must not be demonstrated as published alpha.19 syntax.
 
 ## Build the exact active compiler
 
-The `v0.0.6-alpha.17` annotated tag dereferences to **`7831a37939965f557ce746e1d86bf82d3d629f74`**. Both CI workflows propose this exact source commit at `.compiler`. They separately check out alpha.13 as `.compiler-alpha13` and alpha.15 as `.compiler-alpha15` for their historic workshop/boundary regressions; those copies are not interchangeable.
+The `v0.0.6-alpha.19` annotated tag dereferences to **`e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75`**. Both CI workflows pin this source commit at `.compiler`. They separately check out alpha.13 as `.compiler-alpha13` and alpha.15 as `.compiler-alpha15` for their historic workshop/boundary regressions; those copies are not interchangeable.
 
 ~~~sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout 7831a37939965f557ce746e1d86bf82d3d629f74
+git checkout e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75
 cargo build --locked --offline
 ./target/debug/scarp version
 ~~~

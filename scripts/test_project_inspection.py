@@ -67,9 +67,9 @@ class ProjectInspectionTests(unittest.TestCase):
     def test_course_build_publishes_one_independent_inspection_page(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            self.assertEqual(build(target), 58)
+            self.assertEqual(build(target), 60)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 81)
+            self.assertEqual(len(pages), 84)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")

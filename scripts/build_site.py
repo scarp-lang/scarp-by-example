@@ -310,12 +310,14 @@ def render_catalog(questions: dict[str, dict] | None = None) -> tuple[str, int]:
 <section class="project-feature container-wide" aria-labelledby="projects-heading">
 <div><p class="eyebrow">SCARP PROJECT WORKFLOW</p>
 <h2 id="projects-heading">Go beyond a single file.</h2>
-<p>Learn how the real Scarp compiler creates a project, validates its manifest without running code and launches its declared entrypoint.</p>
-<a class="primary-button" href="{escape(rel("index.html", "projects/index.html"))}">Build your first project →</a></div>
+<p>Learn the modern lowercase <code>scarp.project</code> workflow:
+initialize a project, statically verify its manifest, run source and
+check the two real tests.</p>
+<a class="primary-button" href="{escape(rel("index.html", "projects/declarative/index.html"))}">Build a modern project →</a></div>
 <div class="project-feature-command"><span>Terminal · Scarp v{escape(target["version"])}</span>
-<pre><code>scarp create hello-world
+<pre><code>scarp init hello-world
 scarp verify hello-world
-scarp launch hello-world</code></pre></div>
+scarp run hello-world</code></pre></div>
 </section>
 <section class="compat-panel container-wide" aria-label="Compiler compatibility">
 <div><p class="eyebrow">REPRODUCIBLE BY DESIGN</p><h2>Real code. Exact output.</h2>
@@ -658,6 +660,137 @@ against <a href="{escape(target["release_url"])}">Scarp v{escape(target["version
 </main>"""
     return page_shell(page, lab.title["en"], lab.task["en"], main, "lab-layout")
 
+def render_declarative_project_page(target: dict) -> str:
+    """Show a live-verified v2 manifest, tests, and source on its own bilingual page."""
+    from verify_declarative_project import PROJECT, validate_fixtures
+
+    page = "projects/declarative/index.html"
+    exact_output = validate_fixtures(PROJECT)
+    manifest = escape((PROJECT / "scarp.project").read_text(encoding="utf-8"))
+    source = highlight_scarp((PROJECT / "src/main.srp").read_text(encoding="utf-8"))
+    helper = highlight_scarp((PROJECT / "src/totals.srp").read_text(encoding="utf-8"))
+    test = highlight_scarp((PROJECT / "tests/02-input.srp").read_text(encoding="utf-8"))
+    stdin = escape((PROJECT / "tests/02-input.stdin").read_text(encoding="utf-8"))
+    output = escape(exact_output.decode("utf-8"))
+    origin = REPOSITORY + "/blob/main/tutorials/declarative-project/"
+    en = REPOSITORY + "/blob/main/docs/declarative-projects.md"
+    hi = REPOSITORY + "/blob/main/docs/hi/declarative-projects.md"
+    title = "Build a modern Scarp project"
+    main = f"""<main id="main-content" class="container-wide chapter-page project-page">
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+<a href="{escape(rel(page, "index.html"))}">Home</a><span>/</span>
+<a href="{escape(rel(page, "projects/index.html"))}">Projects</a><span>/</span>
+<span aria-current="page">Modern projects</span></nav>
+<header class="page-heading">
+<p class="eyebrow">SOURCE-VERIFIED SCARP v{escape(target["version"])} · DECLARATIVE MANIFEST V2</p>
+<h1>{title}</h1>
+<p class="lead">Start with lowercase <code>scarp.project</code>, verify the declared
+entrypoint, run an imported pure function and test two real programs using
+the published compiler. This page shows source-backed output, not a browser interpreter.</p>
+<div class="guide-links"><a href="{en}">Full English tutorial ↗</a>
+<a lang="hi" href="{hi}">पूरी हिन्दी गाइड ↗</a></div>
+</header>
+<section class="project-steps" aria-label="Modern project commands">
+<div class="project-step"><span>01</span><h2>Initialize a new directory</h2>
+<code>scarp init learning-project</code></div>
+<div class="project-step"><span>02</span><h2>Verify static source</h2>
+<code>scarp verify tutorials/declarative-project</code></div>
+<div class="project-step"><span>03</span><h2>Execute project</h2>
+<code>scarp run tutorials/declarative-project</code></div></section>
+<p class="project-warning">Run <code>init</code> only on a <strong>new</strong>
+directory, not the checked-in example. From inside the sample folder,
+<code>scarp exec</code> runs the entrypoint without a filename.
+The legacy <code>Scarp.project</code> uses a different format.</p>
+<div class="project-source-grid">
+<section class="code-panel" aria-labelledby="modern-manifest">
+<div class="panel-heading"><div><span class="eyebrow">DECLARATIVE MANIFEST · V2</span>
+<h2 id="modern-manifest">scarp.project</h2></div></div>
+<pre><code>{manifest}</code></pre>
+<div class="panel-footer"><a href="{origin}scarp.project">View manifest ↗</a></div></section>
+<section class="code-panel" aria-labelledby="modern-source">
+<div class="panel-heading"><div><span class="eyebrow">PROJECT ENTRYPOINT</span>
+<h2 id="modern-source">src/main.srp</h2></div></div>
+<pre><code>{source}</code></pre>
+<div class="panel-footer"><a href="{origin}src/main.srp">View Scarp source ↗</a></div></section>
+<section class="code-panel" aria-labelledby="modern-helper">
+<div class="panel-heading"><div><span class="eyebrow">IMPORTED PURE FUNCTION</span>
+<h2 id="modern-helper">src/totals.srp</h2></div></div>
+<pre><code>{helper}</code></pre>
+<div class="panel-footer"><a href="{origin}src/totals.srp">View source ↗</a></div></section>
+<section class="code-panel" aria-labelledby="modern-output">
+<div class="panel-heading"><div><span class="eyebrow">REAL EXECUTION FIXTURE</span>
+<h2 id="modern-output">Expected stdout</h2></div><span class="verified-tag">Byte-exact</span></div>
+<pre><code>{output}</code></pre>
+<div class="panel-footer"><a href="{origin}expected.stdout">View fixture ↗</a></div></section>
+<section class="code-panel" aria-labelledby="modern-test">
+<div class="panel-heading"><div><span class="eyebrow">INPUT-FIXTURE TEST</span>
+<h2 id="modern-test">tests/02-input.srp</h2></div></div>
+<pre><code>{test}</code></pre>
+<div class="panel-footer"><a href="{origin}tests/02-input.srp">View test ↗</a></div></section>
+<section class="code-panel" aria-labelledby="modern-stdin">
+<div class="panel-heading"><div><span class="eyebrow">PER-TEST INPUT · UTF-8</span>
+<h2 id="modern-stdin">tests/02-input.stdin</h2></div></div>
+<pre><code>{stdin}</code></pre>
+<div class="panel-footer"><a href="{origin}tests/02-input.stdin">View fixture ↗</a></div></section>
+</div>
+<section class="lesson-notes" id="modern-notes" aria-labelledby="modern-explain">
+<div class="notes-heading"><div><p class="eyebrow">TEST YOUR PROJECT</p>
+<h2 id="modern-explain">Learn the commands · कमांड समझें</h2></div>
+<div class="language-switch" role="group" aria-label="Explanation language">
+<button type="button" class="note-lang-button" data-note-switch="en"
+ aria-controls="en-notes" aria-pressed="true">English</button>
+<button type="button" class="note-lang-button" data-note-switch="hi"
+ aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button>
+</div></div>
+<div class="note-content" id="en-notes" lang="en">
+<h3>Run a real project test suite</h3>
+<p><code>scarp project info --json</code> only reads and validates the manifest.
+<code>scarp test --list --json</code> lists tests without executing them.
+<code>scarp test --require-tests --json</code> executes both direct
+<code>tests/*.srp</code> files. The second test gets only its sibling
+<code>.stdin</code> fixture (6 and 7), never terminal input.</p>
+<pre class="note-command"><code>scarp project info --json tutorials/declarative-project
+scarp test --list --json tutorials/declarative-project
+scarp test --require-tests --json tutorials/declarative-project</code></pre>
+<div class="practice-challenge"><p><strong>Try it:</strong> in a separate copy,
+change <code>multiply(6, 7)</code> to <code>multiply(7, 8)</code>,
+predict the stdout and add a new assertion for 56.</p></div></div>
+<div class="note-content" id="hi-notes" lang="hi">
+<h3>प्रोजेक्ट और टेस्ट का अंतर</h3>
+<p><code>scarp.project</code> में नए प्रोजेक्ट की जानकारी होती है।
+<code>verify</code> बिना प्रोग्राम चलाए जाँचता है। <code>run</code>
+प्रोग्राम चलाता है। <code>project info --json</code> केवल
+मैनिफ़ेस्ट पढ़ता है। <code>test --list --json</code> टेस्ट की
+सूची देता है और <code>test --require-tests --json</code>
+दो वास्तविक टेस्ट चलाता है। दूसरे टेस्ट में इनपुट
+<code>02-input.stdin</code> से आता है।</p>
+<pre class="note-command"><code>scarp verify tutorials/declarative-project
+scarp run tutorials/declarative-project
+scarp test --require-tests --json tutorials/declarative-project</code></pre>
+<div class="practice-challenge"><p><strong>अभ्यास:</strong> अलग कॉपी में
+<code>multiply(7, 8)</code> लिखें और 56 का नया टेस्ट जोड़ें।</p></div></div>
+<p class="notes-provenance">The source, manifest, stdin and stdout are
+checked-in learning fixtures and are exercised by the real, source-pinned
+compiler on Linux, Windows and macOS; this static page cannot run Scarp.</p>
+</section>
+<section class="run-panel" aria-label="Project-format boundaries">
+<h2>What the manifest does not provide</h2>
+<p>The compiler rejects malformed or unsafe project manifests and
+entrypoints. <code>dependencies {{}}</code> does not resolve packages,
+and there is no registry, lockfile, native executable or browser VM.
+The historical format remains available for old projects.</p>
+<a class="secondary-button"
+ href="{escape(rel(page, "projects/index.html"))}">Compare legacy projects →</a>
+</section>
+<p class="fine-print">Pinned compiler:
+<a href="{escape(target["release_url"])}">Scarp v{escape(target["version"])}</a> ·
+source <code>{escape(target["source_commit"][:12])}</code>.</p>
+</main>"""
+    return page_shell(page, title,
+        "Learn the lower-case declarative scarp.project manifest and checked tests.",
+        main, "project-layout")
+
+
 def render_project_page(target: dict) -> str:
     """Publish the compiler-backed, bilingual tutorial from real project files."""
     page = "projects/index.html"
@@ -695,6 +828,11 @@ def render_project_page(target: dict) -> str:
 <div class="project-step"><span>01</span><h2>Create</h2><code>scarp create hello-world</code></div>
 <div class="project-step"><span>02</span><h2>Verify</h2><code>scarp verify hello-world</code></div>
 <div class="project-step"><span>03</span><h2>Launch</h2><code>scarp launch hello-world</code></div></section>
+<p class="project-warning">This page preserves the <strong>historical
+three-line Scarp.project</strong> manifest. For new projects, use
+<a href="{escape(rel(page, "projects/declarative/index.html"))}">the lowercase
+scarp.project guide</a> with <code>init</code>, <code>run</code> and
+<code>test</code>.</p>
 <p class="project-warning">Run <code>create</code> only with a new, nonexistent directory. To try this course's checked-in sample, use <code>tutorials/first-project</code> without creating it again.</p>
 <div class="project-source-grid">
 <section class="code-panel" aria-labelledby="project-manifest-title">
@@ -1413,7 +1551,7 @@ def alpha14_example_path(slug: str) -> str:
 
 
 def render_alpha14_workshop_index() -> str:
-    """Render the discoverable overview, without expanding the 58-lesson course."""
+    """Render the discoverable overview, without expanding the numbered course."""
     compiler = alpha14_manifest()
     page = "workshops/structured-patterns/index.html"
     cards = []
@@ -1443,7 +1581,7 @@ and practical exercises.</p>
 <code>{escape(compiler["source_commit"])}</code>.
 The website does not execute code in your browser.</p>
 <code>python scripts/verify_alpha14_patterns.py --compiler /path/to/scarp --compiler-source /path/to/scarp-alpha14</code>
-<p>This structured-patterns workshop stays pinned to historical alpha.14; the 58 numbered lessons
+<p>This structured-patterns workshop stays pinned to historical alpha.14; the {len(discover_examples(EXAMPLES))} numbered lessons
 have an independent active compiler pin, as does the older alpha.13 workshop.</p>
 </section>
 <section aria-labelledby="patterns-examples">
@@ -1656,6 +1794,9 @@ def build(destination: Path) -> int:
     (destination / "search-index.json").write_text(
         json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    declarative_path = destination / "projects/declarative/index.html"
+    declarative_path.parent.mkdir(parents=True, exist_ok=True)
+    declarative_path.write_text(render_declarative_project_page(target), encoding="utf-8", newline="\n")
     project_path = destination / "projects/index.html"
     project_path.parent.mkdir(parents=True, exist_ok=True)
     project_path.write_text(render_project_page(target), encoding="utf-8", newline="\n")
@@ -1700,7 +1841,7 @@ def build(destination: Path) -> int:
                                            target, hindi_notes[lesson.source_path], questions),
                         encoding="utf-8", newline="\n")
     # Discoverable, stable directory URLs for search engines and learners.
-    urls = ["index.html", "projects/index.html",
+    urls = ["index.html", "projects/index.html", "projects/declarative/index.html",
             "projects/module-inspection/index.html",
             "projects/source-navigation/index.html",
             "workshops/input-and-tuples/index.html",
@@ -1731,7 +1872,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     count = build(args.output.resolve())
-    print(f"Built {count} standalone lessons, 6 chapters, and three project tutorials at {args.output.resolve()}")
+    print(f"Built {count} standalone lessons, 6 chapters, and four project tutorials at {args.output.resolve()}")
     return 0
 
 

@@ -67,8 +67,8 @@ class Alpha6SiteTests(unittest.TestCase):
     def test_site_publishes_one_bilingual_page_without_incrementing_core_lessons(self):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
-            self.assertEqual(build(dest), 58)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 81)
+            self.assertEqual(build(dest), 60)
+            self.assertEqual(len(list(dest.rglob("index.html"))), 84)
             page = (dest / "workshops/input-and-tuples/index.html").read_text(encoding="utf-8")
             home = (dest / "index.html").read_text(encoding="utf-8")
             expected = (ROOT / WORKSHOP / "main.srp").read_text(encoding="utf-8")
@@ -91,9 +91,9 @@ class Alpha6SiteTests(unittest.TestCase):
             self.assertNotIn("scarp exec --interactive", page)
             self.assertNotIn("workshops/index.html", page)
 
-    def test_home_uses_same_58_lesson_catalog(self):
+    def test_home_uses_same_60_lesson_catalog(self):
         page, count = render_catalog()
-        self.assertEqual(count, 58)
+        self.assertEqual(count, 60)
         self.assertIn("workshops/input-and-tuples/index.html", page)
 
 

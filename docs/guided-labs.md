@@ -14,7 +14,7 @@ For a guided order of study, start from the [Basics chapter learning path](https
 2. Read the challenge in English or हिन्दी and inspect `labs/NN-topic/starter.srp`.
 3. In your local checkout, copy `starter.srp` to **`attempt.srp` in that same lab folder**.
 4. Change `attempt.srp` to achieve the output shown in `solution.stdout`.
-5. Verify and execute with the active **Scarp v0.0.6-alpha.17** CLI:
+5. Verify and execute with the active **Scarp v0.0.6-alpha.19** CLI:
 
 ```text
 scarp verify labs/01-basics/attempt.srp

@@ -53,7 +53,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
         self.assertEqual(manifest["source_commit"], PIN)
         self.assertEqual(manifest["version"], VERSION)
         self.assertNotEqual(manifest["source_commit"], active["source_commit"])
-        self.assertEqual(active["version"], "0.0.6-alpha.17")
+        self.assertEqual(active["version"], "0.0.6-alpha.19")
 
     def test_dedicated_pages_preserve_original_source_and_stdout_dom(self):
         self.assertEqual(len(ALPHA14_WORKSHOP), 2)
@@ -92,7 +92,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
         self.assertIn(PIN, page)
         self.assertIn("PUBLISHED SCARP", page)
         self.assertIn('lang="hi"', page)
-        self.assertIn("58 numbered lessons", page)
+        self.assertIn("60 numbered lessons", page)
         self.assertEqual(page.count('class="lab-card"'), 2)
         for _, slug, heading, *_ in ALPHA14_WORKSHOP:
             self.assertIn(heading, page)
@@ -102,10 +102,10 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
     def test_build_adds_four_workshop_routes_without_changing_progress_inventory(self):
         with tempfile.TemporaryDirectory() as folder:
             out = Path(folder)
-            self.assertEqual(build(out), 58)
+            self.assertEqual(build(out), 60)
             pages = sorted((out / "workshops/structured-patterns").rglob("index.html"))
             self.assertEqual(len(pages), 4)
-            self.assertEqual(len(list(out.rglob("index.html"))), 81)
+            self.assertEqual(len(list(out.rglob("index.html"))), 84)
             home = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="workshops/structured-patterns/index.html"', home)
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")
@@ -117,7 +117,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
                     route.removesuffix("index.html"), sitemap,
                 )
             search = json.loads((out / "search-index.json").read_text(encoding="utf-8"))
-            self.assertEqual(len(search), 58)
+            self.assertEqual(len(search), 60)
             self.assertNotIn("structured-patterns", json.dumps(search))
 
     def test_malformed_pin_and_unknown_examples_fail_closed(self):

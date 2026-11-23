@@ -1,4 +1,6 @@
-# Scarp में पहला असली प्रोजेक्ट — हिन्दी
+# पुरानी `Scarp.project` फ़ाइल — हिन्दी
+
+> **नए प्रोजेक्ट:** अब छोटे अक्षरों वाला `scarp.project` और `scarp init` इस्तेमाल करें। [नया हिन्दी गाइड](declarative-projects.md) देखें। इस पृष्ठ में पुरानी तीन-पंक्ति `Scarp.project` फ़ाइल ऐतिहासिक compatibility के लिए सुरक्षित है; केवल नाम बदलना पर्याप्त migration नहीं है.
 
 यह गाइड **प्रकाशित Scarp v0.0.5-alpha.5** पर आधारित है। आधिकारिक स्रोत कमिट `2eeed0aa52ccb59523307841ad8ffbd83f8911a8` है। यह कोई भविष्य का प्रस्ताव नहीं है। [English guide](../project-workflow.md) · [कम्पाइलर संगतता](../compatibility.md)
 

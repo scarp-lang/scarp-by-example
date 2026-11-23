@@ -1,0 +1,6 @@
+project "learning-project" {
+    version: "0.1.0"
+    entry: "src/main.srp"
+    type: "application"
+    dependencies {}
+}
