@@ -56,14 +56,14 @@ class SiteIntegrityTests(unittest.TestCase):
     def test_missing_fragment_is_reported_with_origin(self):
         root = self.setup_site()
         index = root / "index.html"
-        index.write_text(index.read_text().replace("#%E0%A4%B9", "#missing"))
+        index.write_text(index.read_text(encoding="utf-8").replace("#%E0%A4%B9", "#missing"), encoding="utf-8")
         errors = audit_site(root).errors
         self.assertTrue(any("index.html" in e and "missing id='missing'" in e for e in errors))
 
     def test_repeated_id_is_rejected(self):
         root = self.setup_site()
         page = root / "topic/index.html"
-        page.write_text(page.read_text() + '<span id="ह"></span>', encoding="utf-8")
+        page.write_text(page.read_text(encoding="utf-8") + '<span id="ह"></span>', encoding="utf-8")
         self.assertTrue(any("repeated or empty id" in e for e in audit_site(root).errors))
 
     def test_local_asset_missing(self):
@@ -74,7 +74,7 @@ class SiteIntegrityTests(unittest.TestCase):
     def test_directory_traversal_and_javascript_protocol_are_disallowed(self):
         root = self.setup_site()
         page = root / "index.html"
-        page.write_text(page.read_text() + '<a href="../../outside">escape</a>'
+        page.write_text(page.read_text(encoding="utf-8") + '<a href="../../outside">escape</a>'
                         + '<a href="javascript:alert(1)">script</a>', encoding="utf-8")
         messages = audit_site(root).errors
         self.assertTrue(any("outside the published site" in e for e in messages))
@@ -83,9 +83,9 @@ class SiteIntegrityTests(unittest.TestCase):
     def test_canonical_mismatch_and_missing_sitemap_page(self):
         root = self.setup_site()
         page = root / "topic/index.html"
-        page.write_text(page.read_text().replace(PUBLIC_SITE + 'topic/', PUBLIC_SITE + 'other/'))
+        page.write_text(page.read_text(encoding="utf-8").replace(PUBLIC_SITE + 'topic/', PUBLIC_SITE + 'other/'), encoding="utf-8")
         sitemap = root / "sitemap.xml"
-        sitemap.write_text(sitemap.read_text().replace(
+        sitemap.write_text(sitemap.read_text(encoding="utf-8").replace(
             '<url><loc>' + PUBLIC_SITE + 'topic/</loc></url>', ''), encoding="utf-8"
         )
         messages = audit_site(root).errors
@@ -95,15 +95,15 @@ class SiteIntegrityTests(unittest.TestCase):
     def test_duplicate_sitemap_entries_are_rejected(self):
         root = self.setup_site()
         sitemap = root / "sitemap.xml"
-        sitemap.write_text(sitemap.read_text().replace(
+        sitemap.write_text(sitemap.read_text(encoding="utf-8").replace(
             "</urlset>", f"<url><loc>{PUBLIC_SITE}</loc></url></urlset>"
-        ))
+        ), encoding="utf-8")
         self.assertTrue(any("duplicate locations" in e for e in audit_site(root).errors))
 
     def test_relative_query_and_fragment_links(self):
         root = self.setup_site()
         page = root / "topic/index.html"
-        page.write_text(page.read_text() + '<a href="?q=one#%E0%A4%B9">Self</a>')
+        page.write_text(page.read_text(encoding="utf-8") + '<a href="?q=one#%E0%A4%B9">Self</a>', encoding="utf-8")
         self.assertTrue(audit_site(root).valid)
 
     def test_no_pages_and_invalid_root_are_errors(self):
