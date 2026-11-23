@@ -57,3 +57,18 @@ The GitHub Pages workflow first compiles and validates every real Scarp lesson a
 **Source-aware search:** Homepage search matches verified source as well as English/Hindi titles and descriptions, with an optional chapter filter. Every query word must occur in the lesson; title hits rank ahead of source-only hits and original lesson order breaks ties. The index is loaded from this site only when a learner searches or selects a chapter, and is neither uploaded nor stored. Source-only hits are labeled. Every result with source shows a compact, line-numbered snippet from the actual checked-in `.srp` program; the selected line favors query terms, falls back to the first nonblank line for metadata-only searches, and limits very long lines to 140 source characters plus ellipses. The browser inserts source as text rather than HTML, never executing it. All chapter and lesson links remain available without JavaScript.
 
 **Shareable searches and keyboard access:** On the home page, press `/` outside an editable field to focus lesson search; press `Escape` inside the search field to clear both filters. When a search or chapter filter is active, **Share this search** is a normal link: right-click or long-press to copy its destination, or open it to test. Shared links take the form `index.html?q=funcra&chapter=03-functions#search-area`, restore only valid chapter options, and require no account. Ordinary typing does **not** change browser history or the address bar. The search text is visible in explicitly shared URLs and can be included in normal page-request logs when someone opens the link, so do not put secrets in shared searches. The browser never runs the Scarp source. Run `node --test site/test_search_core.cjs site/test_search_dom.cjs` for relevance ranking, filtering, deep-link restoration, keyboard shortcuts, browser DOM, stale-request and safe-link tests.
+
+## Pre-publish internal navigation audit
+
+Run `python scripts/audit_site.py --site dist` after
+`python scripts/build_site.py`. The validator operates only on files in
+`dist`; it does not fetch remote links or execute Scarp. Every HTML
+page is checked for unique IDs and the expected canonical URL.
+Each local navigation link or script/stylesheet/image path must resolve
+to a generated file. Fragment references must resolve to an ID on the
+target HTML page, including Unicode and percent-encoded fragments.
+The sitemap must include every generated HTML route exactly once.
+
+A failing check blocks the GitHub Pages artifact upload. The separate
+`scripts/test_audit_site.py` suite covers missing anchors, duplicate
+IDs, path traversal, unsafe URL schemes, missing assets and sitemap drift.

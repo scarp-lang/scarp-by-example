@@ -112,6 +112,9 @@ jobs:
       - name: Generate static course catalog
         run: python scripts/build_site.py
 
+      - name: Audit local links, fragment IDs, canonical URLs and sitemap
+        run: python scripts/audit_site.py --site dist
+
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
