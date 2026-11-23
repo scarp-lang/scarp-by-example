@@ -1,0 +1,3 @@
+pub pure funcra multiply(left: integer, right: integer) -> integer {
+    return left * right;
+}

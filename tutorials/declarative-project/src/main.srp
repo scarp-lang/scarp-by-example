@@ -1,0 +1,3 @@
+import "totals.srp" as totals;
+
+print("Total:", totals.multiply(6, 7));
