@@ -5,13 +5,29 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from verify_cli import CliSmokeError, invoke, main, require
+from verify_cli import CliSmokeError, invoke, main, require, scaffold_contract
 from verify_examples import ROOT
 
 
 class CliSmokeTests(unittest.TestCase):
     def output(self, code=0, stdout=b"", stderr=b""):
         return subprocess.CompletedProcess(["scarp"], code, stdout, stderr)
+
+    def test_versioned_scaffolds_keep_case_and_format_separate(self):
+        for version in ("0.0.6-alpha.14", "0.0.6-alpha.19"):
+            name, valid, invalid = scaffold_contract(version)
+            self.assertEqual(name, "Scarp.project")
+            self.assertTrue(valid.startswith(b"scarp-project: 1\n"))
+            self.assertEqual(invalid, valid.replace(b"src/main.srp", b"../outside.srp"))
+        name, valid, invalid = scaffold_contract("0.0.6-alpha.20")
+        self.assertEqual(name, "scarp.project")
+        self.assertTrue(valid.startswith(b'project "first-project" {\n'))
+        self.assertIn(b'dependencies {}', valid)
+        self.assertEqual(invalid, valid.replace(b"src/main.srp", b"../outside.srp"))
+
+    def test_unknown_scaffold_version_fails_closed(self):
+        with self.assertRaisesRegex(CliSmokeError, "unreviewed scaffold contract"):
+            scaffold_contract("0.0.7-alpha.1")
 
     def test_require_checks_exact_output_and_status(self):
         require(self.output(stdout=b"hello\n"), "exec", stdout=b"hello\n", stderr=b"")

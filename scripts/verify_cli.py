@@ -137,14 +137,29 @@ def smoke_test(compiler: Path, timeout: int = 15, *, expected_version: str | Non
         require(invalid, "verify rejects unresolved identifiers",
                 code=1, stdout=b"", nonempty_stderr=True)
 
-    project_smoke(compiler, timeout)
+    project_smoke(compiler, timeout, version=capabilities["version"])
     project_inspection_smoke(compiler, timeout)
     symbol_navigation_smoke(compiler, timeout)
     source_navigation_project_smoke(compiler, timeout)
     print("PASS: Scarp-first CLI, projects, source-navigation workshop, static inspection and launch.")
 
 
-def project_smoke(compiler: Path, timeout: int) -> None:
+def scaffold_contract(version: str) -> tuple[str, bytes, bytes]:
+    """Keep historical scaffolding distinct from published alpha.20."""
+    legacy = b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n"
+    modern = (b'project "first-project" {\n'
+              b'    version: "0.1.0"\n'
+              b'    entry: "src/main.srp"\n'
+              b'    type: "application"\n'
+              b'    dependencies {}\n}\n')
+    if version == "0.0.6-alpha.20":
+        return "scarp.project", modern, modern.replace(b"src/main.srp", b"../outside.srp")
+    if version in {"0.0.6-alpha.14", "0.0.6-alpha.19"}:
+        return "Scarp.project", legacy, legacy.replace(b"src/main.srp", b"../outside.srp")
+    raise CliSmokeError(f"unreviewed scaffold contract for {version}")
+
+
+def project_smoke(compiler: Path, timeout: int, *, version: str) -> None:
     """Test real project scaffolding, static verify, launch and rejection paths."""
     expected = read_expected_stdout(ROOT / "examples/01-basics/01-hello.stdout")
     checked_in = ROOT / "tutorials" / "first-project"
@@ -158,9 +173,21 @@ def project_smoke(compiler: Path, timeout: int) -> None:
         project = Path(folder) / "first-project"
         created = invoke(compiler, "create", str(project), timeout=timeout)
         require(created, "create project", nonempty_stdout=True, stderr=b"")
-        manifest = project / "Scarp.project"
+        manifest_name, original, invalid_manifest = scaffold_contract(version)
+        manifest = project / manifest_name
         source = project / "src" / "main.srp"
-        original = b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n"
+        names = {entry.name for entry in project.iterdir()}
+        if manifest_name not in names or ({"Scarp.project", "scarp.project"} - {manifest_name}) & names:
+            raise CliSmokeError("create wrote an unexpected manifest filename")
+        if version == "0.0.6-alpha.20":
+            for directory in ("src", "tests", "examples"):
+                if not (project / directory).is_dir():
+                    raise CliSmokeError(f"create omitted v2 scaffold directory {directory}")
+            info = invoke(compiler, "project", "info", "--json", str(project), timeout=timeout)
+            require(info, "scaffold metadata", nonempty_stdout=True, stderr=b"")
+            metadata = json.loads(info.stdout)
+            if metadata.get("format") != "v2" or metadata.get("manifest") != manifest_name:
+                raise CliSmokeError("create did not report the canonical v2 manifest")
         if manifest.read_bytes() != original:
             raise CliSmokeError("create wrote an unexpected project manifest")
         if source.read_bytes() != b'print("Hello from Scarp!");\n':
@@ -182,10 +209,7 @@ def project_smoke(compiler: Path, timeout: int) -> None:
         require(invoke(compiler, "launch", str(project), timeout=timeout),
                 "launch catches runtime arithmetic failure", code=1, stdout=b"",
                 nonempty_stderr=True)
-        manifest.write_text(
-            "scarp-project: 1\nname: first-project\nentry: ../outside.srp\n",
-            encoding="utf-8",
-        )
+        manifest.write_bytes(invalid_manifest)
         invalid = invoke(compiler, "verify", "--diagnostic-format=json",
                          str(project), timeout=timeout)
         require(invalid, "reject project path traversal", code=1, stdout=b"",
