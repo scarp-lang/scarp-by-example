@@ -836,7 +836,7 @@ three-line Scarp.project</strong> manifest. For new projects, use
 <a href="{escape(rel(page, "projects/declarative/index.html"))}">the lowercase
 scarp.project guide</a> with <code>init</code>, <code>run</code> and
 <code>test</code>.</p>
-<p class="project-warning">Run <code>create</code> only with a new, nonexistent directory. To try this course's checked-in sample, use <code>tutorials/first-project</code> without creating it again.</p>
+<p class="project-warning">The scaffolding shown here is historical alpha.5. Since alpha.20, <code>create</code> and <code>init</code> both generate lowercase v2 manifests. Run <code>create</code> only with a new, nonexistent directory. To try this course's checked-in sample, use <code>tutorials/first-project</code> without creating it again.</p>
 <div class="project-source-grid">
 <section class="code-panel" aria-labelledby="project-manifest-title">
 <div class="panel-heading"><div><span class="eyebrow">PROJECT MANIFEST</span>
@@ -862,14 +862,14 @@ scarp.project guide</a> with <code>init</code>, <code>run</code> and
  aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button></div></div>
 <div class="note-content" id="en-notes" lang="en">
 <h3>What do these commands actually do?</h3>
-<p><strong>create</strong> makes a new directory with a three-line, version-1 manifest and one starter source file. It refuses existing destinations. <strong>verify DIRECTORY</strong> validates the manifest and program statically. <strong>launch DIRECTORY</strong> runs the selected source using the interpreter, not a native compiler.</p>
+<p>In historical alpha.5, <strong>create</strong> makes a new directory with a three-line, version-1 manifest and one starter source file. It refuses existing destinations. <strong>verify DIRECTORY</strong> validates the manifest and program statically. <strong>launch DIRECTORY</strong> runs the selected source using the interpreter, not a native compiler.</p>
 <h3>Run the checked-in sample</h3>
 <pre class="note-command"><code>scarp verify tutorials/first-project
 scarp launch tutorials/first-project</code></pre>
 <div class="practice-challenge"><p><strong>Practice:</strong> Create a fresh project with a different name. In that new project's <code>src/main.srp</code>, write <code>print(6 * 7);</code>. Predict the output, verify it and launch it.</p></div></div>
 <div class="note-content" id="hi-notes" lang="hi">
 <h3>ये कमांड क्या करते हैं?</h3>
-<p><strong>create</strong> नया प्रोजेक्ट फ़ोल्डर और उसमें <code>Scarp.project</code> तथा <code>src/main.srp</code> बनाता है। पहले से मौजूद फ़ोल्डर पर यह काम नहीं करता। <strong>verify DIRECTORY</strong> बिना प्रोग्राम चलाए static जाँच करता है। <strong>launch DIRECTORY</strong> असली interpreter से प्रोग्राम चलाता है।</p>
+<p>ऐतिहासिक alpha.5 में <strong>create</strong> नया प्रोजेक्ट फ़ोल्डर और उसमें <code>Scarp.project</code> तथा <code>src/main.srp</code> बनाता है। पहले से मौजूद फ़ोल्डर पर यह काम नहीं करता। <strong>verify DIRECTORY</strong> बिना प्रोग्राम चलाए static जाँच करता है। <strong>launch DIRECTORY</strong> असली interpreter से प्रोग्राम चलाता है।</p>
 <h3>तैयार प्रोजेक्ट चलाएँ</h3>
 <pre class="note-command"><code>scarp verify tutorials/first-project
 scarp launch tutorials/first-project</code></pre>

@@ -152,7 +152,7 @@
 
 [Scarp स्रोत](../../examples/04-collections/15-persistent-array-updates.srp) · [सटीक अपेक्षित आउटपुट](../../examples/04-collections/15-persistent-array-updates.stdout)
 
-**ध्यान दें:** `array_set` नया मान लौटाता है; यह `values[index] = ...` जैसा in-place assignment नहीं है। गलत index पर त्रुटि आती है और नए सदस्य का प्रकार मेल खाना चाहिए। यह सुविधा प्रकाशित alpha.18 से उपलब्ध है और यहाँ alpha.19 रिलीज़ स्रोत के साथ जाँची जाती है।
+**ध्यान दें:** `array_set` नया मान लौटाता है; यह `values[index] = ...` जैसा in-place assignment नहीं है। गलत index पर त्रुटि आती है और नए सदस्य का प्रकार मेल खाना चाहिए। यह सुविधा प्रकाशित alpha.18 से उपलब्ध है और यहाँ सक्रिय alpha.20 रिलीज़ स्रोत के साथ जाँची जाती है।
 
 **अभ्यास:** `array_set(original, 0, 50)` लिखने पर मूल और नए ऐरे के पहले मान क्या होंगे?
 

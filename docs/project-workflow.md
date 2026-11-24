@@ -2,11 +2,13 @@
 
 > **For new projects:** use lowercase `scarp.project` with `scarp init`, `scarp run`, and the [modern declarative guide](declarative-projects.md) ([हिन्दी](hi/declarative-projects.md)). This page deliberately retains the original three-line legacy manifest for compatibility lessons. Do not rename it to lowercase without migrating the body.
 
-This guide teaches project commands first published in Scarp v0.0.5-alpha.5, with historical source provenance at commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`. The current course retests the unchanged project fixture against the active alpha.19 compiler, rather than claiming its original authorship occurred in alpha.13. [Compiler compatibility](compatibility.md) · [हिन्दी गाइड](hi/project-workflow.md)
+This guide teaches project commands first published in Scarp v0.0.5-alpha.5, with historical source provenance at commit `2eeed0aa52ccb59523307841ad8ffbd83f8911a8`. The current course retests the unchanged project fixture against the active alpha.20 compiler, rather than claiming its original authorship occurred in alpha.13. [Compiler compatibility](compatibility.md) · [हिन्दी गाइड](hi/project-workflow.md)
 
 A project is a directory containing a manifest `Scarp.project` and a selected `.srp` entrypoint. Alpha.4's project workflow uses the real **interpreter**, not native executable generation or package distribution.
 
-## 1. Start from a new directory
+## 1. Historical scaffolding (alpha.5)
+
+**Version boundary:** This creation transcript describes alpha.5, not the current CLI. Since published alpha.20, `scarp create` is an alias for `scarp init` and writes lowercase v2. To practice legacy execution with alpha.20, use the checked-in sample in section 4.
 
 In a working folder where `hello-world` does **not** already exist, run:
 

@@ -48,7 +48,7 @@ scarp verify hello-world
 scarp launch hello-world
 ```
 
-`create` नया फ़ोल्डर बनाता है जिसमें `Scarp.project` और `src/main.srp` फ़ाइलें होती हैं। पहले से मौजूद फ़ोल्डर को यह कभी नहीं बदलता। `verify DIRECTORY` manifest तथा स्रोत की static जाँच करता है, जबकि `launch DIRECTORY` उसी प्रोग्राम को interpreter में चलाता है।
+प्रकाशित alpha.20 से `create` और `init` दोनों नया फ़ोल्डर बनाते हैं जिसमें छोटे अक्षरों वाली v2 `scarp.project` और `src/main.srp` फ़ाइलें होती हैं। पुरानी v1 `Scarp.project` अब भी पढ़ी जा सकती है। पहले से मौजूद फ़ोल्डर को यह कभी नहीं बदलता। `verify DIRECTORY` manifest तथा स्रोत की static जाँच करता है, जबकि `launch DIRECTORY` उसी प्रोग्राम को interpreter में चलाता है।
 
 Manifest की तीन पंक्तियाँ हैं:
 
