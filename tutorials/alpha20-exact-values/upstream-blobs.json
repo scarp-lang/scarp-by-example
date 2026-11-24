@@ -1,0 +1,8 @@
+{
+  "decimal_exact.srp": "4890c10b15d7a8e827bb9549e987a0a2eb0d973d",
+  "decimal_exact.stdout": "d1f149f581b635d7f5ec6a6604805c2146bbe803",
+  "tuple_index_updates.srp": "9d89b922449df3f8111182cfdd99fd9c14ff0ffa",
+  "tuple_index_updates.stdout": "c166e32d29280009cc5633270bb04b9ed3c31181",
+  "tuple_ordering.srp": "d87d59df5b9f77f8c72087b12b12d2e3eabcb849",
+  "tuple_ordering.stdout": "271474188fea2eaadf632f5039d964f9962fff68"
+}

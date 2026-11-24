@@ -1,0 +1,9 @@
+// Exact decimal literals are opt-in; ordinary floats remain binary64.
+bind subtotal: decimal = 12.50d + 0.25d;
+print(subtotal);
+print(0.1d + 0.2d == 0.3d);
+print(0.1 + 0.2);
+print(decimal_format(subtotal, 2, "half_even"));
+var running = 0d;
+repeat 3 { running += 0.1d; }
+print(running);

@@ -76,3 +76,7 @@ Historical programs and fixtures are compared to their original committed source
 5. Require successful checks and maintainer review before merging. Only a main-branch workflow may deploy the verified course website; a PR itself does not publish anything.
 
 Scarp syntax remains unstable between prereleases. See the [compiler releases archive](https://github.com/scarp-lang/scarp/releases).
+
+## Independent published alpha.20 workshop
+
+The [exact-values workshop](../tutorials/alpha20-exact-values/README.md) ([हिन्दी](hi/alpha20-exact-values.md)) is pinned separately to published alpha.20. Its decimal literals and tuple indexed assignments must not be used to infer support in the alpha.19 numbered course. Its dedicated workflow checks five programs and six negative cases on all three supported hosts. No active course or historical target has been changed.
