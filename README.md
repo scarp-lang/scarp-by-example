@@ -127,4 +127,4 @@ The lessons and runnable examples are free to use. To help maintain the Scarp ec
 
 ## Independently pinned alpha.20 exact-values workshop
 
-[English](tutorials/alpha20-exact-values/README.md) · [हिन्दी](docs/hi/alpha20-exact-values.md). Five programs demonstrate exact decimal literals, rounding, persistent tuple member replacement and lexicographic numeric tuple comparison. The workshop retains its own immutable compiler pin and three-platform verification even when the active numbered course uses the same release.
+[Online workshop](https://scarp-lang.github.io/scarp-by-example/workshops/alpha20-exact-values/) · [English](tutorials/alpha20-exact-values/README.md) · [हिन्दी](docs/hi/alpha20-exact-values.md). Five programs demonstrate exact decimal literals, rounding, persistent tuple member replacement and lexicographic numeric tuple comparison. The workshop retains its own immutable compiler pin and three-platform verification even when the active numbered course uses the same release.

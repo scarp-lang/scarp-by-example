@@ -105,7 +105,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
             self.assertEqual(build(out), 60)
             pages = sorted((out / "workshops/structured-patterns").rglob("index.html"))
             self.assertEqual(len(pages), 4)
-            self.assertEqual(len(list(out.rglob("index.html"))), 85)
+            self.assertEqual(len(list(out.rglob("index.html"))), 91)
             home = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="workshops/structured-patterns/index.html"', home)
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")

@@ -43,6 +43,6 @@ Use a separate scratch file for each case: decimal mixed with float, decimal mix
 python scripts/verify_alpha20_exact_values.py --compiler /path/to/scarp --compiler-source /path/to/pinned/scarp
 ~~~
 
-The dedicated three-platform workflow checks the exact Git commit, compiler version, upstream file identities, all five stdout fixtures, silent static verification, and rejected invalid programs. The workshop is a repository tutorial, not a generated website page yet.
+The dedicated three-platform workflow checks the exact Git commit, compiler version, upstream file identities, all five stdout fixtures, silent static verification, and rejected invalid programs. The [static online workshop](https://scarp-lang.github.io/scarp-by-example/workshops/alpha20-exact-values/) includes an overview and five dedicated lesson pages. Code runs locally, not in the browser.
 
 The experimental Rust ELF64 emitter is not a source-language native compilation command. All programs here run with the interpreter. See [compatibility](../../docs/compatibility.md).

@@ -19,6 +19,7 @@ from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
 from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
 from verify_alpha14_diagnostics import load_cases as load_alpha14_diagnostics
+import alpha20_workshop_page as alpha20_page
 from alpha6_input_page import render_page as render_alpha6_input_page
 from project_migration_page import render_page as render_project_migration_page
 
@@ -330,7 +331,8 @@ scarp run hello-world</code></pre></div>
 <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy ↗</a>
 <a href="workshops/input-and-tuples/index.html">Learn input and tuples ↗</a>
 <a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a>
-<a href="workshops/structured-patterns/index.html">New: alpha.14 structured patterns ↗</a></div>
+<a href="workshops/structured-patterns/index.html">Alpha.14 structured patterns ↗</a>
+<a href="workshops/alpha20-exact-values/index.html">New: exact decimals and tuple snapshots ↗</a></div>
 </section>
 </main>"""
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
@@ -1839,6 +1841,15 @@ def build(destination: Path) -> int:
     diagnostic_page = destination / "workshops/structured-patterns/diagnostics/index.html"
     diagnostic_page.parent.mkdir(parents=True, exist_ok=True)
     diagnostic_page.write_text(render_alpha14_diagnostics_page(), encoding="utf-8", newline="\n")
+    workshop_routes = [(alpha20_page.INDEX, alpha20_page.render_index(page_shell, rel))]
+    workshop_routes.extend(
+        (alpha20_page.lesson_path(name), alpha20_page.render_example(name, page_shell, rel, highlight_scarp))
+        for name in alpha20_page.PROGRAMS
+    )
+    for route, markup in workshop_routes:
+        path = destination / route
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(markup, encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1860,6 +1871,7 @@ def build(destination: Path) -> int:
             "workshops/modern-collections/index.html",
             "workshops/structured-patterns/index.html",
             "workshops/structured-patterns/diagnostics/index.html", "labs/index.html"]
+    urls.extend(route for route, _ in workshop_routes)
     urls.extend(alpha14_example_path(slug) for _, slug, *_ in ALPHA14_WORKSHOP)
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)

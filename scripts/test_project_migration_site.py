@@ -30,7 +30,7 @@ class MigrationSiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             site = Path(temporary)
             self.assertEqual(build(site), 60)
-            self.assertEqual(len(list(site.rglob("index.html"))), 85)
+            self.assertEqual(len(list(site.rglob("index.html"))), 91)
             migration = site / "projects/migration/index.html"
             self.assertTrue(migration.is_file())
             self.assertIn("projects/migration/",
