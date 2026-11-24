@@ -28,7 +28,7 @@ class ModernProjectSiteTests(unittest.TestCase):
             site = Path(directory)
             self.assertEqual(build(site), 60)
             pages = list(site.rglob("index.html"))
-            self.assertEqual(len(pages), 85)
+            self.assertEqual(len(pages), 91)
             page = site / "projects/declarative/index.html"
             self.assertTrue(page.exists())
             self.assertIn('href="projects/declarative/index.html"',

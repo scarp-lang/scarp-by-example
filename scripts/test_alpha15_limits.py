@@ -25,7 +25,7 @@ class Alpha15VerifierTests(unittest.TestCase):
         target = json.loads(limits.HISTORICAL_TARGET.read_text("utf-8"))
         self.assertEqual((target["version"], target["source_commit"]), (limits.VERSION, limits.PIN))
         active = json.loads((limits.ROOT / "docs/compiler-target.json").read_text("utf-8"))
-        self.assertEqual(active["version"], "0.0.6-alpha.19")
+        self.assertEqual(active["version"], "0.0.6-alpha.20")
         self.assertNotEqual(active["source_commit"], target["source_commit"])
         self.assertIn("नमस्ते", limits.LESSON.read_text("utf-8"))
         self.assertEqual(limits.LESSON.with_suffix(".stdout").read_bytes(), b"true\ntrue\n")

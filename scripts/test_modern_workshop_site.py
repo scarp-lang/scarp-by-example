@@ -43,7 +43,7 @@ class ModernWorkshopSiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder)
             self.assertEqual(build(output), 60)
-            self.assertEqual(len(list(output.rglob("index.html"))), 85)
+            self.assertEqual(len(list(output.rglob("index.html"))), 91)
             page = output / "workshops/modern-collections/index.html"
             self.assertTrue(page.is_file())
             self.assertIn(
@@ -59,7 +59,7 @@ class ModernWorkshopSiteTests(unittest.TestCase):
         manifest = json.loads((WORKSHOP / "compiler-target.json").read_text(encoding="utf-8"))
         self.assertEqual(manifest["version"], "0.0.6-alpha.13")
         self.assertEqual(manifest["source_commit"], "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2")
-        self.assertEqual(self.target["version"], "0.0.6-alpha.19")
+        self.assertEqual(self.target["version"], "0.0.6-alpha.20")
         html = render_modern_collections_page(self.target)
         self.assertIn(manifest["source_commit"], html)
         self.assertNotIn(self.target["source_commit"], html)

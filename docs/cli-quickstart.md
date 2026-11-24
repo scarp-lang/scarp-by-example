@@ -44,9 +44,9 @@ scarp verify hello-world
 scarp launch hello-world
 ```
 
-**Current projects:** use `scarp init NEW_DIRECTORY` to create a declarative `scarp.project` (v2). With a valid manifest in the current directory, `scarp exec` automatically resolves and runs the declared entry. Read the [modern project tutorial](declarative-projects.md). `scarp create` is retained as the legacy scaffolder; it writes `Scarp.project` (v1).
+**Current projects:** use `scarp init NEW_DIRECTORY` to create a declarative `scarp.project` (v2). With a valid manifest in the current directory, `scarp exec` automatically resolves and runs the declared entry. Read the [modern project tutorial](declarative-projects.md). Since alpha.20, `scarp create` is an alias for `scarp init`; both write lowercase `scarp.project` (v2). Older uppercase v1 manifests remain readable.
 
-`create` scaffolds `Scarp.project` and `src/main.srp` in a **new** directory. It never overwrites or adopts an existing destination. `verify DIRECTORY` statically validates the declared entrypoint and imports without executing ordinary runtime code. `launch DIRECTORY` executes that entrypoint in the interpreter; it is not native compilation.
+`create` scaffolds `scarp.project` and `src/main.srp` in a **new** directory. It never overwrites or adopts an existing destination. `verify DIRECTORY` statically validates the declared entrypoint and imports without executing ordinary runtime code. `launch DIRECTORY` executes that entrypoint in the interpreter; it is not native compilation.
 
 The versioned, three-line manifest is:
 

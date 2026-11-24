@@ -19,6 +19,7 @@ from guided_labs import GuidedLab, read_labs
 from source_explorer import render_reference_explorer
 from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
 from verify_alpha14_diagnostics import load_cases as load_alpha14_diagnostics
+import alpha20_workshop_page as alpha20_page
 from alpha6_input_page import render_page as render_alpha6_input_page
 from project_migration_page import render_page as render_project_migration_page
 
@@ -330,7 +331,8 @@ scarp run hello-world</code></pre></div>
 <a href="{REPOSITORY}/blob/main/docs/compatibility.md">Compatibility policy ↗</a>
 <a href="workshops/input-and-tuples/index.html">Learn input and tuples ↗</a>
 <a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a>
-<a href="workshops/structured-patterns/index.html">New: alpha.14 structured patterns ↗</a></div>
+<a href="workshops/structured-patterns/index.html">Alpha.14 structured patterns ↗</a>
+<a href="workshops/alpha20-exact-values/index.html">New: exact decimals and tuple snapshots ↗</a></div>
 </section>
 </main>"""
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
@@ -836,7 +838,7 @@ three-line Scarp.project</strong> manifest. For new projects, use
 <a href="{escape(rel(page, "projects/declarative/index.html"))}">the lowercase
 scarp.project guide</a> with <code>init</code>, <code>run</code> and
 <code>test</code>.</p>
-<p class="project-warning">Run <code>create</code> only with a new, nonexistent directory. To try this course's checked-in sample, use <code>tutorials/first-project</code> without creating it again.</p>
+<p class="project-warning">The scaffolding shown here is historical alpha.5. Since alpha.20, <code>create</code> and <code>init</code> both generate lowercase v2 manifests. Run <code>create</code> only with a new, nonexistent directory. To try this course's checked-in sample, use <code>tutorials/first-project</code> without creating it again.</p>
 <div class="project-source-grid">
 <section class="code-panel" aria-labelledby="project-manifest-title">
 <div class="panel-heading"><div><span class="eyebrow">PROJECT MANIFEST</span>
@@ -862,14 +864,14 @@ scarp.project guide</a> with <code>init</code>, <code>run</code> and
  aria-controls="hi-notes" aria-pressed="false" lang="hi">हिन्दी</button></div></div>
 <div class="note-content" id="en-notes" lang="en">
 <h3>What do these commands actually do?</h3>
-<p><strong>create</strong> makes a new directory with a three-line, version-1 manifest and one starter source file. It refuses existing destinations. <strong>verify DIRECTORY</strong> validates the manifest and program statically. <strong>launch DIRECTORY</strong> runs the selected source using the interpreter, not a native compiler.</p>
+<p>In historical alpha.5, <strong>create</strong> makes a new directory with a three-line, version-1 manifest and one starter source file. It refuses existing destinations. <strong>verify DIRECTORY</strong> validates the manifest and program statically. <strong>launch DIRECTORY</strong> runs the selected source using the interpreter, not a native compiler.</p>
 <h3>Run the checked-in sample</h3>
 <pre class="note-command"><code>scarp verify tutorials/first-project
 scarp launch tutorials/first-project</code></pre>
 <div class="practice-challenge"><p><strong>Practice:</strong> Create a fresh project with a different name. In that new project's <code>src/main.srp</code>, write <code>print(6 * 7);</code>. Predict the output, verify it and launch it.</p></div></div>
 <div class="note-content" id="hi-notes" lang="hi">
 <h3>ये कमांड क्या करते हैं?</h3>
-<p><strong>create</strong> नया प्रोजेक्ट फ़ोल्डर और उसमें <code>Scarp.project</code> तथा <code>src/main.srp</code> बनाता है। पहले से मौजूद फ़ोल्डर पर यह काम नहीं करता। <strong>verify DIRECTORY</strong> बिना प्रोग्राम चलाए static जाँच करता है। <strong>launch DIRECTORY</strong> असली interpreter से प्रोग्राम चलाता है।</p>
+<p>ऐतिहासिक alpha.5 में <strong>create</strong> नया प्रोजेक्ट फ़ोल्डर और उसमें <code>Scarp.project</code> तथा <code>src/main.srp</code> बनाता है। पहले से मौजूद फ़ोल्डर पर यह काम नहीं करता। <strong>verify DIRECTORY</strong> बिना प्रोग्राम चलाए static जाँच करता है। <strong>launch DIRECTORY</strong> असली interpreter से प्रोग्राम चलाता है।</p>
 <h3>तैयार प्रोजेक्ट चलाएँ</h3>
 <pre class="note-command"><code>scarp verify tutorials/first-project
 scarp launch tutorials/first-project</code></pre>
@@ -1839,6 +1841,15 @@ def build(destination: Path) -> int:
     diagnostic_page = destination / "workshops/structured-patterns/diagnostics/index.html"
     diagnostic_page.parent.mkdir(parents=True, exist_ok=True)
     diagnostic_page.write_text(render_alpha14_diagnostics_page(), encoding="utf-8", newline="\n")
+    workshop_routes = [(alpha20_page.INDEX, alpha20_page.render_index(page_shell, rel))]
+    workshop_routes.extend(
+        (alpha20_page.lesson_path(name), alpha20_page.render_example(name, page_shell, rel, highlight_scarp))
+        for name in alpha20_page.PROGRAMS
+    )
+    for route, markup in workshop_routes:
+        path = destination / route
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(markup, encoding="utf-8", newline="\n")
     for section, chapter in chapters.items():
         path = destination / chapter_url(section)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1860,6 +1871,7 @@ def build(destination: Path) -> int:
             "workshops/modern-collections/index.html",
             "workshops/structured-patterns/index.html",
             "workshops/structured-patterns/diagnostics/index.html", "labs/index.html"]
+    urls.extend(route for route, _ in workshop_routes)
     urls.extend(alpha14_example_path(slug) for _, slug, *_ in ALPHA14_WORKSHOP)
     urls.extend(lab.url for lab in labs)
     urls.extend(chapter_url(section) for section in chapters)

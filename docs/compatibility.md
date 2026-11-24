@@ -2,17 +2,17 @@
 
 Scarp is a development-stage programming language. This learning repository selects an **immutable, publicly published compiler source commit**; a tag alone does not prove compatibility without real operating-system tests.
 
-## Proposed active course target: Scarp alpha.19
+## Proposed active course target: Scarp alpha.20
 
 | Property | Target |
 | --- | --- |
-| Published release | [Scarp v0.0.6-alpha.19](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.19), 23 November 2026 (prerelease) |
-| Exact annotated-tag source | [`e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75`](https://github.com/scarp-lang/scarp/commit/e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75) |
+| Published release | [Scarp v0.0.6-alpha.20](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.20), 24 November 2026 (prerelease) |
+| Exact annotated-tag source | [`b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`](https://github.com/scarp-lang/scarp/commit/b1a9347f93540fdf95b0ddecba4adc55a3b4bb98) |
 | Machine-readable target | [`docs/compiler-target.json`](compiler-target.json) |
 | Main verification | [Linux, Windows and macOS source/output jobs](../.github/workflows/examples.yml), [Pages/catalog build](../.github/workflows/pages.yml), compiler-target tests and historical source fidelity |
-| Previous active target | [Scarp v0.0.6-alpha.17](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.17), `7831a37939965f557ce746e1d86bf82d3d629f74` |
+| Previous active target | [Scarp v0.0.6-alpha.19](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.19), `e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75` |
 
-**Integration status:** The annotated `v0.0.6-alpha.19` tag points to the exact compiler source commit above. This PR proposes that published source as the active target and adds two byte-identical upstream programs to reach **60 numbered lessons**. Existing fixtures remain intact. Historical alpha.13, alpha.14 and alpha.15 checks continue to use their independent release source commits. Linux/Windows/macOS and Pages validations plus maintainer review are required before merging; PR creation does not deploy the website.
+**Integration status:** The annotated `v0.0.6-alpha.20` tag points to the exact compiler source commit above. This PR proposes that published source as the active target while preserving all **60 numbered lessons**, including their original alpha.18/19 source provenance. Existing fixtures remain intact. Historical alpha.13, alpha.14 and alpha.15 checks continue to use their independent release source commits. Linux/Windows/macOS and Pages validations plus maintainer review are required before merging; PR creation does not deploy the website.
 
 ## Source-language support and limits
 
@@ -32,16 +32,17 @@ Scarp is a development-stage programming language. This learning repository sele
 - Alpha.8 added the declarative lower-case `scarp.project` v2 format, `scarp init`, `scarp test` and `scarp project info` while preserving legacy `Scarp.project` v1.
 - The [published-manifest migration workshop](../tutorials/project-migration/README.md) checks that legacy `Scarp.project` v1 and declarative `scarp.project` v2 use byte-identical source, tests, stdin and stdout; it rejects incorrectly declaring a rename-only legacy header to be v2.
 - Alpha.18 adds pure fixed-array `array_set` (a new immutable snapshot), empty-window memory-retention improvements, and default project resolution for `scarp exec`.
-- Alpha.19 adds Rust-host named callable handles, signature/effect compatibility, usage receipts and cumulative execution ledgers. It **does not** add first-class Scarp function values, closures or an unrestricted native compiler CLI. Tuple indexed assignment present in unreleased compiler development must not be demonstrated as published alpha.19 syntax.
+- Alpha.19 adds Rust-host named callable handles, signature/effect compatibility, usage receipts and cumulative execution ledgers. It **does not** add first-class Scarp function values, closures or an unrestricted native compiler CLI. Tuple indexed assignment was not published until alpha.20.
+- Alpha.20 introduces exact decimal literals, constant-index persistent mutable tuple replacement, numeric tuple ordering and canonical lowercase v2 scaffolding for both `create` and `init`. The CLI still uses the interpreter; native ELF64 generation remains a restricted Rust API.
 
 ## Build the exact active compiler
 
-The `v0.0.6-alpha.19` annotated tag dereferences to **`e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75`**. Both CI workflows pin this source commit at `.compiler`. They separately check out alpha.13 as `.compiler-alpha13` and alpha.15 as `.compiler-alpha15` for their historic workshop/boundary regressions; those copies are not interchangeable.
+The `v0.0.6-alpha.20` annotated tag dereferences to **`b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`**. Both CI workflows pin this source commit at `.compiler`. They separately check out alpha.13 as `.compiler-alpha13` and alpha.15 as `.compiler-alpha15` for their historic workshop/boundary regressions; those copies are not interchangeable.
 
 ~~~sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75
+git checkout b1a9347f93540fdf95b0ddecba4adc55a3b4bb98
 cargo build --locked --offline
 ./target/debug/scarp version
 ~~~
@@ -63,7 +64,7 @@ To verify the **historical** alpha.13 workshop, separately build the exact alpha
 python scripts/verify_alpha13_compat.py --compiler /path/to/alpha13/scarp --compiler-source /path/to/alpha13/compiler/git/checkout
 ~~~
 
-For the historical alpha.14 structured-pattern, diagnostic and frozen 55-lesson workshops, build source commit `43627b74af5fccccc5e233e98207413983ebafc1` in a separate checkout and run `scripts/verify_alpha14_patterns.py`, `scripts/verify_alpha14_diagnostics.py` and `scripts/verify_alpha14_course.py` using that binary and source directory (the frozen lesson verifier only needs the compiler executable). The active alpha.17 binary cannot replace these pinned provenance checks.
+For the historical alpha.14 structured-pattern, diagnostic and frozen 55-lesson workshops, build source commit `43627b74af5fccccc5e233e98207413983ebafc1` in a separate checkout and run `scripts/verify_alpha14_patterns.py`, `scripts/verify_alpha14_diagnostics.py` and `scripts/verify_alpha14_course.py` using that binary and source directory (the frozen lesson verifier only needs the compiler executable). The active alpha.20 binary cannot replace these pinned provenance checks.
 
 Historical programs and fixtures are compared to their original committed sources and executed against the corresponding release. CLI version, silent static verification and byte-exact UTF-8 stdout are checked. Python-only tests do not replace running the actual compiler.
 
@@ -76,3 +77,7 @@ Historical programs and fixtures are compared to their original committed source
 5. Require successful checks and maintainer review before merging. Only a main-branch workflow may deploy the verified course website; a PR itself does not publish anything.
 
 Scarp syntax remains unstable between prereleases. See the [compiler releases archive](https://github.com/scarp-lang/scarp/releases).
+
+## Independent published alpha.20 workshop
+
+The [exact-values workshop](../tutorials/alpha20-exact-values/README.md) ([हिन्दी](hi/alpha20-exact-values.md)) retains its own published alpha.20 pin, even when the active numbered course uses that version. Its five programs and six negative cases run on all three supported hosts. Decimal literal and tuple indexed assignment support must not be inferred for older releases.

@@ -20,7 +20,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         cls.target = read_course()[2]
 
     def test_manifest_source_and_stdout_are_compiler_fixtures(self):
-        self.assertEqual(self.target["version"], "0.0.6-alpha.19")
+        self.assertEqual(self.target["version"], "0.0.6-alpha.20")
         self.assertEqual(load_reference_map()["compiler_commit"],
                          "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2")
         self.assertEqual((PROJECT / "Scarp.project").read_bytes(),
@@ -59,7 +59,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
             self.assertEqual(build(dest), 60)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 85)
+            self.assertEqual(len(list(dest.rglob("index.html"))), 91)
             self.assertTrue((dest / "projects/source-navigation/index.html").is_file())
             self.assertTrue((dest / "reference-explorer.js").is_file())
             self.assertIn("projects/source-navigation/",
