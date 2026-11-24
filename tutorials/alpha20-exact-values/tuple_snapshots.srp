@@ -1,0 +1,9 @@
+// A tuple member update replaces the value held by a mutable binding.
+var reading = (12, "pending");
+bind original = reading;
+reading[0] = 15;
+reading[1] = "ready";
+print(reading);
+print(original);
+print((1, 90) < (2, 0));
+print((2, 4) < (2, 3));

@@ -124,3 +124,7 @@ English remains the canonical source language. **[Read all 60 lessons in Hindi](
 The lessons and runnable examples are free to use. To help maintain the Scarp ecosystem, [support development through GitHub Sponsors](https://github.com/sponsors/sanskarIN). Contributions are optional and do not affect access to lessons.
 
 **License:** [MIT](LICENSE) for this learning repository. Some compiler-source examples originated in the separately licensed [Scarp compiler repository](https://github.com/scarp-lang/scarp); preserve upstream attribution and applicable licensing when reusing material. No stable Scarp by Example release is announced.
+
+## Independently pinned alpha.20 exact-values workshop
+
+[English](tutorials/alpha20-exact-values/README.md) · [हिन्दी](docs/hi/alpha20-exact-values.md). Five programs demonstrate exact decimal literals, rounding, persistent tuple member replacement and lexicographic numeric tuple comparison. The workshop retains its own immutable compiler pin and three-platform verification even when the active numbered course uses the same release.

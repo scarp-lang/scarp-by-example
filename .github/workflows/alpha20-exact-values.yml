@@ -1,0 +1,36 @@
+name: Alpha.20 exact values workshop
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-values:
+    name: Alpha.20 exact values / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: scarp-lang/scarp
+          ref: b1a9347f93540fdf95b0ddecba4adc55a3b4bb98
+          path: .compiler-alpha20
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec
+        with:
+          toolchain: stable
+      - run: python -m unittest discover -s scripts -p test_alpha20_exact_values.py
+      - run: cargo build --locked --offline --manifest-path .compiler-alpha20/Cargo.toml
+      - if: runner.os != 'Windows'
+        run: python scripts/verify_alpha20_exact_values.py --compiler .compiler-alpha20/target/debug/scarp --compiler-source .compiler-alpha20
+      - if: runner.os == 'Windows'
+        run: python scripts/verify_alpha20_exact_values.py --compiler .compiler-alpha20/target/debug/scarp.exe --compiler-source .compiler-alpha20
