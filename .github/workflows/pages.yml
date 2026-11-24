@@ -49,6 +49,14 @@ jobs:
           path: .compiler-alpha15
           persist-credentials: false
 
+      - name: Check out independently pinned alpha.20 workshop compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: b1a9347f93540fdf95b0ddecba4adc55a3b4bb98
+          path: .compiler-alpha20
+          persist-credentials: false
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
@@ -114,6 +122,12 @@ jobs:
 
       - name: Verify published alpha.13 collections and Result workshop
         run: python scripts/verify_alpha13_compat.py --compiler .compiler-alpha13/target/debug/scarp --compiler-source .compiler-alpha13
+
+      - name: Build independently pinned alpha.20 workshop compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha20/Cargo.toml
+
+      - name: Verify all exact-values programs and negative cases before publishing
+        run: python scripts/verify_alpha20_exact_values.py --compiler .compiler-alpha20/target/debug/scarp --compiler-source .compiler-alpha20
 
       - name: Generate static course catalog
         run: python scripts/build_site.py
