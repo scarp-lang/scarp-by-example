@@ -19,7 +19,7 @@ Scarp is a development-stage programming language. This learning repository sele
 - Scarp's original numbered course covers bindings, output, control flow, typed functions, numerical operations, imports, project commands, static inspection and AI-oriented numerical primitives.
 - Published alpha.6 supports redirected `read_line()` and immutable tuple values; the [bilingual input and tuples workshop](../tutorials/input-and-tuples/README.md) remains separately pinned to `cdf6a3924ec2a36c7beca5a9aec4f01a0bce515e`. Its dedicated workflow exercises raw UTF-8 redirected stdin and E0055 on premature EOF. **Alpha.6 does not support `--interactive` or `--input-file`**; those are newer CLI features.
 - The alpha.9 [historical BigInt workshop](../tutorials/exact-bigint/README.md) remains frozen to its own published compiler.
-- Exact decimal arithmetic arrived in alpha.11; the existing separately proposed Decimal feature workshop has its own release pin.
+- Exact decimal arithmetic arrived in alpha.11; the [historical Decimal workshop](../tutorials/exact-decimal/README.md) has its own alpha.11 release pin.
 - Alpha.12 introduced bounded immutable typed lists and maps, concrete Option/Result variants, checked matching and restricted `?` propagation on immutable bind initializers in compatible named functions.
 - Alpha.13 improved propagation/resource behavior and Rust embedding cache APIs. The eight-program [modern collections workshop](../tutorials/modern-collections/README.md) deliberately stays pinned to **published alpha.13**, including all 16 exact upstream source/output files.
 - Alpha.14 improves pattern diagnostics and deterministic map projections. Its [structured-patterns workshop](../tutorials/structured-patterns/README.md) stays pinned to the separately published alpha.14 source; the nine-case lab retains its E0004 JSON diagnostics and exact outputs.
@@ -81,3 +81,9 @@ Scarp syntax remains unstable between prereleases. See the [compiler releases ar
 ## Independent published alpha.20 workshop
 
 The [exact-values workshop](../tutorials/alpha20-exact-values/README.md) ([हिन्दी](hi/alpha20-exact-values.md)) retains its own published alpha.20 pin, even when the active numbered course uses that version. Its five programs and six negative cases run on all three supported hosts. Decimal literal and tuple indexed assignment support must not be inferred for older releases.
+
+### Historical alpha.10 and alpha.11 workshops
+
+The [alpha.10 foundations workshop](../tutorials/alpha10-foundations/README.md) uses immutable source `44fcd0f77ccb92648cdb1fc7632495c506c87cb3`. Its redirected stdin and interactive capability requirements describe that release, not the newer default interactive behavior of `exec`.
+
+The [alpha.11 Decimal workshop](../tutorials/exact-decimal/README.md) uses immutable source `79b57395957f47e1270ee542a856c844b82386de`. Its constructors, rounding and interactive gate predate alpha.20 decimal literal syntax. Each workshop has a separate real-compiler verifier and three-platform CI. No current course fixtures are replaced.
