@@ -68,7 +68,7 @@ class Alpha6SiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
             self.assertEqual(build(dest), 60)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 91)
+            self.assertEqual(len(list(dest.rglob("index.html"))), 95)
             page = (dest / "workshops/input-and-tuples/index.html").read_text(encoding="utf-8")
             home = (dest / "index.html").read_text(encoding="utf-8")
             expected = (ROOT / WORKSHOP / "main.srp").read_text(encoding="utf-8")

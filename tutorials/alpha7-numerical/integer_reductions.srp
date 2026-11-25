@@ -1,0 +1,9 @@
+// Find shared factors and synchronize three periodic tasks.
+bind divisor = integer_gcd(18, 30, 42);
+bind alias = integer_hcf(18, 30, 42);
+bind cycle = integer_lcm(3, 5, 8);
+print(divisor);
+print(divisor == alias);
+print(integer_gcd(-18, 0, 42));
+print(cycle);
+print(integer_lcm(3, 5, 0));
