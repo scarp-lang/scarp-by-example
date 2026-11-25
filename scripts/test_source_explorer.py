@@ -29,7 +29,7 @@ class ReferenceExplorerTests(unittest.TestCase):
                          "e755fda37cdaeed29434e848cb5dd41f2f2e7eb2")
         self.assertEqual(load_reference_map()["compiler_commit"], REVIEWED_COMPILER_COMMIT)
         active = json.loads((ROOT / "docs/compiler-target.json").read_text(encoding="utf-8"))
-        self.assertEqual(active["version"], "0.0.6-alpha.20")
+        self.assertNotEqual(active["version"], "0.0.6-alpha.13")
         self.assertNotEqual(active["source_commit"], REVIEWED_COMPILER_COMMIT)
 
     def test_utf8_byte_span_is_not_character_offset(self):

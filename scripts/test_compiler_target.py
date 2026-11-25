@@ -76,6 +76,12 @@ def validate_compiler_checkouts(workflow_text: str, expected_sha: str) -> None:
 
 
 class CompilerTargetTests(unittest.TestCase):
+    def test_active_release_is_the_reviewed_published_commit(self):
+        target = json.loads(TARGET.read_text(encoding="utf-8"))
+        self.assertEqual((target["version"], target["source_commit"]), (
+            "0.0.7-alpha.1", "996bd5b83c8cb26e98637563729f67bdacc61cd4",
+        ))
+
     def test_target_is_full_immutable_sha_and_explicit_prerelease(self):
         target = json.loads(TARGET.read_text(encoding="utf-8"))
         self.assertRegex(target["source_commit"], r"^[0-9a-f]{40}$")
