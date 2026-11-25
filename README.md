@@ -6,11 +6,11 @@
 
 Scarp by Example is the hands-on companion to the Scarp programming language. Lessons are arranged from first program to numeric and AI-oriented programming. Every runnable lesson includes a Scarp `.srp` source file, an exact `.stdout` fixture, and bilingual teaching notes shown directly on the lesson page from the existing source-linked chapter guides.
 
-> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.6-alpha.20 at exact source commit `b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
+> **Development-stage language:** Scarp syntax can change between prereleases. This repository tests **Scarp v0.0.7-alpha.1 at exact source commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`** for CI. Do not assume that a lesson compatible with compiler `main` will run unchanged on an older download. See [compatibility](docs/compatibility.md).
 
 ## Online lessons
 
-**Published v0.0.7-alpha.1 numerical workshop:** [English guide](tutorials/alpha7-numerical/README.md) · [हिन्दी गाइड](docs/hi/alpha7-numerical.md) · [Online workshop](https://scarp-lang.github.io/scarp-by-example/workshops/alpha7-numerical/). Three original programs teach fixed-array concatenation, multi-argument GCD/HCF/LCM and stable softplus, independently pinned to the published compiler. The 60 numbered lessons retain their existing active target until a separate compatibility upgrade passes CI.
+**Published v0.0.7-alpha.1 numerical workshop:** [English guide](tutorials/alpha7-numerical/README.md) · [हिन्दी गाइड](docs/hi/alpha7-numerical.md) · [Online workshop](https://scarp-lang.github.io/scarp-by-example/workshops/alpha7-numerical/). Three original programs teach fixed-array concatenation, multi-argument GCD/HCF/LCM and stable softplus, independently pinned to the published compiler. The 60 numbered lessons now propose the same published release as their active target; the workshop retains its independent compiler pin for future upgrades.
 
 The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provides **a dedicated URL for every runnable lesson**, plus six chapter overview pages, source code, byte-exact expected output, previous/next lesson navigation, direct chapter-to-chapter journeys and last-lesson lab handoffs, English/Hindi explanations with exercises, bilingual source-aware lesson search with chapter filters and shareable links and compiler-source previews, optional **on-device lesson completion and resume**, and dark/light themes. It remains a static GitHub Pages site: Scarp code executes locally with the compiler, **not** in the browser. The [Pages workflow](.github/workflows/pages.yml) validates all lessons before publishing and runs an independent, offline [site-integrity audit](scripts/audit_site.py) for internal links, anchor IDs, assets, canonical URLs and sitemap coverage. A broken navigation link now blocks Pages deployment.
 
@@ -35,7 +35,7 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 ## Start here
 
 1. Install [Rust and Cargo](https://www.rust-lang.org/tools/install) to run the current compiler source, or select a supported binary from [Scarp prereleases](https://github.com/scarp-lang/scarp/releases).
-2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact course target commit `b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`, then build it with `cargo build --locked --offline`. Confirm the current executable version with `target/debug/scarp version` (Windows: `target\\debug\\scarp.exe version`).
+2. Clone the [Scarp repository](https://github.com/scarp-lang/scarp), check out exact course target commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`, then build it with `cargo build --locked --offline`. Confirm the current executable version with `target/debug/scarp version` (Windows: `target\\debug\\scarp.exe version`).
 3. Clone this repository. From your Scarp checkout, run the binary on a lesson, using the **absolute path** to its `.srp` file: `./target/debug/scarp exec /path/to/scarp-by-example/examples/01-basics/01-hello.srp`.
 4. Compare output with the lesson's adjacent `.stdout` file. On Windows, use `target\\debug\\scarp.exe`.
 
@@ -55,7 +55,7 @@ Learn to create, statically verify, and launch a real offline Scarp project. Fol
 
 **New in compiler alpha.6:** A [root mean square lesson](examples/04-collections/12-root-mean-square.srp) demonstrates numerically stable signal magnitude. The [English source navigation guide](docs/source-navigation.md) and [हिन्दी मार्गदर्शिका](docs/hi/source-navigation.md) explain read-only `inspect symbols` and `inspect references`; neither command executes the program.
 
-**New in published compiler alpha.4:** Scarp adds bounded `sample_area`, `sample_cumulative_area`, `sample_slopes` and `cosine_similarity` vector built-ins, plus a limited Rust-host ELF64 relocatable object API. These historical numerical features remain available in the active alpha.20 compiler; examples must still pass exact-output verification before inclusion in the numbered course. The ELF API is **not** a `scarp compile` CLI or general native executable support. The historical alpha.13 source pin is independently checked in multi-platform CI.
+**New in published compiler alpha.4:** Scarp adds bounded `sample_area`, `sample_cumulative_area`, `sample_slopes` and `cosine_similarity` vector built-ins, plus a limited Rust-host ELF64 relocatable object API. These historical numerical features remain available in the proposed active v0.0.7-alpha.1 compiler; examples must still pass exact-output verification before inclusion in the numbered course. The ELF API is **not** a `scarp compile` CLI or general native executable support. The historical alpha.13 source pin is independently checked in multi-platform CI.
 
 **New in published compiler alpha.3:** [Practice deterministic Top-K and temperature-controlled probabilities](https://scarp-lang.github.io/scarp-by-example/labs/06-ai-foundations/#stretch-challenge) in the optional AI lab. This is score ranking, not random sampling, model training or a GPU runtime.
 
@@ -71,7 +71,7 @@ The collections and `option<T>` / `result<T,E>` language features arrived in alp
 
 **New diagnostic repair lab:** [Nine syntax-error exercises](tutorials/structured-patterns/README.md#diagnose-and-fix-invalid-patterns) pair real alpha.14 parser errors with working corrected code, exact E0004 diagnostic spans and recorded stdout. The new dedicated page is part of the static website, not a browser interpreter.
 
-**Compiler migration:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) established the previously tested alpha.15 course pin. The active course now proposes the published alpha.20 compiler at an exact annotated-tag commit, subject to Linux/Windows/macOS and Pages verification. The alpha.13, alpha.14 and alpha.15 historical workshop checks retain separate immutable compiler pins. No numbered lesson output fixtures are rewritten and no stable or native-compiled release is implied.
+**Compiler migration:** [PR #76](https://github.com/scarp-lang/scarp-by-example/pull/76) established the previously tested alpha.15 course pin. The active course now proposes the published v0.0.7-alpha.1 compiler at its exact release-tag commit, subject to Linux/Windows/macOS and Pages verification. The alpha.13, alpha.14, alpha.15 and alpha.20 historical workshop checks retain separate immutable compiler pins. No numbered lesson output fixtures are rewritten and no stable or native-compiled release is implied.
 
 ## Published alpha.16 and alpha.17 features
 
@@ -109,7 +109,7 @@ The current course includes **60 numbered runnable lessons**. Both added source/
 
 ## Verification
 
-The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.6-alpha.20](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.20) from its immutable source commit of the official compiler and performs static `scarp verify` then byte-exact `scarp exec` on every lesson on GitHub-hosted runners. An independent CLI smoke test checks legacy commands, real project creation/launch and **alpha.5 project-directory module inspection**, including file/project inventory equivalence, static-only behavior and invalid-manifest handling. Run the same checks locally:
+The [example verification workflow](.github/workflows/examples.yml) builds [Scarp v0.0.7-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.7-alpha.1) from its immutable source commit of the official compiler and performs static `scarp verify` then byte-exact `scarp exec` on every lesson on GitHub-hosted runners. An independent CLI smoke test checks legacy commands, real project creation/launch and **alpha.5 project-directory module inspection**, including file/project inventory equivalence, static-only behavior and invalid-manifest handling. Run the same checks locally:
 
 ```sh
 python3 scripts/verify_examples.py --compiler /absolute/path/to/scarp/target/debug/scarp

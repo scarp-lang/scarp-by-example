@@ -123,6 +123,33 @@ class CompilerTargetTests(unittest.TestCase):
                 self.assertIn(".compiler-alpha13/Cargo.toml", workflow.read_text(encoding="utf-8"))
                 self.assertIn("--compiler-source .compiler-alpha13", workflow.read_text(encoding="utf-8"))
 
+    def test_historical_exact_values_and_numerical_workshop_pins(self):
+        pages = WORKFLOWS[1].read_text(encoding="utf-8")
+        for directory, workflow_name, checkout, verifier in (
+            ("alpha20-exact-values", "alpha20-exact-values.yml", ".compiler-alpha20", "verify_alpha20_exact_values.py"),
+            ("alpha7-numerical", "alpha7-numerical.yml", ".compiler-alpha7", "verify_alpha7_numerical.py"),
+        ):
+            with self.subTest(workshop=directory):
+                target = json.loads((ROOT / "tutorials" / directory / "compiler-target.json").read_text(encoding="utf-8"))
+                workflow = (ROOT / ".github/workflows" / workflow_name).read_text(encoding="utf-8")
+                for source in (pages, workflow):
+                    entries = [e for e in checkout_inputs(source) if e.get("path") == checkout]
+                    self.assertEqual(len(entries), 1)
+                    self.assertEqual(entries[0]["repository"], "scarp-lang/scarp")
+                    self.assertEqual(entries[0]["ref"], target["source_commit"])
+                    self.assertIn(checkout + "/Cargo.toml", source)
+                    self.assertIn("scripts/" + verifier, source)
+                    self.assertIn("--compiler-source " + checkout, source)
+
+    def test_pages_publication_is_main_only(self):
+        pages = WORKFLOWS[1].read_text(encoding="utf-8")
+        gate = "if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'"
+        # Configure, upload, and deploy must all be guarded, including manual runs.
+        self.assertEqual(pages.count(gate), 3)
+        deploy = pages.split("\n  deploy:\n", 1)[1]
+        self.assertIn(gate, deploy)
+        self.assertIn("needs: build", deploy)
+
     def test_historical_alpha15_boundary_compiler_is_independently_pinned(self):
         historical = "a21b7b6d942bd1ca9abbbbb522f92f9c8e21e281"
         for workflow in WORKFLOWS:

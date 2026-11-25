@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: scarp-lang/scarp
-          ref: b1a9347f93540fdf95b0ddecba4adc55a3b4bb98
+          ref: 996bd5b83c8cb26e98637563729f67bdacc61cd4
           path: .compiler
           persist-credentials: false
 
@@ -150,18 +150,18 @@ jobs:
         run: python scripts/audit_site.py --site dist
 
       - name: Configure Pages
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload verified site
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
   deploy:
     name: Publish verified catalog
-    if: github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10

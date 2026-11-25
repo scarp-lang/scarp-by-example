@@ -19,15 +19,17 @@ class CliSmokeTests(unittest.TestCase):
             self.assertEqual(name, "Scarp.project")
             self.assertTrue(valid.startswith(b"scarp-project: 1\n"))
             self.assertEqual(invalid, valid.replace(b"src/main.srp", b"../outside.srp"))
-        name, valid, invalid = scaffold_contract("0.0.6-alpha.20")
-        self.assertEqual(name, "scarp.project")
-        self.assertTrue(valid.startswith(b'project "first-project" {\n'))
-        self.assertIn(b'dependencies {}', valid)
-        self.assertEqual(invalid, valid.replace(b"src/main.srp", b"../outside.srp"))
+        for version in ("0.0.6-alpha.20", "0.0.7-alpha.1"):
+            with self.subTest(version=version):
+                name, valid, invalid = scaffold_contract(version)
+                self.assertEqual(name, "scarp.project")
+                self.assertTrue(valid.startswith(b'project "first-project" {\n'))
+                self.assertIn(b'dependencies {}', valid)
+                self.assertEqual(invalid, valid.replace(b"src/main.srp", b"../outside.srp"))
 
     def test_unknown_scaffold_version_fails_closed(self):
         with self.assertRaisesRegex(CliSmokeError, "unreviewed scaffold contract"):
-            scaffold_contract("0.0.7-alpha.1")
+            scaffold_contract("0.0.7-alpha.2")
 
     def test_require_checks_exact_output_and_status(self):
         require(self.output(stdout=b"hello\n"), "exec", stdout=b"hello\n", stderr=b"")
