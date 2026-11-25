@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import (
     build, escape, lesson_description, read_course, render_catalog,
     render_lesson, lesson_exec_command, visible_stdin, section_heading, table_cells, plain_markdown,
@@ -196,7 +197,15 @@ class SiteTests(unittest.TestCase):
                     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
                 )
             ]
-            self.assertEqual(len(locations), 95)
+            self.assertEqual(len(locations), EXPECTED_PAGE_COUNT)
+            # Counts alone can hide duplicate sitemap entries and missing pages.
+            actual_urls = {
+                "https://scarp-lang.github.io/scarp-by-example/" +
+                page.relative_to(output).as_posix().removesuffix("index.html")
+                for page in output.rglob("index.html")
+            }
+            self.assertEqual(len(locations), len(set(locations)), "duplicate sitemap URL")
+            self.assertEqual(set(locations), actual_urls, "sitemap and generated routes differ")
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/", locations)
             self.assertIn("https://scarp-lang.github.io/scarp-by-example/projects/module-inspection/", locations)
@@ -281,7 +290,7 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(
                 sum('data-checkpoint-answer=' in page.read_text(encoding="utf-8")
                     for page in pages), 18)
-            self.assertEqual(len(list(output.rglob("index.html"))), 95)
+            self.assertEqual(len(list(output.rglob("index.html"))), EXPECTED_PAGE_COUNT)
             search = json.loads((output / "search-index.json").read_text(encoding="utf-8"))
             self.assertEqual(len(search), 60)
             for item in search:

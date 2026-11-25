@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import MODERN_WORKSHOP, build, escape, read_course, render_modern_collections_page
 from verify_examples import ROOT, read_expected_stdout
 
@@ -43,7 +44,7 @@ class ModernWorkshopSiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder)
             self.assertEqual(build(output), 60)
-            self.assertEqual(len(list(output.rglob("index.html"))), 95)
+            self.assertEqual(len(list(output.rglob("index.html"))), EXPECTED_PAGE_COUNT)
             page = output / "workshops/modern-collections/index.html"
             self.assertTrue(page.is_file())
             self.assertIn(

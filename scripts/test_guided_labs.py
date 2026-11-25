@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 from guided_labs import read_labs, validate_bilingual
 from verify_examples import ROOT, VerificationError, read_expected_stdout
 from verify_guided_labs import verify_lab
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import build
 
 
@@ -185,12 +186,12 @@ class GuidedLabCatalogTests(unittest.TestCase):
             locations = [node.text for node in sitemap.findall(
                 ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
             )]
-            self.assertEqual(len(locations), 91)
+            self.assertEqual(len(locations), EXPECTED_PAGE_COUNT)
             self.assertIn(
                 "https://scarp-lang.github.io/scarp-by-example/labs/01-basics/",
                 locations
             )
-            self.assertEqual(len(list(out.rglob("index.html"))), 91)
+            self.assertEqual(len(list(out.rglob("index.html"))), EXPECTED_PAGE_COUNT)
 
 
 if __name__ == "__main__":

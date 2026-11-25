@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import build, render_alpha14_diagnostics_page
 from test_alpha14_workshop_site import CodeText
 from verify_alpha14_diagnostics import DIRECTORY, PIN, IDS, load_cases
@@ -61,7 +62,7 @@ class Alpha14DiagnosticSiteTests(unittest.TestCase):
             output = Path(root)
             self.assertEqual(build(output), 60)
             index_files = list(output.rglob("index.html"))
-            self.assertEqual(len(index_files), 95)
+            self.assertEqual(len(index_files), EXPECTED_PAGE_COUNT)
             route = "workshops/structured-patterns/diagnostics/index.html"
             self.assertTrue((output / route).is_file())
             self.assertIn(
