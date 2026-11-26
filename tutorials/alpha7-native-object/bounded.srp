@@ -1,0 +1,8 @@
+// Each visited operation consumes native work allowance.
+pure funcra triangular(n: integer) -> integer {
+    var total = 0;
+    repeat n as i {
+        total += i + 1;
+    }
+    return total;
+}

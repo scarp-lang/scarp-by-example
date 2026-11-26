@@ -1,0 +1,13 @@
+// Select compute as the external entry; both helpers are private.
+pure funcra compute(n: integer, divisor: integer) -> integer {
+    return scale(n, divisor) + 1;
+}
+
+pure funcra scale(n: integer, divisor: integer) -> integer {
+    return wide(n, divisor, 1, 2, 3, 4, 5, 6);
+}
+
+pure funcra wide(a: integer, b: integer, c: integer, d: integer,
+                 e: integer, f: integer, g: integer, h: integer) -> integer {
+    return (a + c + d + e + f + g + h) / b;
+}
