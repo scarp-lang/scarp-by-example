@@ -121,7 +121,14 @@ def check_host(output: bytes, reports: dict) -> None:
                 start, end = reports[case]["failure_spans"][int(span)]
                 source = (WORKSHOP / (case + ".srp")).read_bytes()
                 operator = {"divide": b"/", "overflow": b"+", "wide-overflow": b"*"}[label]
-                require(source[start:end] == operator, f"{label}: incorrect operator byte span")
+                # A slash in a leading comment is not the division expression.
+                # All three fixtures put the failing operator in a return body;
+                # select the final occurrence for wide's eighth-argument multiply.
+                body = source.index(b"return ")
+                expected_start = (source.rindex(operator, body) if label == "wide-overflow"
+                                  else source.index(operator, body))
+                require((start, end) == (expected_start, expected_start + len(operator)),
+                        f"{label}: incorrect operator byte span")
         else:
             require(int(span) == 0, f"{label}: success span is not zero")
         seen.add(label)

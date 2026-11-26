@@ -127,7 +127,8 @@ class HostTests(unittest.TestCase):
                          ("bounded", b"+")):
             source = (WORKSHOP / (name + ".srp")).read_bytes()
             # Find the operator in the function rather than in a comment.
-            start = source.index(op, source.index(b"pure funcra"))
+            start = (source.rindex(op) if name == "wide"
+                     else source.index(op, source.index(b"pure funcra")))
             self.reports[name] = {"failure_spans": [[start, start + 1]]}
         self.output = (
             b"checked 7 0 0\noverflow 0 1 0\nempty 0 0 0\n"
@@ -156,3 +157,15 @@ class HostTests(unittest.TestCase):
         bad["entry"]["failure_spans"] = [[0, 1]]
         with self.assertRaises(ValueError):
             check_host(self.output, bad)
+
+    def test_wrong_multiply_in_same_function(self):
+        bad = copy.deepcopy(self.reports)
+        source = (WORKSHOP / "wide.srp").read_bytes()
+        start = source.index(b"*")
+        bad["wide"]["failure_spans"] = [[start, start + 1]]
+        with self.assertRaises(ValueError):
+            check_host(self.output, bad)
+
+    def test_out_of_range_failure_id(self):
+        with self.assertRaises(ValueError):
+            check_host(self.output.replace(b"divide 0 2 0", b"divide 0 2 1"), self.reports)
