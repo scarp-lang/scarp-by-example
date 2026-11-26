@@ -2,7 +2,7 @@
 
 [English tutorial](../../tutorials/alpha20-exact-values/README.md)
 
-इस अभ्यास के लिए प्रकाशित Scarp v0.0.6-alpha.20 का उपयोग करें। मुख्य पाठ्यक्रम भी alpha.20 पर है; इस workshop का अलग स्थिर compiler pin है।
+इस अभ्यास के लिए प्रकाशित Scarp v0.0.6-alpha.20 का उपयोग करें। मुख्य पाठ्यक्रम के नए compiler target से अलग, इस workshop का alpha.20 का स्थिर compiler pin है।
 
 ## Decimal
 

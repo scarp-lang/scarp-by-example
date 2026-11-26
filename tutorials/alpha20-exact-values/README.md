@@ -2,7 +2,7 @@
 
 [हिन्दी में पढ़ें](../../docs/hi/alpha20-exact-values.md) · [Published compiler](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.20)
 
-This optional workshop is independently pinned to `b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`. The numbered course now targets alpha.20 as well; the workshop retains an independent pin for future migrations. The upstream tuple examples retain their original development-era comments; the feature is now described in the published alpha.20 release notes. No newer compiler main behavior is assumed.
+This optional workshop is independently pinned to `b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`. The numbered course proposes v0.0.7-alpha.1; this workshop retains its independent alpha.20 pin and is never silently retargeted. The upstream tuple examples retain their original development-era comments; the feature is now described in the published alpha.20 release notes. No newer compiler main behavior is assumed.
 
 ## Run and predict
 

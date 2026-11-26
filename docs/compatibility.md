@@ -2,17 +2,17 @@
 
 Scarp is a development-stage programming language. This learning repository selects an **immutable, publicly published compiler source commit**; a tag alone does not prove compatibility without real operating-system tests.
 
-## Proposed active course target: Scarp alpha.20
+## Proposed active course target: Scarp v0.0.7-alpha.1
 
 | Property | Target |
 | --- | --- |
-| Published release | [Scarp v0.0.6-alpha.20](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.20), 24 November 2026 (prerelease) |
-| Exact annotated-tag source | [`b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`](https://github.com/scarp-lang/scarp/commit/b1a9347f93540fdf95b0ddecba4adc55a3b4bb98) |
+| Published release | [Scarp v0.0.7-alpha.1](https://github.com/scarp-lang/scarp/releases/tag/v0.0.7-alpha.1), 25 November 2026 (prerelease) |
+| Exact release-tag source | [`996bd5b83c8cb26e98637563729f67bdacc61cd4`](https://github.com/scarp-lang/scarp/commit/996bd5b83c8cb26e98637563729f67bdacc61cd4) |
 | Machine-readable target | [`docs/compiler-target.json`](compiler-target.json) |
 | Main verification | [Linux, Windows and macOS source/output jobs](../.github/workflows/examples.yml), [Pages/catalog build](../.github/workflows/pages.yml), compiler-target tests and historical source fidelity |
-| Previous active target | [Scarp v0.0.6-alpha.19](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.19), `e534e73a81c9500e3aef9f3d51cafa0bc7bbcf75` |
+| Previous active target | [Scarp v0.0.6-alpha.20](https://github.com/scarp-lang/scarp/releases/tag/v0.0.6-alpha.20), `b1a9347f93540fdf95b0ddecba4adc55a3b4bb98` |
 
-**Integration status:** The annotated `v0.0.6-alpha.20` tag points to the exact compiler source commit above. This PR proposes that published source as the active target while preserving all **60 numbered lessons**, including their original alpha.18/19 source provenance. Existing fixtures remain intact. Historical alpha.13, alpha.14 and alpha.15 checks continue to use their independent release source commits. Linux/Windows/macOS and Pages validations plus maintainer review are required before merging; PR creation does not deploy the website.
+**Integration status:** The published `v0.0.7-alpha.1` tag directly identifies the exact compiler source commit above. This PR proposes that published source as the active target while preserving all **60 numbered lessons**, including their original alpha.18/19 source provenance. Existing fixtures remain intact. Historical alpha.13, alpha.14, alpha.15 and alpha.20 checks continue to use their independent release source commits. Linux/Windows/macOS and Pages validations plus maintainer review are required before merging; PR creation does not deploy the website.
 
 ## Source-language support and limits
 
@@ -35,14 +35,16 @@ Scarp is a development-stage programming language. This learning repository sele
 - Alpha.19 adds Rust-host named callable handles, signature/effect compatibility, usage receipts and cumulative execution ledgers. It **does not** add first-class Scarp function values, closures or an unrestricted native compiler CLI. Tuple indexed assignment was not published until alpha.20.
 - Alpha.20 introduces exact decimal literals, constant-index persistent mutable tuple replacement, numeric tuple ordering and canonical lowercase v2 scaffolding for both `create` and `init`. The CLI still uses the interpreter; native ELF64 generation remains a restricted Rust API.
 
+- Scarp v0.0.7-alpha.1 adds fixed-array concatenation, variadic integer reductions and stable softplus. Its experimental Rust-host ELF64 API supports additional integer arguments and restricted loop/control-flow forms; the source CLI still executes through the interpreter. Interpreter frame reuse is an implementation improvement, not a source-level lifetime annotation or a general native backend.
+
 ## Build the exact active compiler
 
-The `v0.0.6-alpha.20` annotated tag dereferences to **`b1a9347f93540fdf95b0ddecba4adc55a3b4bb98`**. Both CI workflows pin this source commit at `.compiler`. They separately check out alpha.13 as `.compiler-alpha13` and alpha.15 as `.compiler-alpha15` for their historic workshop/boundary regressions; those copies are not interchangeable.
+The `v0.0.7-alpha.1` release tag resolves to **`996bd5b83c8cb26e98637563729f67bdacc61cd4`**. Both CI workflows pin this source commit at `.compiler`. They separately check out alpha.13 as `.compiler-alpha13` and alpha.15 as `.compiler-alpha15` for their historic workshop/boundary regressions; those copies are not interchangeable.
 
 ~~~sh
 git clone https://github.com/scarp-lang/scarp.git
 cd scarp
-git checkout b1a9347f93540fdf95b0ddecba4adc55a3b4bb98
+git checkout 996bd5b83c8cb26e98637563729f67bdacc61cd4
 cargo build --locked --offline
 ./target/debug/scarp version
 ~~~
@@ -64,7 +66,7 @@ To verify the **historical** alpha.13 workshop, separately build the exact alpha
 python scripts/verify_alpha13_compat.py --compiler /path/to/alpha13/scarp --compiler-source /path/to/alpha13/compiler/git/checkout
 ~~~
 
-For the historical alpha.14 structured-pattern, diagnostic and frozen 55-lesson workshops, build source commit `43627b74af5fccccc5e233e98207413983ebafc1` in a separate checkout and run `scripts/verify_alpha14_patterns.py`, `scripts/verify_alpha14_diagnostics.py` and `scripts/verify_alpha14_course.py` using that binary and source directory (the frozen lesson verifier only needs the compiler executable). The active alpha.20 binary cannot replace these pinned provenance checks.
+For the historical alpha.14 structured-pattern, diagnostic and frozen 55-lesson workshops, build source commit `43627b74af5fccccc5e233e98207413983ebafc1` in a separate checkout and run `scripts/verify_alpha14_patterns.py`, `scripts/verify_alpha14_diagnostics.py` and `scripts/verify_alpha14_course.py` using that binary and source directory (the frozen lesson verifier only needs the compiler executable). The active v0.0.7-alpha.1 binary cannot replace these pinned provenance checks.
 
 Historical programs and fixtures are compared to their original committed sources and executed against the corresponding release. CLI version, silent static verification and byte-exact UTF-8 stdout are checked. Python-only tests do not replace running the actual compiler.
 
@@ -80,11 +82,11 @@ Scarp syntax remains unstable between prereleases. See the [compiler releases ar
 
 ## Independent published alpha.20 workshop
 
-The [exact-values workshop](../tutorials/alpha20-exact-values/README.md) ([हिन्दी](hi/alpha20-exact-values.md)) retains its own published alpha.20 pin, even when the active numbered course uses that version. Its five programs and six negative cases run on all three supported hosts. Decimal literal and tuple indexed assignment support must not be inferred for older releases.
+The [exact-values workshop](../tutorials/alpha20-exact-values/README.md) ([हिन्दी](hi/alpha20-exact-values.md)) retains its own published alpha.20 pin, even after the active numbered course migrates to v0.0.7-alpha.1. Its five programs and six negative cases run on all three supported hosts. Decimal literal and tuple indexed assignment support must not be inferred for older releases.
 
 ## Independent published v0.0.7-alpha.1 workshop
 
-The [numerical programming workshop](../tutorials/alpha7-numerical/README.md) ([हिन्दी](hi/alpha7-numerical.md)) pins the published compiler commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`. It teaches array concatenation, multi-argument integer reductions and stable vector softplus with original programs and exact output fixtures. The numbered course target remains unchanged; the new workshop has a three-platform verifier and independent Pages publication gate. Native object emission is still an experimental Rust API, not a general CLI compilation mode.
+The [numerical programming workshop](../tutorials/alpha7-numerical/README.md) ([हिन्दी](hi/alpha7-numerical.md)) pins the published compiler commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`. It teaches array concatenation, multi-argument integer reductions and stable vector softplus with original programs and exact output fixtures. The proposed numbered course target now matches this workshop, which retains a separate three-platform verifier and Pages publication gate. Historical compiler pins remain unchanged. Native object emission in this release is still an experimental Rust API, not a general CLI compilation mode.
 
 ### Historical alpha.10 and alpha.11 workshops
 

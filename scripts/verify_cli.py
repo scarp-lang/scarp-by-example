@@ -14,6 +14,10 @@ from source_explorer import verify_reference_map
 from verify_examples import ROOT, read_expected_stdout
 
 
+# Explicit reviewed versions, never an unrestricted future-version fallback.
+MODERN_SCAFFOLD_VERSIONS = frozenset({"0.0.6-alpha.20", "0.0.7-alpha.1"})
+
+
 class CliSmokeError(RuntimeError):
     """Observed CLI behavior differs from the pinned published CLI contract."""
 
@@ -145,14 +149,14 @@ def smoke_test(compiler: Path, timeout: int = 15, *, expected_version: str | Non
 
 
 def scaffold_contract(version: str) -> tuple[str, bytes, bytes]:
-    """Keep historical scaffolding distinct from published alpha.20."""
+    """Keep legacy v1 distinct from the reviewed lowercase v2 releases."""
     legacy = b"scarp-project: 1\nname: first-project\nentry: src/main.srp\n"
     modern = (b'project "first-project" {\n'
               b'    version: "0.1.0"\n'
               b'    entry: "src/main.srp"\n'
               b'    type: "application"\n'
               b'    dependencies {}\n}\n')
-    if version == "0.0.6-alpha.20":
+    if version in MODERN_SCAFFOLD_VERSIONS:
         return "scarp.project", modern, modern.replace(b"src/main.srp", b"../outside.srp")
     if version in {"0.0.6-alpha.14", "0.0.6-alpha.19"}:
         return "Scarp.project", legacy, legacy.replace(b"src/main.srp", b"../outside.srp")
@@ -179,7 +183,7 @@ def project_smoke(compiler: Path, timeout: int, *, version: str) -> None:
         names = {entry.name for entry in project.iterdir()}
         if manifest_name not in names or ({"Scarp.project", "scarp.project"} - {manifest_name}) & names:
             raise CliSmokeError("create wrote an unexpected manifest filename")
-        if version == "0.0.6-alpha.20":
+        if version in MODERN_SCAFFOLD_VERSIONS:
             for directory in ("src", "tests", "examples"):
                 if not (project / directory).is_dir():
                     raise CliSmokeError(f"create omitted v2 scaffold directory {directory}")

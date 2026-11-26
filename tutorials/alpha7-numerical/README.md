@@ -1,6 +1,6 @@
 # Scarp v0.0.7-alpha.1 — numerical programming workshop
 
-This independently pinned workshop teaches three source-language additions from the [published compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.7-alpha.1), commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`. The numbered course and historical workshops keep their own compatibility targets. These are original course programs, informed by the official release and its examples, not verbatim upstream imports.
+This independently pinned workshop teaches three source-language additions from the [published compiler release](https://github.com/scarp-lang/scarp/releases/tag/v0.0.7-alpha.1), commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`. The numbered course proposes the same published release; this workshop retains an independent pin. Historical workshops keep their original targets. These are original course programs, informed by the official release and its examples, not verbatim upstream imports.
 
 ## Learning path
 
