@@ -41,7 +41,7 @@ cc -std=c11 -Wall -Wextra -Werror host.c checked.o bounded.o entry.o -o native-w
 ./native-workshop
 ```
 
-Each output row contains label, signed value, status and source-span index. Consult the relevant object's JSON `failure_spans` only for a nonzero status; offsets are half-open UTF-8 byte ranges in the original source. The companion verifier checks emitted ELF headers, deterministic bytes, metadata, overwrite refusal, invalid targets, stack-budget rejection and (on Linux x86-64) these native results.
+Each output row contains label, signed value, status and source-span index. Consult the relevant object's JSON `failure_spans` only for a nonzero status; offsets are half-open UTF-8 byte ranges in the original source. The companion verifier checks emitted ELF headers, deterministic bytes, metadata, overwrite refusal, invalid targets, stack-budget rejection and (on Linux x86-64) these native results. The separate wide-argument host below adds three more result checks.
 
 From the repository root, with a checkout of the compiler at the pinned commit:
 
@@ -50,6 +50,42 @@ python scripts/verify_alpha7_native_object.py --compiler /path/to/scarp --compil
 ```
 
 Omit `--link-host` when running on Windows, macOS or a non-x86-64 Linux host. This only validates object emission and command behavior on those hosts.
+
+## 5. External eight-argument ABI
+
+The first call-chain example passes extra arguments to an internal helper.
+The separate [wide.srp](wide.srp) demonstrates an external caller passing
+eight arguments directly. Its weighted sum makes argument swaps observable.
+For 1 through 8 the expected result is 204; for 8 through 1 it is 120.
+
+```sh
+scarp native-object --json x86_64-none checked wide.srp -o wide.o
+cc -std=c11 -Wall -Wextra -Werror wide_host.c wide.o -o wide-workshop
+./wide-workshop
+```
+
+Use the C commands only on Linux x86-64. The JSON reports
+`integer_arguments: 8` and `stack_argument_bytes: 16` for the external
+caller. The caller's stack alignment padding is separate. The host
+uses the exact eight-argument prototype; the two checked examples export
+the same symbol and must be linked into separate executables.
+
+## 6. Verify the precise stack boundary and diagnostic bytes
+
+Take `peak_stack_bytes` from the entry object's JSON. Re-emit the same
+source with that exact number instead of 4096 and a new output filename:
+it must produce identical object bytes. Then use one byte less with
+another unused path: compilation must fail without creating the output.
+The Python verifier automates both checks without relying on a hard-coded
+frame size. The stack allowance is not the work allowance.
+
+The entry source starts with a Hindi/emoji comment. When division fails,
+the host's span ID must map to the exact slash byte, not a Unicode character
+index. A source offset is measured against the original UTF-8 file, not
+rendered columns. The verifier also rejects unsupported recursion,
+top-level print effects and invalid UTF-8 without publishing a partial object.
+It compares six successful native result expectations against interpreter
+execution of the same declarations plus print calls.
 
 ## Limits and next steps
 

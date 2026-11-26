@@ -1,0 +1,5 @@
+// External arguments seven and eight are passed on the caller's stack.
+pure funcra weighted(a: integer, b: integer, c: integer, d: integer,
+                     e: integer, f: integer, g: integer, h: integer) -> integer {
+    return a + b * 2 + c * 3 + d * 4 + e * 5 + f * 6 + g * 7 + h * 8;
+}

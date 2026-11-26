@@ -30,6 +30,8 @@ The [learning portal](https://scarp-lang.github.io/scarp-by-example/) now provid
 
 **Website navigation:** Open a chapter from the home page, then select an example. For a direct link, use a path like [01 · Hello](https://scarp-lang.github.io/scarp-by-example/lessons/01-basics/01-hello/). The same source and output fixtures remain in Git; [site development notes](site/README.md) document the generated routes.
 
+**Experimental native object workshop (published v0.0.7-alpha.2):** [Learn native integer functions, bounded loops and direct calls](tutorials/alpha7-native-object/README.md). This independently pinned GitHub tutorial demonstrates x86-64 ELF64 object emission and optional Linux host execution; it is not a numbered interpreter lesson or a browser-executed example.
+
 ## Start here
 
 1. Install [Rust and Cargo](https://www.rust-lang.org/tools/install) to run the current compiler source, or select a supported binary from [Scarp prereleases](https://github.com/scarp-lang/scarp/releases).

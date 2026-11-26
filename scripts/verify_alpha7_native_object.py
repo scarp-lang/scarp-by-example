@@ -18,6 +18,7 @@ PIN = "638dc4c227f34f1c660be66834bcc0cbdb22dec8"
 VERSION = "0.0.7-alpha.2"
 CASES = {
     "checked": (["checked"], "scarp_checked_integer_function", 2, None),
+    "wide": (["checked"], "scarp_checked_integer_function", 8, None),
     "bounded": (["bounded", "1000"], "scarp_bounded_integer_function", 1, 1000),
     "entry": (["bounded-entry", "compute", "1000", "4096"],
               "scarp_bounded_integer_entry", 2, 1000),
@@ -68,15 +69,16 @@ def check_metadata(raw: bytes, name: str, source: bytes) -> dict:
         "max_work": work, "call_stack_alignment": 16,
         "span_encoding": "utf-8-bytes",
     }.items():
-        require(key in report and report[key] == expected, f"{name}: invalid {key}")
-    require(isinstance(report.get("mode"), str) and bool(report["mode"]),
-            "missing mode")
+        require(key in report and type(report[key]) is type(expected)
+                and report[key] == expected, f"{name}: invalid {key}")
+    require(report.get("mode") == args[0], "incorrect native mode")
     for field in ("callee_frame_bytes", "callee_stack_bytes", "stack_argument_bytes"):
         require(type(report.get(field)) is int and report[field] >= 0,
                 f"{name}: invalid {field}")
     require(report["callee_stack_bytes"] == report["callee_frame_bytes"] + 8,
             "callee stack does not include return address")
-    require(report["stack_argument_bytes"] == 0, "unexpected external stack arguments")
+    require(report["stack_argument_bytes"] == max(0, arity - 6) * 8,
+            "incorrect external stack argument bytes")
     spans = report.get("failure_spans")
     require(isinstance(spans, list) and bool(spans), "missing failure spans")
     for span in spans:
@@ -101,6 +103,10 @@ def check_host(output: bytes, reports: dict) -> None:
         "entry": (22, 0, "entry"), "divide": (0, 2, "entry"),
         "again": (22, 0, "entry"),
     }
+    expected.update({
+        "wide-forward": (204, 0, "wide"), "wide-reverse": (120, 0, "wide"),
+        "wide-overflow": (0, 1, "wide"),
+    })
     seen = set()
     for line in output.decode("ascii").splitlines():
         label, value, status, span = line.split()
@@ -111,14 +117,73 @@ def check_host(output: bytes, reports: dict) -> None:
         if wanted_status:
             require(0 <= int(span) < len(reports[case]["failure_spans"]),
                     f"{label}: span index outside metadata")
-            if label == "divide":
+            if label in ("divide", "overflow", "wide-overflow"):
                 start, end = reports[case]["failure_spans"][int(span)]
-                source = (WORKSHOP / "entry.srp").read_bytes()
-                require(b"/" in source[start:end], "division failure lost its callee span")
+                source = (WORKSHOP / (case + ".srp")).read_bytes()
+                operator = {"divide": b"/", "overflow": b"+", "wide-overflow": b"*"}[label]
+                require(source[start:end] == operator, f"{label}: incorrect operator byte span")
         else:
             require(int(span) == 0, f"{label}: success span is not zero")
         seen.add(label)
     require(seen == set(expected), "missing native host rows")
+
+
+def check_interpreter(binary: str, folder: Path) -> None:
+    """Run independent interpreter calls using the identical function declarations."""
+    cases = {
+        "checked": ("print(offset(12, -5));", b"7\n"),
+        "bounded": ("print(triangular(0));\nprint(triangular(5));", b"0\n15\n"),
+        "entry": ("print(compute(21, 2));", b"22\n"),
+        "wide": ("print(weighted(1, 2, 3, 4, 5, 6, 7, 8));\n"
+                 "print(weighted(8, 7, 6, 5, 4, 3, 2, 1));", b"204\n120\n"),
+    }
+    for name, (calls, output) in cases.items():
+        program = folder / (name + "-interpreted.srp")
+        program.write_bytes((WORKSHOP / (name + ".srp")).read_bytes()
+                            + b"\n" + calls.encode("utf-8") + b"\n")
+        require(success(run(binary, "exec", str(program)), name + " interpreter") == output,
+                f"{name}: interpreter result differs from expected native value")
+
+
+def check_boundaries(binary: str, folder: Path, reports: dict) -> None:
+    """The measured static stack bound is both sufficient and necessary."""
+    peak = reports["entry"]["peak_stack_bytes"]
+    program = str(WORKSHOP / "entry.srp")
+    exact = folder / "exact-stack.o"
+    args = (binary, "native-object", "--json", "x86_64-none",
+            "bounded-entry", "compute", "1000")
+    raw = success(run(*args, str(peak), program, "-o", str(exact)), "exact stack")
+    metadata = json.loads(raw)
+    expected = dict(reports["entry"], max_stack_bytes=peak)
+    require(metadata == expected, "exact stack metadata differs")
+    require(exact.read_bytes() == (folder / "entry.o").read_bytes(),
+            "exact stack budget changed object bytes")
+    too_small = folder / "one-byte-short.o"
+    rejected(run(*args, str(peak - 1), program, "-o", str(too_small)),
+             1, "one byte below required stack")
+    require(not too_small.exists(), "one-byte-short budget published an object")
+
+    zero = folder / "zero-work.o"
+    raw = success(run(binary, "native-object", "--json", "x86_64-none",
+                      "bounded", "0", str(WORKSHOP / "bounded.srp"), "-o", str(zero)),
+                  "zero work emission")
+    require(json.loads(raw).get("max_work") == 0, "zero work budget lost")
+    check_elf(zero.read_bytes())
+
+    # Compilation must not run top-level effects, and unsupported recursion
+    # and invalid UTF-8 must never leave a partial output.
+    for name, source, mode in (
+        ("effect", b"print(42);", ("checked",)),
+        ("recursive", b"pure funcra loop(n: integer) -> integer { return loop(n); }",
+         ("bounded-entry", "loop", "1000", "4096")),
+        ("invalid-utf8", b"\xff", ("checked",)),
+    ):
+        src = folder / (name + ".srp")
+        src.write_bytes(source)
+        obj = folder / (name + ".o")
+        rejected(run(binary, "native-object", "--json", "x86_64-none",
+                     *mode, str(src), "-o", str(obj)), 1, name)
+        require(not obj.exists(), f"{name}: rejected source produced an object")
 
 
 def verify(compiler: Path, source: Path, link_host: bool) -> None:
@@ -157,7 +222,8 @@ def verify(compiler: Path, source: Path, link_host: bool) -> None:
             require(copy.read_bytes() == data, "nondeterministic object bytes")
             rejected(run(*base, str(obj)), 1, name + " overwrite")
             require(obj.read_bytes() == data, "existing object changed")
-            objects.append(str(obj))
+            if name != "wide":
+                objects.append(str(obj))
         absent = folder / "rejected.o"
         rejected(run(binary, "native-object", "unknown-target", "checked",
                      str(WORKSHOP / "checked.srp"), "-o", str(absent)), 2, "target")
@@ -166,13 +232,22 @@ def verify(compiler: Path, source: Path, link_host: bool) -> None:
                      "compute", "1000", "1", str(WORKSHOP / "entry.srp"), "-o",
                      str(absent)), 1, "stack budget")
         require(not absent.exists(), "insufficient stack wrote a file")
+        check_boundaries(binary, folder, reports)
+        check_interpreter(binary, folder)
         if link_host:
             host = folder / "host"
             success(run("cc", "-std=c11", "-Wall", "-Wextra", "-Werror",
                         str(WORKSHOP / "host.c"), *objects, "-o", str(host)), "host link")
-            check_host(success(run(str(host)), "native host"), reports)
-    print("PASS: three native object modes, metadata, determinism and rejection cases"
-          + (", plus nine linked native results." if link_host else "."))
+            wide_host = folder / "wide-host"
+            success(run("cc", "-std=c11", "-Wall", "-Wextra", "-Werror",
+                        str(WORKSHOP / "wide_host.c"), str(folder / "wide.o"),
+                        "-o", str(wide_host)), "wide host link")
+            output = success(run(str(host)), "native host")
+            output += success(run(str(wide_host)), "wide native host")
+            check_host(output, reports)
+    print("PASS: four native objects, exact stack boundary, metadata, determinism,"
+          " rejection cases and six interpreter results"
+          + (", plus twelve linked native results." if link_host else "."))
 
 
 def main() -> int:
