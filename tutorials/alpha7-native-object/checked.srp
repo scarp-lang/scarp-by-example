@@ -1,0 +1,4 @@
+// A pure scalar function: no interpreter entry statements.
+pure funcra offset(base: integer, delta: integer) -> integer {
+    return base + delta;
+}
