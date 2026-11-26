@@ -128,3 +128,10 @@ The lessons and runnable examples are free to use. To help maintain the Scarp ec
 ## Independently pinned alpha.20 exact-values workshop
 
 [Online workshop](https://scarp-lang.github.io/scarp-by-example/workshops/alpha20-exact-values/) · [English](tutorials/alpha20-exact-values/README.md) · [हिन्दी](docs/hi/alpha20-exact-values.md). Five programs demonstrate exact decimal literals, rounding, persistent tuple member replacement and lexicographic numeric tuple comparison. The workshop retains its own immutable compiler pin and three-platform verification even when the active numbered course uses the same release.
+
+## Historical input and exact-number workshops
+
+- [Published alpha.10 foundations](tutorials/alpha10-foundations/README.md): six source-backed programs covering fixed arrays, BigInt, line input, Unicode prompts and a typed calculator.
+- [Published alpha.11 Decimal](tutorials/exact-decimal/README.md): three programs covering constructors, explicit rounding and typed exact-decimal input.
+
+Both bilingual repository tutorials keep independent historical compiler pins and three-platform validation. They do not change the active alpha.20 curriculum, website page count or search/progress inventory. For current decimal literals and tuple semantics, use the alpha.20 exact-values workshop above.
