@@ -4,3 +4,7 @@
 *.md text eol=lf
 *.py text eol=lf
 Scarp.project text eol=lf
+
+# Historical alpha.10 input fixtures preserve CRLF and final unterminated lines.
+tutorials/alpha10-foundations/**/*.stdin -text
+tutorials/alpha10-foundations/*.stdin -text

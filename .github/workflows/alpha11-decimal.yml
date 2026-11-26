@@ -1,0 +1,60 @@
+name: Verify published alpha.11 Decimal workshop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tutorials/exact-decimal/**"
+      - "scripts/verify_alpha11_decimal.py"
+      - "scripts/test_alpha11_decimal.py"
+      - ".github/workflows/alpha11-decimal.yml"
+  pull_request:
+    paths:
+      - "tutorials/exact-decimal/**"
+      - "scripts/verify_alpha11_decimal.py"
+      - "scripts/test_alpha11_decimal.py"
+      - ".github/workflows/alpha11-decimal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha11-decimal-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  published-decimal:
+    name: Decimal alpha.11 / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check out immutable published alpha.11 compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: 79b57395957f47e1270ee542a856c844b82386de
+          path: .compiler-alpha11
+          persist-credentials: false
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - name: Test Decimal workshop safeguards
+        run: python -m unittest discover -s scripts -p 'test_alpha11_decimal.py'
+      - name: Build exact published Scarp compiler offline
+        run: cargo build --locked --offline --manifest-path .compiler-alpha11/Cargo.toml
+      - name: Verify source, input, stdout and diagnostics
+        shell: bash
+        run: |
+          compiler=.compiler-alpha11/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha11_decimal.py --compiler "$compiler" --compiler-source .compiler-alpha11
