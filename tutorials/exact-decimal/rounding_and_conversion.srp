@@ -1,0 +1,8 @@
+// These cases are taken from the published alpha.11 decimal regression tests.
+print(decimal_div_rounded(decimal("1"), decimal("3"), 2, "half_even"));
+print(decimal_div_rounded(decimal("1"), decimal("8"), 2, "half_up"));
+print(decimal_round(decimal("1.225"), 2, "half_even"));
+print(decimal_round(decimal("-1.225"), 2, "half_up"));
+print(decimal_format(decimal("1.2"), 2, "half_even"));
+print(decimal_format(decimal("-0.005"), 2, "half_even"));
+print(decimal_from_integer(42), decimal_to_integer(decimal("42.0")));

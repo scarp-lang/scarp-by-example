@@ -1,0 +1,62 @@
+name: Verify published alpha.10 foundations workshop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tutorials/alpha10-foundations/**"
+      - "scripts/verify_alpha10_foundations.py"
+      - "scripts/test_alpha10_foundations.py"
+      - ".gitattributes"
+      - ".github/workflows/alpha10-foundations.yml"
+  pull_request:
+    paths:
+      - "tutorials/alpha10-foundations/**"
+      - "scripts/verify_alpha10_foundations.py"
+      - "scripts/test_alpha10_foundations.py"
+      - ".gitattributes"
+      - ".github/workflows/alpha10-foundations.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha10-foundations-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  published-foundations:
+    name: Alpha.10 source-backed samples / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out learning repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check out exact published alpha.10 compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: scarp-lang/scarp
+          ref: 44fcd0f77ccb92648cdb1fc7632495c506c87cb3
+          path: .compiler-alpha10
+          persist-credentials: false
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - name: Run safeguard unit tests
+        run: python -m unittest discover -s scripts -p 'test_alpha10_foundations.py'
+      - name: Build release-pinned compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha10/Cargo.toml
+      - name: Verify source and runtime behavior
+        shell: bash
+        run: |
+          compiler=.compiler-alpha10/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha10_foundations.py --compiler "$compiler" --compiler-source .compiler-alpha10
