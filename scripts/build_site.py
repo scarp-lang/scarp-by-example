@@ -20,6 +20,7 @@ from source_explorer import render_reference_explorer
 from verify_alpha14_patterns import validate_manifest as validate_alpha14_manifest, TARGET as ALPHA14_TARGET
 from verify_alpha14_diagnostics import load_cases as load_alpha14_diagnostics
 import alpha20_workshop_page as alpha20_page
+import alpha7_numerical_page as alpha7_page
 from alpha6_input_page import render_page as render_alpha6_input_page
 from project_migration_page import render_page as render_project_migration_page
 
@@ -332,7 +333,8 @@ scarp run hello-world</code></pre></div>
 <a href="workshops/input-and-tuples/index.html">Learn input and tuples ↗</a>
 <a href="workshops/modern-collections/index.html">Explore modern Scarp examples ↗</a>
 <a href="workshops/structured-patterns/index.html">Alpha.14 structured patterns ↗</a>
-<a href="workshops/alpha20-exact-values/index.html">New: exact decimals and tuple snapshots ↗</a></div>
+<a href="workshops/alpha20-exact-values/index.html">Exact decimals and tuple snapshots ↗</a>
+<a href="workshops/alpha7-numerical/index.html">New: v0.0.7 numerical programming ↗</a></div>
 </section>
 </main>"""
     return page_shell("index.html", "Learn Scarp with real code", "A practical, verified Scarp learning resource with standalone examples.", main, "home-layout"), len(lessons)
@@ -1845,6 +1847,11 @@ def build(destination: Path) -> int:
     workshop_routes.extend(
         (alpha20_page.lesson_path(name), alpha20_page.render_example(name, page_shell, rel, highlight_scarp))
         for name in alpha20_page.PROGRAMS
+    )
+    workshop_routes.append((alpha7_page.INDEX, alpha7_page.render_index(page_shell, rel)))
+    workshop_routes.extend(
+        (alpha7_page.lesson_path(name), alpha7_page.render_example(name, page_shell, rel, highlight_scarp))
+        for name in alpha7_page.PROGRAMS
     )
     for route, markup in workshop_routes:
         path = destination / route

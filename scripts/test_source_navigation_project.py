@@ -7,6 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import build, read_course, render_source_navigation_page
 from source_explorer import load_reference_map, render_reference_explorer
 from verify_examples import ROOT, read_expected_stdout
@@ -59,7 +60,7 @@ class SourceNavigationWorkshopTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
             self.assertEqual(build(dest), 60)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 91)
+            self.assertEqual(len(list(dest.rglob("index.html"))), EXPECTED_PAGE_COUNT)
             self.assertTrue((dest / "projects/source-navigation/index.html").is_file())
             self.assertTrue((dest / "reference-explorer.js").is_file())
             self.assertIn("projects/source-navigation/",

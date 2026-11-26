@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import build, escape, highlight_scarp, page_shell, read_course, rel
 from project_migration_page import render_page
 from verify_examples import ROOT
@@ -30,7 +31,7 @@ class MigrationSiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             site = Path(temporary)
             self.assertEqual(build(site), 60)
-            self.assertEqual(len(list(site.rglob("index.html"))), 91)
+            self.assertEqual(len(list(site.rglob("index.html"))), EXPECTED_PAGE_COUNT)
             migration = site / "projects/migration/index.html"
             self.assertTrue(migration.is_file())
             self.assertIn("projects/migration/",

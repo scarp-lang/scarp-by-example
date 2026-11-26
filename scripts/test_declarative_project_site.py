@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import build, read_course, render_declarative_project_page
 from verify_declarative_project import validate_fixtures
 
@@ -28,7 +29,7 @@ class ModernProjectSiteTests(unittest.TestCase):
             site = Path(directory)
             self.assertEqual(build(site), 60)
             pages = list(site.rglob("index.html"))
-            self.assertEqual(len(pages), 91)
+            self.assertEqual(len(pages), EXPECTED_PAGE_COUNT)
             page = site / "projects/declarative/index.html"
             self.assertTrue(page.exists())
             self.assertIn('href="projects/declarative/index.html"',

@@ -1,0 +1,50 @@
+name: Verify published v0.0.7-alpha.1 numerical workshop
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha7-numerical-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  numerical-workshop:
+    name: Numerical workshop / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - name: Check out course
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check out published compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: scarp-lang/scarp
+          ref: 996bd5b83c8cb26e98637563729f67bdacc61cd4
+          path: .compiler-alpha7
+          persist-credentials: false
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec
+        with:
+          toolchain: stable
+      - name: Test numerical workshop and generated pages
+        run: python -m unittest discover -s scripts -p 'test_alpha7_numerical.py'
+      - name: Build exact compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha7/Cargo.toml
+      - name: Verify source and exact outputs
+        shell: bash
+        run: |
+          compiler=.compiler-alpha7/target/debug/scarp
+          if [ "$RUNNER_OS" = Windows ]; then compiler="$compiler.exe"; fi
+          python scripts/verify_alpha7_numerical.py --compiler "$compiler" --compiler-source .compiler-alpha7

@@ -9,6 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from unittest.mock import patch
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import (
     ALPHA14_WORKSHOP, alpha14_example_path, build,
     render_alpha14_workshop_index, render_alpha14_example_page,
@@ -105,7 +106,7 @@ class PublishedAlpha14WebsiteTests(unittest.TestCase):
             self.assertEqual(build(out), 60)
             pages = sorted((out / "workshops/structured-patterns").rglob("index.html"))
             self.assertEqual(len(pages), 4)
-            self.assertEqual(len(list(out.rglob("index.html"))), 91)
+            self.assertEqual(len(list(out.rglob("index.html"))), EXPECTED_PAGE_COUNT)
             home = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="workshops/structured-patterns/index.html"', home)
             sitemap = (out / "sitemap.xml").read_text(encoding="utf-8")

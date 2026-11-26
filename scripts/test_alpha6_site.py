@@ -10,6 +10,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from alpha6_input_page import read_workshop, COMMIT, RELEASE, VERSION, WORKSHOP
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import ROOT, build, render_catalog
 from verify_examples import read_expected_stdout, read_optional_stdin
 
@@ -68,7 +69,7 @@ class Alpha6SiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
             self.assertEqual(build(dest), 60)
-            self.assertEqual(len(list(dest.rglob("index.html"))), 91)
+            self.assertEqual(len(list(dest.rglob("index.html"))), EXPECTED_PAGE_COUNT)
             page = (dest / "workshops/input-and-tuples/index.html").read_text(encoding="utf-8")
             home = (dest / "index.html").read_text(encoding="utf-8")
             expected = (ROOT / WORKSHOP / "main.srp").read_text(encoding="utf-8")

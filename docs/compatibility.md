@@ -82,6 +82,10 @@ Scarp syntax remains unstable between prereleases. See the [compiler releases ar
 
 The [exact-values workshop](../tutorials/alpha20-exact-values/README.md) ([हिन्दी](hi/alpha20-exact-values.md)) retains its own published alpha.20 pin, even when the active numbered course uses that version. Its five programs and six negative cases run on all three supported hosts. Decimal literal and tuple indexed assignment support must not be inferred for older releases.
 
+## Independent published v0.0.7-alpha.1 workshop
+
+The [numerical programming workshop](../tutorials/alpha7-numerical/README.md) ([हिन्दी](hi/alpha7-numerical.md)) pins the published compiler commit `996bd5b83c8cb26e98637563729f67bdacc61cd4`. It teaches array concatenation, multi-argument integer reductions and stable vector softplus with original programs and exact output fixtures. The numbered course target remains unchanged; the new workshop has a three-platform verifier and independent Pages publication gate. Native object emission is still an experimental Rust API, not a general CLI compilation mode.
+
 ### Historical alpha.10 and alpha.11 workshops
 
 The [alpha.10 foundations workshop](../tutorials/alpha10-foundations/README.md) uses immutable source `44fcd0f77ccb92648cdb1fc7632495c506c87cb3`. Its redirected stdin and interactive capability requirements describe that release, not the newer default interactive behavior of `exec`.

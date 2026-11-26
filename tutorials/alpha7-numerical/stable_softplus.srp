@@ -1,0 +1,8 @@
+// Extreme finite scores exercise a stable numerical activation.
+bind scores = [1000.0, -1000.0];
+bind activated = softplus(scores);
+print(activated);
+print(scores);
+bind middle = softplus([0.0]);
+print(middle[0] > 0.69);
+print(middle[0] < 0.70);

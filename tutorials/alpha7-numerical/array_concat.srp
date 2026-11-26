@@ -1,0 +1,13 @@
+// Join two batches of measurements without changing either input.
+pure funcra combine(a: array<integer, 2>, b: array<integer, 2>) -> array<integer, 4> {
+    return array_concat(a, b);
+}
+
+bind first = [array: 4, 9];
+bind second = [array: 16, 25];
+bind merged = combine(first, second);
+print(array_len(merged));
+print(merged);
+print(first);
+print(second);
+print(array_concat(merged, [array: <integer>]));

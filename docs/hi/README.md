@@ -43,3 +43,7 @@ scarp exec examples/01-basics/01-hello.srp
 ## योगदान
 
 अध्याय और पाठ क्रमांक समान रखें, और keywords, .srp स्रोत तथा .stdout आउटपुट का अनुवाद न करें। [अनुवाद नीति](../translations/README.md) और [योगदान गाइड](../../CONTRIBUTING.md) पढ़ें.
+
+## नई स्वतंत्र कार्यशाला
+
+[Scarp v0.0.7-alpha.1: ऐरे जोड़ना, GCD/HCF/LCM और softplus](alpha7-numerical.md) अलग प्रकाशित कम्पाइलर संस्करण पर आधारित है। मुख्य क्रमांकित पाठों का संस्करण नहीं बदला है।

@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from catalog_test_support import EXPECTED_PAGE_COUNT
 from build_site import build, read_course, render_project_inspection_page
 from verify_examples import ROOT
 
@@ -69,7 +70,7 @@ class ProjectInspectionTests(unittest.TestCase):
             target = Path(directory)
             self.assertEqual(build(target), 60)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 91)
+            self.assertEqual(len(pages), EXPECTED_PAGE_COUNT)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")
