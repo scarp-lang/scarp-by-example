@@ -8,6 +8,8 @@ from unittest.mock import patch
 import alpha7_generics_text_page as workshop
 from build_site import build, page_shell, rel, highlight_scarp
 from test_alpha14_workshop_site import CodeText
+from test_compiler_target import checkout_inputs
+from verify_alpha7_generics_text import ROOT
 
 
 class Alpha7GenericsWebsiteTests(unittest.TestCase):
@@ -31,6 +33,23 @@ class Alpha7GenericsWebsiteTests(unittest.TestCase):
                 else:
                     self.assertIn("Original Scarp by Example teaching program (MIT)", html)
                     self.assertNotIn(workshop.ORIGIN + name, html)
+
+    def test_pages_verifies_exact_workshop_before_generation(self):
+        path = ROOT / ".github" / "workflows"
+        for name in ("pages.yml", "alpha7-generics-text.yml"):
+            with self.subTest(workflow=name):
+                content = (path / name).read_text(encoding="utf-8")
+                entries = [entry for entry in checkout_inputs(content)
+                           if entry.get("path") == ".compiler-alpha7-generics"]
+                self.assertEqual(len(entries), 1)
+                self.assertEqual(entries[0]["repository"], "scarp-lang/scarp")
+                self.assertEqual(entries[0]["ref"], workshop.PIN)
+                self.assertIn(".compiler-alpha7-generics/Cargo.toml", content)
+                self.assertIn("--compiler-source .compiler-alpha7-generics", content)
+        pages = (path / "pages.yml").read_text(encoding="utf-8")
+        self.assertLess(pages.index("run: python scripts/verify_alpha7_generics_text.py"),
+                        pages.index("run: python scripts/build_site.py"))
+        self.assertEqual(pages.count("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'"), 3)
 
     def test_unknown_route_and_drift_fail_closed(self):
         with self.assertRaisesRegex(ValueError, "unknown alpha.3"):

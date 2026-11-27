@@ -17,7 +17,7 @@ jobs:
   build:
     name: Verify and generate catalog
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Check out course
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -55,6 +55,14 @@ jobs:
           repository: scarp-lang/scarp
           ref: b1a9347f93540fdf95b0ddecba4adc55a3b4bb98
           path: .compiler-alpha20
+          persist-credentials: false
+
+      - name: Check out independently pinned v0.0.7-alpha.3 compiler
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: scarp-lang/scarp
+          ref: 44a3bb0a91e67570e46ce058a3f6211f8e5db0f5
+          path: .compiler-alpha7-generics
           persist-credentials: false
 
       - name: Set up Rust
@@ -129,6 +137,12 @@ jobs:
       - name: Verify all exact-values programs and negative cases before publishing
         run: python scripts/verify_alpha20_exact_values.py --compiler .compiler-alpha20/target/debug/scarp --compiler-source .compiler-alpha20
 
+      - name: Build independent Alpha.3 workshop compiler
+        run: cargo build --locked --offline --manifest-path .compiler-alpha7-generics/Cargo.toml
+
+      - name: Verify Alpha.3 generic and text programs before publishing
+        run: python scripts/verify_alpha7_generics_text.py --compiler .compiler-alpha7-generics/target/debug/scarp --compiler-source .compiler-alpha7-generics
+
       - name: Generate static course catalog
         run: python scripts/build_site.py
 
@@ -136,18 +150,18 @@ jobs:
         run: python scripts/audit_site.py --site dist
 
       - name: Configure Pages
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload verified site
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
   deploy:
     name: Publish verified catalog
-    if: github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
