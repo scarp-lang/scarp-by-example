@@ -43,7 +43,7 @@ class ModernWorkshopSiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder)
             self.assertEqual(build(output), 60)
-            self.assertEqual(len(list(output.rglob("index.html"))), 91)
+            self.assertEqual(len(list(output.rglob("index.html"))), 99)
             page = output / "workshops/modern-collections/index.html"
             self.assertTrue(page.is_file())
             self.assertIn(

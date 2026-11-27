@@ -1,0 +1,8 @@
+// String updates construct new values and keep older snapshots intact.
+var text = "a";
+bind before = text;
+text += "é";
+text *= 2;
+print(before, text);
+print("é🌍" * 2 + "!");
+print("[" + "x" * 0 + "]");

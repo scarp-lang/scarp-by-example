@@ -1,0 +1,36 @@
+name: Alpha.3 generics and text workshop
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  generics-text:
+    name: Alpha.3 generics and text / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: scarp-lang/scarp
+          ref: 44a3bb0a91e67570e46ce058a3f6211f8e5db0f5
+          path: .compiler-alpha7-generics
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec
+        with:
+          toolchain: stable
+      - run: python -m unittest discover -s scripts -p test_alpha7_generics_text.py
+      - run: cargo build --locked --offline --manifest-path .compiler-alpha7-generics/Cargo.toml
+      - if: runner.os != 'Windows'
+        run: python scripts/verify_alpha7_generics_text.py --compiler .compiler-alpha7-generics/target/debug/scarp --compiler-source .compiler-alpha7-generics
+      - if: runner.os == 'Windows'
+        run: python scripts/verify_alpha7_generics_text.py --compiler .compiler-alpha7-generics/target/debug/scarp.exe --compiler-source .compiler-alpha7-generics

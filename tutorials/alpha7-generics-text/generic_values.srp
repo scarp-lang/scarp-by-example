@@ -1,0 +1,14 @@
+// Infer concrete types from values; explicit arguments use ::<...>.
+pure funcra identity<T>(value: T) -> T {
+    return value;
+}
+pure funcra pair<A, B>(a: A, b: B) -> tuple<A, B> {
+    return (a, b);
+}
+pure funcra second<T>(items: array<T, 2>) -> T {
+    return items[1];
+}
+
+print(identity(100), identity("Scarp"), identity(true));
+print(pair::<integer, string>(7, "Scarp"));
+print(second([array: 10, 20]));
