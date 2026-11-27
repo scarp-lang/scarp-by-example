@@ -69,7 +69,7 @@ class ProjectInspectionTests(unittest.TestCase):
             target = Path(directory)
             self.assertEqual(build(target), 60)
             pages = list(target.rglob("index.html"))
-            self.assertEqual(len(pages), 91)
+            self.assertEqual(len(pages), 99)
             self.assertIn(
                 "projects/module-inspection/",
                 (target / "sitemap.xml").read_text(encoding="utf-8")
