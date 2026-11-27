@@ -1,0 +1,14 @@
+// Propagate the original error type while wrapping the success payload.
+pure funcra wrap<T, E>(input: result<T, E>) -> result<tuple<T>, E> {
+    bind value = input?;
+    return new result<tuple<T>, E>::Ok((value,));
+}
+funcra display(input: result<tuple<integer>, string>) -> unit {
+    match on input {
+        case Ok((value,)) { print(value); }
+        case Err(error) { print(error); }
+    }
+}
+
+display(wrap(new result<integer, string>::Ok(12)));
+display(wrap(new result<integer, string>::Err("failed")));

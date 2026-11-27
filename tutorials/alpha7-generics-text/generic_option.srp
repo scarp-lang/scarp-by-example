@@ -1,0 +1,18 @@
+// An absent value is distinct from a present value equal to the fallback.
+pure funcra present<T>(value: T) -> option<T> {
+    return new option<T>::Some(value);
+}
+pure funcra absent<T>() -> option<T> {
+    return new option<T>::None();
+}
+pure funcra value_or<T>(input: option<T>, fallback: T) -> T {
+    match on input {
+        case Some(value) { return value; }
+        case None { return fallback; }
+    }
+}
+
+bind missing: option<integer> = absent();
+print(value_or(present("Scarp"), "missing"));
+print(value_or(missing, 9));
+print(value_or(present(0), 9));

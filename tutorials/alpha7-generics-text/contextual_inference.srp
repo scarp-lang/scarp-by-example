@@ -1,0 +1,16 @@
+// The expected type can determine a return-only parameter.
+pure funcra empty<T>() -> list<T> {
+    return [list: <T>];
+}
+pure funcra defaulted<T>(head: T, next: T = head) -> T {
+    return next;
+}
+record Names {
+    values: list<string>,
+}
+
+bind names: list<string> = empty();
+bind flags = empty::<boolean>();
+bind record_value = new Names { values: empty() };
+print(list_len(names), list_len(flags), list_len(record_value->values));
+print(defaulted(29), defaulted("first", "second"));
